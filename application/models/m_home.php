@@ -22,13 +22,31 @@ class m_home extends CI_Model
 		$hasil = $this->db->query("SELECT * FROM r_berita");
 		return $hasil->result();
 	}
-	function simpan_berita($judul, $isi, $kat)
+
+	function simpan_berita($judul, $isi, $kat, $image)
 	{
 		$id = $this->get_id();
 		$tgl = date('Y-m-d H:i:s');
-		$hasil = $this->db->query("INSERT INTO r_berita (id,judul,isi,id_kat,tgl,soft_deletes)VALUES('$id','$judul','$isi','$kat','$tgl','0')");
-		return $hasil;
+		$data = array(
+			'id' => $id,
+			'tgl' => $tgl,
+			'judul' => $judul,
+			'isi' => $isi,
+			'kat' => $kat,
+			'gambar' => $image,
+
+		);
+		$result = $this->db->insert('r_berita', $data);
+		return $result;
 	}
+
+	// function simpan_berita($judul, $isi, $kat)
+	// {
+	// 	$id = $this->get_id();
+	// 	$tgl = date('Y-m-d H:i:s');
+	// 	$hasil = $this->db->query("INSERT INTO r_berita (id,judul,isi,id_kat,tgl,soft_deletes)VALUES('$id','$judul','$isi','$kat','$tgl','0')");
+	// 	return $hasil;
+	// }
 	function hapus_berita($id)
 	{
 		$hasil = $this->db->query("DELETE FROM r_berita WHERE id='$id'");
