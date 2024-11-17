@@ -1,5 +1,20 @@
 RewriteEngine On
-RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?/$1 [L]
+RewriteRule ^(.*)$ index.php/$1 [L]
+RewriteRule ^/?$ "https\:\/\/www\.pcisnujombang\.org\/" [R=301,L]
+#  <IfModule mod_rewrite.c> 
+#         RewriteCond %{REQUEST_FILENAME} !.well-known/
+#         RewriteRule "(^|/)\.(?!well-known)" - [F]
+#     </IfModule>
+# Add Font Types
+AddType application/vnd.ms-fontobject .eot
+AddType font/truetype .ttf
+AddType font/opentype .otf
+AddType font/opentype .woff
+AddType font/opentype .woff2
+AddType image/svg+xml .svg .svgz
+
+<FilesMatch ".(eot|ttf|otf|woff|woff2|svg|svgz)">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
