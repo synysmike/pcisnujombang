@@ -66,31 +66,35 @@
 					<div class="col-auto d-inline-block d-lg-none">
 						<div class="header-logo">
 							<a href="<?php echo base_url(); ?>" class="php">PC ISNU Jombang</a>
-							<!-- <a href="index.html"><img src="<?php echo base_url(); ?>assets/public/assets/img/logo-white.svg" alt="Donat"></a> -->
+							<!-- <a href="index.html"><img src="<?php echo base_url() . ""; ?>assets/public/assets/img/logo-white.svg" alt="Donat"></a> -->
 						</div>
 					</div>
 					<nav class="main-menu d-none d-lg-block">
 						<ul>
 							<li class="menu-item-has-children">
-								<a href="<?php echo base_url('home') ?>">Home</a>
+								<a href="<?php echo base_url() . 'home' ?>">Home</a>
 								<ul class="mega-menu mega-menu-content">
 
 								</ul>
 
 								<?php $seg =  $this->uri->segment(1);
-								if ($seg == "Home") {
+								// echo $seg;
+								if ($seg == "" or $seg == "home") {
 								?>
 							<li><a href="#about-sec">About Us</a></li>
 							<li><a href="#donation-sec">Donations</a></li>
 							<li><a href="#service-sec">Service</a></li>
 							<li><a href="#blog-sec">Blog</a></li>
-						<?php }
+						<?php
+								} else {
+									echo "";
+								}
 						?>
 						</li>
 
 
 						<li>
-							<a href="<?php echo base_url('registrasi') ?>">Registrasi Anggota</a>
+							<a href="<?php echo base_url() . 'registrasi' ?>">Registrasi Anggota</a>
 						</li>
 						</ul>
 					</nav>
