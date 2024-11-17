@@ -68,7 +68,7 @@
 			</span>
 		</div>
 	</div>
-	<?php $this->load->view('public\mobile_menu'); ?>
+	<?php $this->load->view($mobile_menu); ?>
 	<!--==============================
 	<div class="color-scheme-wrap active">
 		<button class="switchIcon"><i class="fa-solid fa-palette"></i></button>
