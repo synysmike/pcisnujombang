@@ -22,6 +22,7 @@ class M_home extends CI_Model
 		$hasil = $this->db->query("SELECT * FROM r_berita");
 		return $hasil->result();
 	}
+	
 
 	function simpan_berita($judul, $isi, $kat, $image)
 	{
