@@ -16,7 +16,7 @@ class Home extends CI_Controller
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
 		$this->data['page'] = 'public/home';
-		$this->data['mobile_menu'] = 'public/home/mobile_menu';
+		$this->data['mobile_menu'] = 'public/mobile_menu';
 		$this->data['hero'] = 'public/home/hero';
 		$this->data['about'] = 'public/home/about';
 		$this->data['blog'] = 'public/home/blog';
