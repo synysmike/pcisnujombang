@@ -11,6 +11,7 @@ class Home extends CI_Controller
 		$this->load->model('m_home');
 	}
 
+	
 	public function index()
 	{
 		$this->data['css'] = 'public/home/css-req';
