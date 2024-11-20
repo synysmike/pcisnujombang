@@ -91,10 +91,10 @@
 		</div>
 	</div> -->
 
-	<?php $this->load->view('public\header'); ?>
+	<?php $this->load->view('.\header'); ?>
 	<?php $this->load->view($page); ?>
 
-	<?php $this->load->view('public\footer'); ?>
+	<?php $this->load->view('.\footer'); ?>
 
 
 	<!-- Scroll To Top -->
