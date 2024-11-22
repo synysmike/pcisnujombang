@@ -22,7 +22,23 @@ class M_home extends CI_Model
 		$hasil = $this->db->query("SELECT * FROM r_berita");
 		return $hasil->result();
 	}
-
+	function get_berita_by_id($id)
+	{
+		$id = $id;
+		// var_dump($id);
+		$hsl = $this->db->query("SELECT * FROM r_berita WHERE id='$id'");
+		if ($hsl->num_rows() > 0) {
+			foreach ($hsl->result() as $data) {
+				$hasil = array(
+					'judul' => $data->judul,
+					'isi' => $data->isi,
+					'id_kat' => $data->id_kat,
+					'gambar' => $data->gambar,
+				);
+			}
+		}
+		// return $hasil;
+	}
 
 	function simpan_berita($judul, $isi, $kat, $image)
 	{

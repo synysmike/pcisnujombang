@@ -48,7 +48,7 @@
 		// Datatables AJAX
 		var table = $('#tabel-berita').DataTable({
 			ajax: {
-				url: '<?php echo base_url("home/get_berita") ?>',
+				url: '<?php echo base_url("home/get_all_berita") ?>',
 				type: 'post',
 				dataSrc: '',
 			},
@@ -120,15 +120,12 @@
 			$('#create').modal('show');
 			$(".modal-title").text("Edit Data");
 			var row = $(this).closest('tr');
-			var judul = table.row(row).data().judul;
-			var isi = table.row(row).data().isi;
-			var kat = table.row(row).data().id_kat;
-			$("#judul").val(judul)
-			$('#isiBerita').summernote('code', isi)
-			$("#kategori").val(kat)
+			var id = table.row(row).data().id;
+			$.get("home/get_berita/" + id, function(data) {
+				console.log(data);
 
-
-
+			});
+			return false;
 		});
 
 

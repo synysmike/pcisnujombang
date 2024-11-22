@@ -8,7 +8,7 @@ class Home extends CI_Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->model('m_home');
+		$this->load->model('M_home');
 	}
 
 	
@@ -46,12 +46,22 @@ class Home extends CI_Controller
 		$this->load->view('admin/main', $this->data);
 	}
 
-	function get_berita()
+	function get_all_berita()
 	{
-		$data = $this->m_home->get_berita();
+		$data = $this->M_home->get_berita();
 		echo json_encode($data);
 	}
-	
+	public function get_berita()
+	{
+		$id = $this->input->get('id');
+		if ($id) {
+			// Fetch data based on the id 
+			$data = $this->M_home->get_berita_by_id($id);
+			echo json_encode($data);
+		} else {
+			echo json_encode(null);
+		}
+	}
 	function simpan_berita()
 	{
 
