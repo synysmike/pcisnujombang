@@ -22,7 +22,7 @@ class M_home extends CI_Model
 		$hasil = $this->db->query("SELECT * FROM r_berita");
 		return $hasil->result();
 	}
-	
+
 
 	function simpan_berita($judul, $isi, $kat, $image)
 	{
@@ -33,10 +33,11 @@ class M_home extends CI_Model
 			'tgl' => $tgl,
 			'judul' => $judul,
 			'isi' => $isi,
-			'kat' => $kat,
+			'id_kat' => $kat,
 			'gambar' => $image,
 
 		);
+		// var_dump($data);
 		$result = $this->db->insert('r_berita', $data);
 		return $result;
 	}
@@ -50,9 +51,20 @@ class M_home extends CI_Model
 	// }
 	function hapus_berita($id)
 	{
-		$hasil = $this->db->query("DELETE FROM r_berita WHERE id='$id'");
-		return $hasil;
+		// $this->db->select('gambar');
+		$this->db->where('id', $id);
+		$nama_gambar = $this->db->get('r_berita')->row()->gambar;
+		// var_dump($nama_gambar);
+		$path = "./assets/images/" . $nama_gambar;
+		if (file_exists($path)) {
+			// Remove file
+			unlink($path);
+			$hasil = $this->db->query("DELETE FROM r_berita WHERE id='$id'");
+			return $hasil;
+		}
 	}
+
+
 	public function get_all($limit, $start)
 	{
 		$this->db->select('*, ambil_total_berita(url) jumlah_visitor');

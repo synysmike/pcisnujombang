@@ -54,19 +54,47 @@ class Home extends CI_Controller
 	
 	function simpan_berita()
 	{
-		$config['upload_path'] = "./assets/images";
-		$config['allowed_types'] = 'gif|jpg|png';
-		$config['encrypt_name'] = TRUE;
-		$this->load->library('upload', $config);
-		if ($this->upload->do_upload("file")) {
-			$data = array('upload_data' => $this->upload->data());
-			$image = $data['upload_data']['file_name'];
+
+
+
+		if (isset($_FILES["file"]["name"])) {
+			$tgl = date('Y-m-d');
 			$judul = $this->input->post('judul');
-			$isi = $this->input->post('isi');
-			$kat = $this->input->post('kat');
-			$data = $this->m_home->simpan_berita($judul, $isi, $kat, $image);
-			echo json_encode($data);
-		}
+			preg_replace("/[^A-Za-z0-9 ]/", '_', $judul);
+			$config['upload_path'] = "./assets/images";
+			$config['allowed_types'] = 'jpg|jpeg|png|gif';
+			$config['max_size'] = 1000;
+			$config['file_name'] = $tgl . "_" . $judul;
+			$this->load->library('upload', $config);
+			$this->upload->initialize($config);
+			if (!$this->upload->do_upload('file')) {
+				echo $this->upload->display_errors();
+			} else {
+				$arr_image = array('upload_data' => $this->upload->data());
+				$image = $arr_image['upload_data']['file_name'];
+				$judul = $this->input->post('judul');
+				$isi = $this->input->post('isiBerita');
+				$kat = $this->input->post('kategori');
+				$result = $this->m_home->simpan_berita($judul, $isi, $kat, $image);
+				echo json_encode($result);
+				// echo '<img src="' . base_url() . 'upload/' . $data["file_name"] . '" width="300" height="225" class="img-thumbnail" />';
+			}
+		} 
+		// var_dump($_FILES);
+		// $config['upload_path'] = "./assets/images";
+		// $config['allowed_types'] = 'gif|jpg|png';
+		// $config['encrypt_name'] = TRUE;
+		// $this->load->library('upload', $config);
+		// if ($this->simpan_berita('file')) {
+		// 	$data = array('upload_data' => $this->simpan_berita->data());
+		// 	$image = $data['upload_data']['file_name'];
+		// 	var_dump($image);
+			// $judul = $this->input->post('judul');
+			// $isi = $this->input->post('isiBerita');
+			// $kat = $this->input->post('kategori');
+			// $result = $this->m_home->simpan_berita($judul, $isi, $kat, $image);
+			// echo json_encode($result);
+		// }
 	}
 
 
@@ -75,6 +103,7 @@ class Home extends CI_Controller
 		$id = $this->input->post('id');
 		$data = $this->m_home->hapus_berita($id);
 		echo json_encode($data);
+		
 	}
 	
 }

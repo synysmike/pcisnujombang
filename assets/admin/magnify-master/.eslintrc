@@ -1,0 +1,26 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "jquery": true
+  },
+  "ignorePatterns": [
+    "dist",
+    "docs"
+  ],
+  "extends": "eslint:recommended",
+  "rules": {
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "no-extra-boolean-cast": "warn",
+    "no-unused-vars": "warn"
+  }
+}

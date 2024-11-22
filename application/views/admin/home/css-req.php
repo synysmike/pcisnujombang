@@ -17,6 +17,7 @@
 <link href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap4.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/buttons/3.2.0/css/buttons.bootstrap4.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css" rel="stylesheet">
+<link rel="stylesheet" href="<?php echo base_url(); ?>/assets/admin/magnify-master/dist/jquery.magnify.css" />
 
 <!-- Select2 CSS -->
 

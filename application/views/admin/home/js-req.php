@@ -15,7 +15,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- endbuild -->
 
-<!-- Vendors JS -->
+<!-- jq-magnify JS -->
+<script src="<?php echo base_url(); ?>assets/admin/magnify-master/dist/jquery.magnify.js"></script>
 
 <!-- Main JS -->
 <script src="<?php echo base_url(); ?>assets/admin/assets/js/main.js"></script>
@@ -34,8 +35,9 @@
 
 		$('#isiBerita').summernote();
 		$('#kategori').select2({
-			dropdownParent: $("#basicModal")
+			dropdownParent: $("#create")
 		});
+
 		DataTable.ext.buttons.alert = {
 			className: 'buttons-info',
 			action: function(e, dt, node, config) {
@@ -56,7 +58,8 @@
 						text: 'Tambah Berita',
 						className: 'btn btn-success',
 						action: function(e, node, config) {
-							$('#basicModal').modal('show')
+							$('#create').modal('show');
+							$(".modal-title").text("Tambah Data");
 						}
 					}]
 				}
@@ -71,27 +74,61 @@
 					data: 'judul',
 				},
 				{
+					data: 'id_kat',
+				},
+				{
 					data: 'isi',
 				},
 				{
 					data: 'tgl',
 				},
 				{
+					// proses gambar pada datatables
 					data: 'gambar',
+					render: function(data) {
+						// return '<img width="80px" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url(); ?>assets/images/' + data ' src="images/1716811639.png" alt="">';
+						return "<img class='img-thumbnail' data-magnify='gallery' data-src='<?php echo base_url(); ?>assets/images/" + data + "' src='<?php echo base_url(); ?>assets/images/" + data + "' width='80px'>";
+					}
 				},
+
 				{
-					defaultContent: ' <button type="button" class="btn btn-info edit">edit</button><input type="button" class="btn btn-danger hapus" value="hapus"/>'
+					// button aksi(refrensi :https://stackoverflow.com/questions/54930978/datatables-show-column-data-in-modal)
+					render: function(data, type, row) {
+						return '<button class="btn btn-info edit" type="button" >' + "Edit" + '</button> <button class="btn btn-danger hapus" type="button" >' + "Hapus" + '</button>'
+					}
+
 
 				},
 			]
 		});
+
+
+		//gallery_Magnify.js
+		$("[data-magnify=gallery]").magnify(
+			[
+				'zoomIn',
+				'zoomOut',
+				'prev',
+				'fullscreen',
+				'next',
+				'actualSize',
+				'rotateRight'
+			]
+		);
 		// set button dan fungsi edit
 		$('#tabel-berita tbody').on('click', '.edit', function() {
-			// var idmodal = $('#basicModal').attr('id', 'teguh');
-			$('#basicModal').show()
-			// var row = $(this).closest('tr');
-			// var data = table.row(row).data().id;
-			// console.log(idmodal);
+			$('#create').modal('show');
+			$(".modal-title").text("Edit Data");
+			var row = $(this).closest('tr');
+			var judul = table.row(row).data().judul;
+			var isi = table.row(row).data().isi;
+			var kat = table.row(row).data().id_kat;
+			$("#judul").val(judul)
+			$('#isiBerita').summernote('code', isi)
+			$("#kategori").val(kat)
+
+
+
 		});
 
 
@@ -129,41 +166,12 @@
 		});
 
 
-		// $('#submit').submit(function(e) {
-		// 	e.preventDefault();
-		// 	$.ajax({
-		// 		url: "<?php echo base_url('home/simpan_berita') ?>",
-		// 		type: "post",
-		// 		data: new FormData(this),
-		// 		processData: false,
-		// 		contentType: false,
-		// 		cache: false,
-		// 		async: false,
-		// 		success: function(data) {
-		// 			$('[id="judul"]').val("");
-		// 			$('#isiBerita').summernote('reset');
-		// 			$("#kategori").select2("val", "");
-		// 			Swal.fire({
-		// 				title: "Data tersimpan!",
-		// 				text: "Data anda telah tersimpan",
-		// 				icon: "success"
-		// 			});
-		// 			$('#basicModal').modal('hide');
-		// 			$('#tabel-berita').DataTable().ajax.reload();
-		// 		}
-		// 	});
-		// });
 
 
 		// Simpan Barang
 		$('#btn_simpan').on('click', function(e) {
 			e.preventDefault();
-			const form = document.getElementById('submit');
-			const formData = new FormData(form);
-			// var judul = $('#judul').val();
-			// var isi = $('[name="isiBerita"]').val();
-			// var kat = $('#kategori').val();
-			// console.log(isi);
+			const formData = new FormData($('#submit')[0]);
 			$.ajax({
 				type: "POST",
 				url: "<?php echo base_url('home/simpan_berita') ?>",
@@ -171,7 +179,9 @@
 				data: formData,
 				processData: false,
 				contentType: false,
-				success: function(response) {
+				cache: false,
+				async: false,
+				success: function(data) {
 					$('[id="judul"]').val("");
 					$('#isiBerita').summernote('reset');
 					$("#kategori").select2("val", "");
@@ -180,7 +190,7 @@
 						text: "Data anda telah tersimpan",
 						icon: "success"
 					});
-					$('#basicModal').modal('hide');
+					$('#create').modal('hide');
 					$('#tabel-berita').DataTable().ajax.reload();
 				},
 				error: function(xhr, textStatus, errorThrown) {
