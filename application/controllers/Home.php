@@ -51,67 +51,84 @@ class Home extends CI_Controller
 		$data = $this->M_home->get_berita();
 		echo json_encode($data);
 	}
+
+	
 	public function get_berita()
 	{
-		$id = $this->input->get('id');
-		if ($id) {
-			// Fetch data based on the id 
-			$data = $this->M_home->get_berita_by_id($id);
-			echo json_encode($data);
-		} else {
-			echo json_encode(null);
-		}
+		$this->load->model("M_home");
+		$id = $this->input->post('id');
+		$data["results"] = $this->M_home->get_berita_by_id($id);
+		echo json_encode($data["results"]);
 	}
+
+
+
 	function simpan_berita()
 	{
+		$data = $this->input->post();
+		$id = $this->input->post('id');
 
+		if ($id) {
+			// Perform soft delete on the existing record
+			$this->M_home->delTemp_berita($id);
 
-
-		if (isset($_FILES["file"]["name"])) {
-			$tgl = date('Y-m-d');
-			$judul = $this->input->post('judul');
-			preg_replace("/[^A-Za-z0-9 ]/", '_', $judul);
-			$config['upload_path'] = "./assets/images";
-			$config['allowed_types'] = 'jpg|jpeg|png|gif';
-			$config['max_size'] = 1000;
-			$config['file_name'] = $tgl . "_" . $judul;
-			$this->load->library('upload', $config);
-			$this->upload->initialize($config);
-			if (!$this->upload->do_upload('file')) {
-				echo $this->upload->display_errors();
+			// Check if a new file is uploaded
+			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
+				$data['gambar'] = $this->upload_image($this->input->post('judul'));
 			} else {
-				$arr_image = array('upload_data' => $this->upload->data());
-				$image = $arr_image['upload_data']['file_name'];
-				$judul = $this->input->post('judul');
-				$isi = $this->input->post('isiBerita');
-				$kat = $this->input->post('kategori');
-				$result = $this->m_home->simpan_berita($judul, $isi, $kat, $image);
-				echo json_encode($result);
-				// echo '<img src="' . base_url() . 'upload/' . $data["file_name"] . '" width="300" height="225" class="img-thumbnail" />';
+				// Retain the existing image
+				$existing_record = $this->M_home->get_berita_by_id($id);
+				$data['gambar'] = $existing_record->gambar;
 			}
-		} 
-		// var_dump($_FILES);
-		// $config['upload_path'] = "./assets/images";
-		// $config['allowed_types'] = 'gif|jpg|png';
-		// $config['encrypt_name'] = TRUE;
-		// $this->load->library('upload', $config);
-		// if ($this->simpan_berita('file')) {
-		// 	$data = array('upload_data' => $this->simpan_berita->data());
-		// 	$image = $data['upload_data']['file_name'];
-		// 	var_dump($image);
-			// $judul = $this->input->post('judul');
-			// $isi = $this->input->post('isiBerita');
-			// $kat = $this->input->post('kategori');
-			// $result = $this->m_home->simpan_berita($judul, $isi, $kat, $image);
-			// echo json_encode($result);
-		// }
+
+			// Create a new record with the updated values
+			unset($data['id']); // Remove the id from the data array
+			$result = $this->M_home->simpan_berita($data);
+		} else {
+			// Check if a new file is uploaded
+			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
+				$data['gambar'] = $this->upload_image($this->input->post('judul'));
+			}
+
+			// Create new record
+			$result = $this->M_home->simpan_berita($data);
+		}
+
+		echo json_encode($result);
 	}
+
+	private function upload_image($judul)
+	{
+		$tgl = date('Y-m-d');
+		$judul = preg_replace("/[^A-Za-z0-9 ]/", '_', $judul);
+		$config['upload_path'] = "./assets/images";
+		$config['allowed_types'] = 'jpg|jpeg|png|gif';
+		$config['max_size'] = 1000;
+		$config['file_name'] = $tgl . "_" . $judul;
+		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
+
+		if (!$this->upload->do_upload('file')) {
+			return '';
+		} else {
+			$arr_image = array('upload_data' => $this->upload->data());
+			return $arr_image['upload_data']['file_name'];
+		}
+	}
+
+
 
 
 	function hapus_berita()
 	{
 		$id = $this->input->post('id');
-		$data = $this->m_home->hapus_berita($id);
+		$data = $this->M_home->hapus_berita($id);
+		echo json_encode($data);
+	}
+	function delTemp_berita()
+	{
+		$id = $this->input->post('id');
+		$data = $this->M_home->delTemp_berita($id);
 		echo json_encode($data);
 		
 	}

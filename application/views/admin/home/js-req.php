@@ -59,16 +59,20 @@
 						className: 'btn btn-success',
 						action: function(e, node, config) {
 							$('#create').modal('show');
+							$('[id="judul"]').val("");
+							$('#isiBerita').summernote('reset');
+							$("#kategori").select2("val", "");
+							$("#preview").hide();
 							$(".modal-title").text("Tambah Data");
 						}
 					}]
 				}
 			},
-			columns: [
-
-
-				{
-					data: 'id',
+			columns: [{
+					data: null, // Use null data to create a row number column
+					render: function(data, type, row, meta) {
+						return meta.row + 1; // Return the row number
+					}
 				},
 				{
 					data: 'judul',
@@ -86,21 +90,18 @@
 					// proses gambar pada datatables
 					data: 'gambar',
 					render: function(data) {
-						// return '<img width="80px" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url(); ?>assets/images/' + data ' src="images/1716811639.png" alt="">';
 						return "<img class='img-thumbnail' data-magnify='gallery' data-src='<?php echo base_url(); ?>assets/images/" + data + "' src='<?php echo base_url(); ?>assets/images/" + data + "' width='80px'>";
 					}
 				},
-
 				{
 					// button aksi(refrensi :https://stackoverflow.com/questions/54930978/datatables-show-column-data-in-modal)
 					render: function(data, type, row) {
-						return '<button class="btn btn-info edit" type="button" >' + "Edit" + '</button> <button class="btn btn-danger hapus" type="button" >' + "Hapus" + '</button>'
+						return '<button class="btn btn-info edit" type="button" >' + "Edit" + '</button> <button class="btn btn-danger hapus" type="button" >' + "Hapus" + '</button>';
 					}
-
-
 				},
 			]
 		});
+
 
 
 		//gallery_Magnify.js
@@ -117,58 +118,55 @@
 		);
 		// set button dan fungsi edit
 		$('#tabel-berita tbody').on('click', '.edit', function() {
-			$('#create').modal('show');
+
 			$(".modal-title").text("Edit Data");
 			var row = $(this).closest('tr');
 			var id = table.row(row).data().id;
-			$.get("home/get_berita/" + id, function(data) {
-				console.log(data);
-
+			$.ajax({
+				url: "<?php echo base_url('home/get_berita') ?>",
+				dataType: "JSON",
+				data: {
+					'id': id
+				}, // change this to send js object
+				type: "post",
+				success: function(data) {
+					if (data && data.length > 0) {
+						var item = data[0];
+						// Access the first item in the array 
+						// console.log("ID: " + item.id);
+						// Log the id property 
+						$('#create').modal('show');
+						$('#item-id').val(item.id);
+						$("#judul").val(item.judul);
+						$('#isiBerita').summernote('code', item.isi);
+						$("#kategori").val(item.id_kat).trigger('change');
+						if (item.gambar) {
+							$("#preview").show();
+							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/') ?>" + item.gambar);
+						} else {
+							$("#preview").hide();
+							$("#preview-gambar").attr("src", "");
+						}
+						// $("#kategori").val(item.id_kat);
+					} else {
+						console.warn("No data received or data is empty");
+					}
+				}
 			});
 			return false;
 		});
 
 
-		// set button dan fungsi hapus
-		$('#tabel-berita tbody').on('click', '.hapus', function() {
-			var row = $(this).closest('tr');
-			Swal.fire({
-				title: "Apakah anda yakin menghapus data ini?",
-				showDenyButton: true,
-				confirmButtonText: "Yakin",
-				denyButtonText: `Batal`
-			}).then((result) => {
-				/* Read more about isConfirmed, isDenied below */
-				if (result.isConfirmed) {
-					var id = table.row(row).data().id;
-					$.ajax({
-						type: "POST",
-						url: "<?php echo base_url('home/hapus_berita') ?>",
-						dataType: "JSON",
-						data: {
-							id: id
-						},
-						success: function(data) {
-							Swal.fire("Data Terhapus", "", "success");
-							$('#tabel-berita').DataTable().ajax.reload();
-						}
-					});
-					return false;
-
-				} else if (result.isDenied) {
-					Swal.fire("Batal Hapus!", "", "info");
-				}
-			});
-
-		});
-
-
-
-
-		// Simpan Barang
-		$('#btn_simpan').on('click', function(e) {
+		// Simpan Berita
+		$('#item-form').submit(function(e) {
 			e.preventDefault();
-			const formData = new FormData($('#submit')[0]);
+			// Create a FormData object 
+			var formData = new FormData(this);
+			// Add Select2 data 
+			formData.append('kategori', $('#kategori').val());
+			// Add Summernote data 
+			formData.append('isiBerita', $('#isiBerita').summernote('code'));
+
 			$.ajax({
 				type: "POST",
 				url: "<?php echo base_url('home/simpan_berita') ?>",
@@ -200,6 +198,44 @@
 			});
 			return false;
 		});
+		// HAPUS DATA
+		// set button dan fungsi hapus
+		$('#tabel-berita tbody').on('click', '.hapus', function() {
+			var row = $(this).closest('tr');
+			Swal.fire({
+				title: "Apakah anda yakin menghapus data ini?",
+				showDenyButton: true,
+				confirmButtonText: "Yakin",
+				denyButtonText: `Batal`
+			}).then((result) => {
+				/* Read more about isConfirmed, isDenied below */
+				if (result.isConfirmed) {
+					var id = table.row(row).data().id;
+					$.ajax({
+						type: "POST",
+						url: "<?php echo base_url('home/delTemp_berita') ?>",
+						dataType: "JSON",
+						data: {
+							id: id
+						},
+						success: function(data) {
+							Swal.fire("Data Terhapus", "", "success");
+							$('#tabel-berita').DataTable().ajax.reload();
+						}
+					});
+					return false;
+
+				} else if (result.isDenied) {
+					Swal.fire("Batal Hapus!", "", "info");
+				}
+			});
+
+		});
+
+
+
+
+
 
 		//GET HAPUS
 		$('#show_data').on('click', '.item_hapus', function() {

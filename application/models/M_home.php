@@ -19,42 +19,84 @@ class M_home extends CI_Model
 
 	function get_berita()
 	{
-		$hasil = $this->db->query("SELECT * FROM r_berita");
-		return $hasil->result();
+		$this->db->where('soft_deletes IS NULL');
+		$query = $this->db->get('r_berita');
+		return $query->result_array();
 	}
-	function get_berita_by_id($id)
+	public function get_berita_by_id($id)
 	{
-		$id = $id;
-		// var_dump($id);
-		$hsl = $this->db->query("SELECT * FROM r_berita WHERE id='$id'");
-		if ($hsl->num_rows() > 0) {
-			foreach ($hsl->result() as $data) {
-				$hasil = array(
-					'judul' => $data->judul,
-					'isi' => $data->isi,
-					'id_kat' => $data->id_kat,
-					'gambar' => $data->gambar,
-				);
-			}
+		$this->db->select('*');
+		$this->db->from('r_berita');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		if ($query->num_rows() > 0) {
+			return $query->result();
+		} else {
+			return false;
 		}
-		// return $hasil;
 	}
 
-	function simpan_berita($judul, $isi, $kat, $image)
+	function simpan_berita($data)
 	{
 		$id = $this->get_id();
 		$tgl = date('Y-m-d H:i:s');
-		$data = array(
-			'id' => $id,
-			'tgl' => $tgl,
-			'judul' => $judul,
-			'isi' => $isi,
-			'id_kat' => $kat,
-			'gambar' => $image,
-
-		);
+		$slug = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
+		if ($data['gambar']) {
+			$data = array(
+				'id' => $id,
+				'tgl' => $tgl,
+				'judul' => $data['judul'],
+				'isi' => $data['isiBerita'],
+				'id_kat' => $data['kategori'],
+				'gambar' => $data['gambar'],
+				'slug' => $slug,
+			);
+		} else {
+			$data = array(
+				'id' => $id,
+				'tgl' => $tgl,
+				'judul' => $data['judul'],
+				'isi' => $data['isiBerita'],
+				'id_kat' => $data['kategori'],
+				'slug' => $slug,
+			);
+		}
 		// var_dump($data);
 		$result = $this->db->insert('r_berita', $data);
+		return $result;
+	}
+
+
+
+
+	function update_berita($id, $data)
+	{
+		$slug = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
+		$tgl = date('Y-m-d H:i:s');
+		if ($data['gambar']) {
+			$data = array(
+				'id' => $id,
+				'tgl' => $tgl,
+				'tgl' => $tgl,
+				'judul' => $data['judul'],
+				'isi' => $data['isiBerita'],
+				'gambar' => $data['gambar'],
+				'id_kat' => $data['kat'],
+				'slug' => $slug,
+			);
+		} else {
+			$data = array(
+				'id' => $data['id'],
+				'tgl' => $tgl,
+				'judul' => $data['judul'],
+				'isi' => $data['isiBerita'],
+				'id_kat' => $data['kat'],
+				'slug' => $slug,
+			);
+		}
+		// var_dump($data);
+		$this->db->where('id', $id);
+		$result = $this->db->update('r_berita', $data);
 		return $result;
 	}
 
@@ -65,21 +107,51 @@ class M_home extends CI_Model
 	// 	$hasil = $this->db->query("INSERT INTO r_berita (id,judul,isi,id_kat,tgl,soft_deletes)VALUES('$id','$judul','$isi','$kat','$tgl','0')");
 	// 	return $hasil;
 	// }
-	function hapus_berita($id)
-	{
-		// $this->db->select('gambar');
+	function delTemp_berita($id)
+	{ // Get the row with the specified id 
 		$this->db->where('id', $id);
-		$nama_gambar = $this->db->get('r_berita')->row()->gambar;
-		// var_dump($nama_gambar);
-		$path = "./assets/images/" . $nama_gambar;
-		if (file_exists($path)) {
-			// Remove file
-			unlink($path);
-			$hasil = $this->db->query("DELETE FROM r_berita WHERE id='$id'");
+		$query = $this->db->get('r_berita');
+		$row = $query->row();
+		// Check if the row exists 
+		if ($row) {
+			// Perform soft delete by setting the soft_deletes column 
+			$this->db->where('id', $id);
+			$data = array('soft_deletes' => date('Y-m-d H:i:s'));
+			// Set the current timestamp 
+			$hasil = $this->db->update('r_berita', $data);
 			return $hasil;
+		} else {
+
+			// Handle the case where the row does not exist 
+			return false;
 		}
 	}
-
+	function hapus_berita($id)
+	{
+		// Get the row with the specified id 
+		$this->db->where('id', $id);
+		$query = $this->db->get('r_berita');
+		$row = $query->row();
+		// Check if the row exists 
+		if ($row) {
+			$nama_gambar = $row->gambar;
+			// Check if the gambar field is not empty 
+			if ($nama_gambar != "") {
+				$path = "./assets/images/" . $nama_gambar;
+				if (file_exists($path)) {
+					// Remove file 
+					unlink($path);
+				}
+			}
+			// Delete the row from the database 
+			$this->db->where('id', $id);
+			$hasil = $this->db->delete('r_berita');
+			return $hasil;
+		} else {
+			// Handle the case where the row does not exist 
+			return false;
+		}
+	}
 
 	public function get_all($limit, $start)
 	{
