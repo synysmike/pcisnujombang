@@ -2,7 +2,7 @@
 <div class="card">
 	<div class="modal fade" id="create" tabindex="-2" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="form-horizontal" id="item-form" enctype='multipart/form-data'>
+			<form id="item-form" class="form-horizontal" id="submit" enctype='multipart/form-data'>
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>

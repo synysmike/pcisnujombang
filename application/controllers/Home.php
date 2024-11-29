@@ -10,7 +10,10 @@ class Home extends CI_Controller
 		parent::__construct();
 		$this->load->model('M_home');
 	}
-
+	public function login()
+	{
+		$this->load->view('public/login');
+	}
 	
 	public function index()
 	{
@@ -66,6 +69,7 @@ class Home extends CI_Controller
 	function simpan_berita()
 	{
 		$data = $this->input->post();
+		// echo json_encode($data);
 		$id = $this->input->post('id');
 
 		if ($id) {
@@ -80,7 +84,6 @@ class Home extends CI_Controller
 				$existing_record = $this->M_home->get_berita_by_id($id);
 				$data['gambar'] = $existing_record->gambar;
 			}
-
 			// Create a new record with the updated values
 			unset($data['id']); // Remove the id from the data array
 			$result = $this->M_home->simpan_berita($data);
@@ -88,9 +91,8 @@ class Home extends CI_Controller
 			// Check if a new file is uploaded
 			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
 				$data['gambar'] = $this->upload_image($this->input->post('judul'));
-			}
-
-			// Create new record
+				// echo json_encode($data);
+			} 
 			$result = $this->M_home->simpan_berita($data);
 		}
 
