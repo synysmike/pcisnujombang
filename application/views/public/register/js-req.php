@@ -13,7 +13,7 @@
 <!-- Isotope Filter -->
 <script src="<?php echo base_url(); ?>assets/public/assets/js/imagesloaded.pkgd.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/public/assets/js/isotope.pkgd.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- Main Js File -->
 <script src="<?php echo base_url(); ?>assets/public/assets/js/main.js"></script>
 

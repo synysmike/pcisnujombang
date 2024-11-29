@@ -9,3 +9,4 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/public/assets/css/swiper-bundle.min.css">
 <!-- Theme Custom CSS -->
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/public/assets/css/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
