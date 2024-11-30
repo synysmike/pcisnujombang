@@ -15,9 +15,18 @@
 
 <!-- Main Js File -->
 <script src="<?php echo base_url(); ?>assets/public/assets/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
 
+</script>
 <script>
 	$(document).ready(function() {
+		<?php if ($this->session->flashdata('login_success')): ?> Swal.fire({
+				icon: 'success',
+				title: 'Success',
+				text: '<?php echo $this->session->flashdata('login_success'); ?>'
+			});
+		<?php endif; ?>
 		$('#register').on('click', function(e) {
 			e.preventDefault();
 			const form = document.getElementById('submit');

@@ -8,6 +8,7 @@ class Registrasi extends CI_Controller
 		parent::__construct();
 		$this->load->model('M_user');
 		$this->load->database();
+		$this->load->helper('auth'); // Load the auth helper
 	}
 
 	public function get_kabkota()
@@ -70,8 +71,25 @@ class Registrasi extends CI_Controller
 					// Set session data
 					$this->session->set_userdata('user_id', $user->id);
 					$this->session->set_userdata('username', $user->username);
-					$this->session->set_userdata('user_level', $user->id_level); // Include user level in session
-					echo json_encode(array('status' => 'success'));
+					$this->session->set_userdata('user_level', $user->id_level);
+					// Include user level in session
+					// Redirect based on user level 
+					// Redirect based on user level 
+					switch ($user->id_level) {
+						case 1:
+							$redirect_url = 'home';
+							break;
+						case 2:
+							$redirect_url = 'registrasi';
+							break;
+						case 3:
+							$redirect_url = 'user';
+							break;
+						default:
+							$redirect_url = 'dashboard';
+							break;
+					}
+					echo json_encode(array('status' => 'success', 'redirect_url' => site_url($redirect_url)));
 				} else {
 					echo json_encode(array('status' => 'not_approved'));
 				}
@@ -82,7 +100,14 @@ class Registrasi extends CI_Controller
 			echo json_encode(array('status' => 'error', 'message' => 'User not found'));
 		}
 	}
-	
+
+	public function logout()
+	{
+		// Destroy the session 
+		$this->session->sess_destroy();
+		// Redirect to the login page 
+		redirect('home/login');
+	}
 
 	public function ordal()
 	{

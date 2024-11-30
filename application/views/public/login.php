@@ -261,13 +261,13 @@
 									title: 'Success',
 									text: 'Login successful!'
 								}).then(function() {
-									window.location.href = '<?php echo site_url('home'); ?>';
+									window.location.href = response.redirect_url;
 								});
 							} else if (response.status === 'not_approved') {
 								Swal.fire({
 									icon: 'warning',
 									title: 'Not Approved',
-									text: 'Your account is not yet approved. Please contact support.'
+									text: 'Akun anda belum ter-"Approve", Silahkan menghubungi admin untuk dilakukan approval'
 								});
 							} else {
 								Swal.fire({

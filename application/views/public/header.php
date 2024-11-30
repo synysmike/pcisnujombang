@@ -80,12 +80,24 @@
 								<?php $seg =  $this->uri->segment(1);
 								// echo $seg;
 								if ($seg == "" or $seg == "home") {
+
 								?>
-							<li><a href="#about-sec">About Us</a></li>
-							<li><a href="#donation-sec">Donations</a></li>
-							<li><a href="#service-sec">Service</a></li>
-							<li><a href="#blog-sec">Blog</a></li>
+									<!-- <li><a href="#about-sec">About Us</a></li> -->
+							<li><a href="#donation-sec">Visi/Misi</a></li>
+							<li><a href="#service-sec">Galeri</a></li>
+							<li><a href="#blog-sec">Berita</a></li>
+							<?php
+									if ($this->session->userdata('user_id')):
+							?>
+								<li><a href="<?php echo site_url('registrasi/logout'); ?>">Logout</a></li>
+
+							<?php else: ?>
+								<li>
+									<a href="<?php echo base_url() . 'registrasi' ?>">Registrasi Anggota</a>
+								</li>
+
 						<?php
+									endif;
 								} else {
 									echo "";
 								}
@@ -93,9 +105,7 @@
 						</li>
 
 
-						<li>
-							<a href="<?php echo base_url() . 'registrasi' ?>">Registrasi Anggota</a>
-						</li>
+
 						</ul>
 					</nav>
 					<p class="header-notice"><img class="me-1" src="<?php echo base_url(); ?>assets/public/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p>

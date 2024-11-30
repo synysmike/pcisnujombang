@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Home extends CI_Controller
+class Home extends My_Controller
 {
 	public $data         = array();
 
@@ -12,7 +12,19 @@ class Home extends CI_Controller
 	}
 	public function login()
 	{
-		$this->load->view('public/login');
+		$sess = $this->session->userdata('user_id');
+		if ($sess) {
+			$this->db->where('id', $sess);
+			$query = $this->db->get('r_user'); // Assuming your table name is 'users' 
+			$userdata =  $query->row();
+			// Set flash data for Swal notification 
+			$this->session->set_flashdata('login_success', 'Anda Sudah login - Sdr. ' . $userdata->username);
+			// Redirect to the dashboard if the user is already logged in 
+			redirect('home');
+		} else {
+
+			$this->load->view('public/login');
+		}
 	}
 	
 	public function index()
@@ -42,6 +54,7 @@ class Home extends CI_Controller
 	}
 	public function ordal()
 	{
+		$this->check_user_level([2, 3, 4]);
 		$this->data['js'] = 'admin/home/js-req';
 		$this->data['css'] = 'admin/home/css-req';
 		$this->data['ct'] = 'admin/home/home';
