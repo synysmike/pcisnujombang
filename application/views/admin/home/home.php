@@ -1,4 +1,62 @@
 <!-- Basic DataTable -->
+
+
+<div class="card">
+	<div class="modal fade" id="createCategory" tabindex="-2" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<form id="category-form" class="form-horizontal" id="submit" enctype='multipart/form-data'>
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel2">Tambah Kategori</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="row mb-3">
+							<div class="col mb-6">
+								<label for="categoryName" class="form-label">Nama Kategori</label>
+								<input type="text" id="categoryName" name="categoryName" class="form-control" placeholder="Masukan Nama Kategori">
+								<input type="hidden" name="id" id="category-id">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col mb-6">
+								<label for="categoryDescription" class="form-label">Deskripsi Kategori</label>
+								<textarea name="categoryDescription" id="categoryDescription" class="form-control" placeholder="Masukan Deskripsi Kategori"></textarea>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col">
+								<table id="tabel-kategori" class="table table-striped table-bordered">
+									<thead>
+										<tr>
+											<th>#</th>
+											<th>Nama Kategori</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- Data will be populated by DataTables -->
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+						<button id="btn_simpan_kategori" type="submit" class="btn btn-primary">Simpan Kategori</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+
 <div class="card">
 	<div class="modal fade" id="create" tabindex="-2" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -31,12 +89,12 @@
 						</div>
 						<div class="row">
 							<div class="col md-6">
-								<label for="kategori" class="form-label">Pilih Kategori</label>
-								<select class="form-select" name="kategori" id="kategori" aria-label="Multiple select example">
-									<option selected="">Open this select menu</option>
-									<option value="1">One</option>
-									<option value="2">Two</option>
-									<option value="3">Three</option>
+								<label for="kategori" class="form-label">Pilih Kategori
+
+								</label>
+								<select class="form-select select2" name="kategori" id="kategori" aria-label="Multiple select example">
+									<!-- Options will be populated by JavaScript -->
+									<option value="" disabled selected>-- Pilih Kategori --</option>
 								</select>
 							</div>
 							<div class="col md-6">

@@ -35,7 +35,24 @@
 
 		$('#isiBerita').summernote();
 		$('#kategori').select2({
-			dropdownParent: $("#create")
+			placeholder: 'Pilih Kategori',
+			allowClear: true
+		});
+		// Fetch kategori data and populate the Select2 dropdown 
+		$.ajax({
+			url: '<?php echo base_url("kategori/get_all_kategori") ?>',
+			type: 'post',
+			success: function(data) {
+				var categories = JSON.parse(data);
+				categories.forEach(function(category) {
+					var option = new Option(category.kategori, category.id, false, false);
+					$('#kategori').append(option).trigger('change');
+				});
+			},
+			error: function(xhr, status, error) {
+				console.error("AJAX Error:", status, error);
+				// Log any AJAX errors 
+			}
 		});
 
 		DataTable.ext.buttons.alert = {
@@ -45,7 +62,141 @@
 			}
 		};
 
-		// Datatables AJAX
+		var tableKategori = $('#tabel-kategori').DataTable({
+			ajax: {
+				url: '<?php echo base_url("kategori/get_all_kategori") ?>',
+				type: 'post',
+				dataSrc: '',
+			},
+
+			columns: [{
+				data: null,
+				// Use null data to create a row number column 
+				render: function(data, type, row, meta) {
+					return meta.row + 1;
+					// Return the row number 
+				}
+			}, {
+				data: 'kategori',
+			}, {
+				render: function(data, type, row) {
+					return '<button class="btn btn-warning edit-category" type="button" data-id="' + row.id + '">' + "Edit" + '</button> ' + '<button class="btn btn-danger delete-category" type="button" data-id="' + row.id + '">' + "Delete" + '</button>';
+				}
+			}, ]
+		});
+
+		// Handle edit and delete actions 
+		$('#tabel-kategori').on('click', '.edit-category', function() {
+			var id = $(this).data('id');
+			// Fetch category data and populate the form fields
+			$.ajax({
+				url: '<?php echo base_url("kategori/get_kategori_by_id") ?>/' + id,
+				type: 'get',
+				success: function(data) {
+					console.log("Data received:", data);
+					// Log the received data 
+					if (data) {
+						$('#category-id').val(data.id);
+						$('#categoryName').val(data.kategori);
+						// Ensure this matches the key in your response
+						$('#categoryDescription').val(data.description);
+						console.log("Form fields updated");
+						// Log form field updates
+					} else {
+						console.error("No data received");
+					}
+				},
+				error: function(xhr, status, error) {
+					console.error("AJAX Error:", status, error);
+					// Log any AJAX errors 
+				}
+			});
+		});
+
+		$('#tabel-kategori').on('click', '.delete-category', function() {
+			var id = $(this).data('id');
+			if (confirm('Anda yakin ingin menghapus kategori ini?')) {
+				$.ajax({
+					url: '<?php echo base_url("kategori/delete") ?>/' + id,
+					type: 'post',
+					success: function(response) {
+						var data = JSON.parse(response);
+						if (data.status === 'success') {
+							swal({
+								title: "Success!",
+								text: data.message,
+								icon: "success",
+								button: "OK",
+							}).then(() => {
+								tableKategori.ajax.reload();
+							});
+						} else {
+							swal({
+								title: "Error!",
+								text: data.message,
+								icon: "error",
+								button: "OK",
+							});
+						}
+					},
+					error: function(xhr, status, error) {
+						console.error("AJAX Error:", status, error);
+						// Log any AJAX errors 
+						swal({
+							title: "Error!",
+							text: "An error occurred while processing your request.",
+							icon: "error",
+							button: "OK",
+						});
+					}
+				});
+			}
+		});
+
+
+		// Handle form submission for creating categories 
+		$('#category-form').on('submit', function(e) {
+			e.preventDefault();
+			$.ajax({
+				url: '<?php echo base_url("kategori/store") ?>',
+				type: 'post',
+				data: $(this).serialize(),
+				success: function() {
+					$('#createCategory').modal('hide');
+					tableKategori.ajax.reload();
+				}
+			});
+		});
+		// Handle form submission for editing categories 
+		$('#edit-category-form').on('submit', function(e) {
+			e.preventDefault();
+			var id = $('#edit-category-id').val();
+			$.ajax({
+				url: '<?php echo base_url("kategori/update") ?>/' + id,
+				type: 'post',
+				data: $(this).serialize(),
+				success: function() {
+					$('#editCategory').modal('hide');
+					tableKategori.ajax.reload();
+				}
+			});
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		// Datatables AJAX Berita
 		var table = $('#tabel-berita').DataTable({
 			ajax: {
 				url: '<?php echo base_url("home/get_all_berita") ?>',
@@ -55,17 +206,28 @@
 			layout: {
 				topStart: {
 					buttons: [{
-						text: 'Tambah Berita',
-						className: 'btn btn-success',
-						action: function(e, node, config) {
-							$('#create').modal('show');
-							$('[id="judul"]').val("");
-							$('#isiBerita').summernote('reset');
-							$("#kategori").select2("val", "");
-							$("#preview").hide();
-							$(".modal-title").text("Tambah Data");
+							text: 'Tambah Berita',
+							className: 'btn btn-success',
+							action: function(e, node, config) {
+								$('#create').modal('show');
+								$('[id="judul"]').val("");
+								$('#isiBerita').summernote('reset');
+								$("#kategori").select2("val", "");
+								$("#preview").hide();
+								$(".modal-title").text("Tambah Data");
+							}
+						},
+						{
+							text: 'Tambah Kategori', // Add Category Button
+							className: 'btn btn-secondary',
+							action: function(e, node, config) {
+								$('#createCategory').modal('show'); // Assuming you have a modal for adding categories
+								$('[id="categoryName"]').val("");
+								$('[id="categoryDescription"]').val("");
+								$(".modal-title").text("Tambah Kategori");
+							}
 						}
-					}]
+					]
 				}
 			},
 			columns: [{
@@ -78,7 +240,7 @@
 					data: 'judul',
 				},
 				{
-					data: 'id_kat',
+					data: 'kategori_nama',
 				},
 				{
 					data: 'isi',
@@ -101,6 +263,7 @@
 				},
 			]
 		});
+
 
 
 

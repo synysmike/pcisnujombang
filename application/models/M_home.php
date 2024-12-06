@@ -19,9 +19,12 @@ class M_home extends CI_Model
 
 	function get_berita()
 	{
-		$this->db->where('soft_deletes IS NULL');
-		$query = $this->db->get('r_berita');
-		return $query->result_array();
+		$this->db->select('r_berita.*, m_kategori.kategori as kategori_nama');
+		$this->db->from('r_berita');
+		$this->db->join('m_kategori', 'r_berita.id_kat = m_kategori.id');
+		$this->db->where('r_berita.soft_deletes IS NULL');
+		$query = $this->db->get();
+		return $query->result();
 	}
 	public function get_berita_by_id($id)
 	{
