@@ -1,5 +1,44 @@
 <!-- Basic DataTable -->
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		background-color: #f8f9fa;
+		margin: 0;
+		padding: 20px;
+	}
 
+	.card {
+		background-color: #fff;
+		border: 1px solid #dee2e6;
+		border-radius: 0.25rem;
+		box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+		padding: 20px;
+		margin-bottom: 20px;
+	}
+
+	.card-datatable {
+		overflow-x: auto;
+	}
+
+	.actions {
+		display: flex;
+		gap: 10px;
+	}
+
+	.dataTables_wrapper .dataTables_filter {
+		float: right;
+		text-align: right;
+	}
+
+	.dataTables_wrapper .dataTables_paginate {
+		float: right;
+		text-align: right;
+	}
+
+	.dataTables_wrapper .dataTables_info {
+		float: left;
+	}
+</style>
 
 <div class="card">
 	<div class="modal fade" id="createCategory" tabindex="-2" aria-hidden="true">
@@ -119,7 +158,7 @@
 				<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
 					<div class="card">
 						<div class="card-datatable table-responsive pt-0">
-							<table id="tabel-berita" class="datatables-basic table border-top">
+							<table id="tabel-berita" class="display responsive nowrap">
 								<thead>
 									<tr>
 										<th>no</th>

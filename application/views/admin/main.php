@@ -64,7 +64,7 @@
 							<div class="DocSearch-content col-12 col-xl-12 container-p-y">
 
 								<!-- Content wrapper -->
-								<hr class="my-12" />
+								<!-- <hr class="my-12" /> -->
 
 								<?php $ct = $ct;
 								$this->load->view($ct); ?>
