@@ -112,11 +112,11 @@
 				<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
 					<div class="card">
 						<div class="card-datatable table-responsive pt-0">
-							<table id="tabel-user" class="datatables-basic table border-top">
+							<table id="tabel-user" class="display responsive nowrap">
 								<thead>
 									<tr>
 										<th>No</th>
-										<th>ID</th>
+										<th>id</th>
 										<th>Nama</th>
 										<th>Username</th>
 										<th>Email</th>
