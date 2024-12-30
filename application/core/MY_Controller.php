@@ -9,7 +9,7 @@ class MY_Controller extends CI_Controller
 	{
 		$user_level = $this->session->userdata('user_level');
 		if (!in_array($user_level, $allowed_levels)) {
-			redirect('home/login');
+			redirect('login');
 			// ok
 		}
 	}

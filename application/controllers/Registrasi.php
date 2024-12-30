@@ -58,56 +58,7 @@ class Registrasi extends CI_Controller
 	}
 
 
-	public function login()
-	{
-		$username = $this->input->post('username');
-		$password = $this->input->post('password');
-
-		$user = $this->M_user->get_user_by_username($username);
-
-		if ($user) {
-			if (password_verify($password, $user->password)) {
-				if ($user->status === 'Approved') {
-					// Set session data
-					$this->session->set_userdata('user_id', $user->id);
-					$this->session->set_userdata('username', $user->username);
-					$this->session->set_userdata('user_level', $user->id_level);
-					// Include user level in session
-					// Redirect based on user level 
-					// Redirect based on user level 
-					switch ($user->id_level) {
-						case 1:
-							$redirect_url = 'home';
-							break;
-						case 2:
-							$redirect_url = 'registrasi';
-							break;
-						case 3:
-							$redirect_url = 'user';
-							break;
-						default:
-							$redirect_url = 'dashboard';
-							break;
-					}
-					echo json_encode(array('status' => 'success', 'redirect_url' => site_url($redirect_url)));
-				} else {
-					echo json_encode(array('status' => 'not_approved'));
-				}
-			} else {
-				echo json_encode(array('status' => 'error', 'message' => 'Invalid password'));
-			}
-		} else {
-			echo json_encode(array('status' => 'error', 'message' => 'User not found'));
-		}
-	}
-
-	public function logout()
-	{
-		// Destroy the session 
-		$this->session->sess_destroy();
-		// Redirect to the login page 
-		redirect('home/login');
-	}
+	
 
 	public function ordal()
 	{

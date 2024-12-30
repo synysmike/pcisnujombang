@@ -602,20 +602,22 @@
 
 
 	<ul class="menu-inner py-1">
-		<!-- Home -->
-		<li class="menu-item">
-			<a href="<?php echo site_url('home/ordal'); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-home"></i>
-				<div class="text-truncate" data-i18n="Home">Home</div>
-			</a>
-		</li>
-		<!-- Berita -->
-		<li class="menu-item">
-			<a href="<?php echo site_url(''); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-news"></i>
-				<div class="text-truncate" data-i18n="Berita">Berita</div>
-			</a>
-		</li>
+		<?php if (in_array($this->session->userdata('user_level'), [2, 3, 4])): ?>
+			<!-- Home -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('home/ordal'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-home"></i>
+					<div class="text-truncate" data-i18n="Home">Home</div>
+				</a>
+			</li>
+			<!-- Berita -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('berita/ordal'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-news"></i>
+					<div class="text-truncate" data-i18n="Berita">Berita</div>
+				</a>
+			</li>
+		<?php endif; ?>
 		<!-- Profile -->
 		<li class="menu-item">
 			<a href="<?php echo site_url('profil'); ?>" class="menu-link">
@@ -630,34 +632,50 @@
 				<div class="text-truncate" data-i18n="Kontak">Kontak</div>
 			</a>
 		</li>
-		<!-- Anggota -->
-		<li class="menu-item">
-			<a href="<?php echo site_url('anggota'); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-group"></i>
-				<div class="text-truncate" data-i18n="Anggota">Anggota</div>
-			</a>
-		</li>
-		<!-- Jabatan -->
-		<li class="menu-item">
-			<a href="<?php echo site_url('jabatan'); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-briefcase"></i>
-				<div class="text-truncate" data-i18n="Jabatan">Jabatan</div>
-			</a>
-		</li>
-		<!-- User -->
-		<li class="menu-item">
-			<a href="<?php echo site_url('user'); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-user"></i>
-				<div class="text-truncate" data-i18n="User">User</div>
-			</a>
-		</li>
-		<!-- Galeri -->
-		<li class="menu-item">
-			<a href="<?php echo site_url('galeri'); ?>" class="menu-link">
-				<i class="menu-icon tf-icons bx bx-image"></i>
-				<div class="text-truncate" data-i18n="Galeri">Galeri</div>
-			</a>
-		</li>
+		<?php if (in_array($this->session->userdata('user_level'), [3, 4])): ?>
+			<!-- Anggota -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('anggota'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-group"></i>
+					<div class="text-truncate" data-i18n="Anggota">Anggota</div>
+				</a>
+			</li>
+			<!-- Jabatan -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('jabatan'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-briefcase"></i>
+					<div class="text-truncate" data-i18n="Jabatan">Jabatan</div>
+				</a>
+			</li>
+			<!-- Galeri -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('galeri'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-image"></i>
+					<div class="text-truncate" data-i18n="Galeri">Galeri</div>
+				</a>
+			</li>
+		<?php endif; ?>
+		<?php if (in_array($this->session->userdata('user_level'), [4])): ?>
+			<!-- User -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('user'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-user"></i>
+					<div class="text-truncate" data-i18n="User">User</div>
+				</a>
+			</li>
+
+		<?php endif; ?>
+		<?php if (in_array($this->session->userdata('user_level'), [2, 3, 4])): ?>
+			<!-- User -->
+			<li class="menu-item">
+				<a href="<?php echo site_url('logout'); ?>" class="menu-link">
+					<i class="menu-icon tf-icons bx bx-log-out"></i>
+					<div class="text-truncate" data-i18n="Logout">Logout</div>
+				</a>
+			</li>
+
+		<?php endif; ?>
 	</ul>
+
 
 </aside>

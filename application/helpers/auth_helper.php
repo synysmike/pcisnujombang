@@ -12,7 +12,7 @@ if (!function_exists('check_user_level')) {
 		$CI = &get_instance();
 		$user_level = $CI->session->userdata('user_level');
 		if ($user_level !== $required_level) {
-			redirect('registrasi/login');
+			redirect('berita');
 		}
 	}
 }

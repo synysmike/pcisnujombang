@@ -89,7 +89,7 @@
 							<?php
 									if ($this->session->userdata('user_id')):
 							?>
-								<li><a href="<?php echo site_url('registrasi/logout'); ?>">Logout</a></li>
+								<li><a href="<?php echo site_url('logout'); ?>">Logout</a></li>
 
 							<?php else: ?>
 								<li>

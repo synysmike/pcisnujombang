@@ -250,7 +250,7 @@
 					e.preventDefault(); // Prevent the default form submission
 
 					$.ajax({
-						url: '<?php echo site_url('registrasi/login'); ?>',
+						url: '<?php echo site_url('auth/login'); ?>',
 						type: 'POST',
 						data: $(this).serialize(),
 						dataType: 'json', // Ensure the response is parsed as JSON
