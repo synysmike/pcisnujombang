@@ -30,4 +30,30 @@ class M_home extends CI_Model
 		// dump($start);
 		return $query->result_array();
 	}
+
+	public function get_by_id($id)
+	{
+		$this->db->select('*');
+		$this->db->from('info');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+
+	public function insert_info($data)
+	{
+		return $this->db->insert('info', $data);
+	}
+
+	public function update_info($id, $data)
+	{
+		$this->db->where('id', $id);
+		return $this->db->update('info', $data);
+	}
+
+	public function delete_info($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->delete('info');
+	}
 }
