@@ -53,9 +53,96 @@ class Home extends My_Controller
 
 	public function set_config()
 	{
-
 		$this->M_home->get_config();
 	}
+
+	public function get_config($id)
+	{
+		$config = $this->M_home->get_config_by_id($id);
+		echo json_encode($config);
+	}
+	public function get_all_config()
+	{
+		$configs = $this->M_home->get_config();
+		echo json_encode($configs);
+	}
+
+	public function create()
+	{
+		$section = $this->input->post('section');
+		$carousel = $this->input->post('carousel');
+
+		$data = array(
+			'config_profile_name' => $this->input->post('nama_config'),
+			'alamat' => $this->input->post('alamat'),
+			'kontak' => $this->input->post('kontak'),
+			'email' => $this->input->post('email'),
+			'date_of_creation' => date('Y-m-d H:i:s'),
+			'array_of_id_section' => is_array($section) ? implode(',', $section) : $section, // Convert array to comma-separated string
+			'array_of_id_carousel' => is_array($carousel) ? implode(',', $carousel) : $carousel, // Convert array to comma-separated string
+			'color_1' => $this->input->post('color_1'),
+			'color_2' => $this->input->post('color_2')
+		);
+
+		// Insert the data into the database
+		$this->M_home->insert($data);
+
+		// Return a JSON response
+		echo json_encode(array('status' => 'success'));
+	}
+
+	public function edit($id)
+	{
+		$section = $this->input->post('section');
+		$carousel = $this->input->post('carousel');
+
+		$data = array(
+			'config_profile_name' => $this->input->post('nama_config'),
+			'alamat' => $this->input->post('alamat'),
+			'kontak' => $this->input->post('kontak'),
+			'email' => $this->input->post('email'),
+			'array_of_id_section' => is_array($section) ? implode(',', $section) : $section, // Convert array to comma-separated string
+			'array_of_id_carousel' => is_array($carousel) ? implode(',', $carousel) : $carousel, // Convert array to comma-separated string
+			'color_1' => $this->input->post('color_1'),
+			'color_2' => $this->input->post('color_2')
+		);
+
+		// Update the data in the database
+		$this->M_home->update_config($id, $data);
+
+		// Return a JSON response
+		echo json_encode(array('status' => 'success'));
+	}
+	public function delete($id)
+	{
+		$this->M_home->soft_delete($id);
+		echo json_encode(array('status' => 'success'));
+	}
+
+	public function read()
+	{
+		$this->data['records'] = $this->M_home->get_all();
+		$this->load->view('admin/main', $this->data);
+	}
+
+	public function update($id)
+	{
+		$data = array(
+			'title' => $this->input->post('title'),
+			'content' => $this->input->post('content')
+		);
+		$this->M_home->update($id, $data);
+		redirect('home/ordal');
+	}
+
+
+
+	public function get_all_carousels()
+	{
+		$carousels = $this->M_carousel->get_all();
+		echo json_encode(['data' => $carousels]);
+	}
+
 	public function store_carousel()
 	{
 		$config['upload_path'] = './uploads/';
@@ -64,7 +151,7 @@ class Home extends My_Controller
 
 		if (!$this->upload->do_upload('picture')) {
 			$error = array('error' => $this->upload->display_errors());
-			$this->load->view('admin/home/create_carousel', $error);
+			echo json_encode($error);
 		} else {
 			$upload_data = $this->upload->data();
 			$data = array(
@@ -73,14 +160,14 @@ class Home extends My_Controller
 				'picture' => $upload_data['file_name']
 			);
 			$this->M_carousel->insert($data);
-			redirect('home/ordal');
+			echo json_encode(array('status' => 'success'));
 		}
 	}
 
 	public function edit_carousel($id)
 	{
-		$this->data['carousel'] = $this->M_carousel->get($id);
-		$this->load->view('admin/home/edit_carousel', $this->data);
+		$carousel = $this->M_carousel->get($id);
+		echo json_encode($carousel);
 	}
 
 	public function update_carousel($id)
@@ -108,40 +195,6 @@ class Home extends My_Controller
 	public function delete_carousel($id)
 	{
 		$this->M_carousel->delete($id);
-		redirect('home/ordal');
-	}
-
-
-
-	public function create()
-	{
-		$data = array(
-			'title' => $this->input->post('title'),
-			'content' => $this->input->post('content')
-		);
-		$this->M_home->insert($data);
-		redirect('home/ordal');
-	}
-
-	public function read()
-	{
-		$this->data['records'] = $this->M_home->get_all();
-		$this->load->view('admin/main', $this->data);
-	}
-
-	public function update($id)
-	{
-		$data = array(
-			'title' => $this->input->post('title'),
-			'content' => $this->input->post('content')
-		);
-		$this->M_home->update($id, $data);
-		redirect('home/ordal');
-	}
-
-	public function delete($id)
-	{
-		$this->M_home->delete($id);
 		redirect('home/ordal');
 	}
 	

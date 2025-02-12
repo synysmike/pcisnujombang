@@ -14,4 +14,3 @@
 <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.css" rel="stylesheet">
 <link rel="stylesheet" href="<?php echo base_url(); ?>/assets/admin/magnify-master/dist/jquery.magnify.css" />
 <script src="<?php echo base_url(); ?>assets/admin/assets/vendor/js/helpers.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/js/config.js"></script>

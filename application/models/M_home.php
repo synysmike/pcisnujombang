@@ -16,9 +16,36 @@ class M_home extends CI_Model
 		$char3 = random_string('alpha', 1);
 		return $char1 . $char2 . $char3;
 	}
+	public function get_config()
+	{
+		$this->db->select('*');
+		$this->db->from('r_home_config');
+		$this->db->where('softdeletes_date IS NULL');
+		$query = $this->db->get();
+		return [
+			"data" => $query->result_array()
+		];
+	}
 
-	
+	public function get_config_by_id($id)
+	{
+		$this->db->select('*');
+		$this->db->from('r_home_config');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+	public function update_config($id, $data)
+	{
+		$this->db->where('id', $id);
+		return $this->db->update('r_home_config', $data);
+	}
 
+	public function soft_delete($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->update('r_home_config', ['softdeletes_date' => date('Y-m-d H:i:s')]);
+	}
 	public function get_all($limit, $start)
 	{
 		$this->db->select('*, ambil_total_berita(url) jumlah_visitor');
@@ -40,18 +67,18 @@ class M_home extends CI_Model
 		return $query->row_array();
 	}
 
-	public function insert_info($data)
+	public function insert($data)
 	{
-		return $this->db->insert('info', $data);
+		return $this->db->insert('r_home_config', $data);
 	}
 
-	public function update_info($id, $data)
+	public function update($id, $data)
 	{
 		$this->db->where('id', $id);
 		return $this->db->update('info', $data);
 	}
 
-	public function delete_info($id)
+	public function delete($id)
 	{
 		$this->db->where('id', $id);
 		return $this->db->delete('info');
