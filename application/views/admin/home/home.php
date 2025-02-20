@@ -30,8 +30,54 @@
 	</div>
 </div>
 <!-- Modal -->
+<div class="modal fade" id="sectionModal" tabindex="-1" role="dialog" aria-labelledby="sectionModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="sectionModalLabel">Section Information</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form id="sectionForm">
+					<div class="form-group">
+						<label for="section_name">Section Name</label>
+						<input type="text" class="form-control" id="section_name" name="section_name" required>
+					</div>
+					<div class="form-group">
+						<label for="section_content">Section Content</label>
+						<textarea class="form-control summernote" id="section_content" name="section_content" required></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-primary" form="sectionForm">Save changes</button>
+					</div>
+				</form>
+
+				<div class="card mt-4">
+					<div class="card-datatable table-responsive pt-0">
+						<table id="sectionTable" class="table table-striped table-bordered" style="width:100%">
+							<thead>
+								<tr>
+									<th>No.</th>
+									<th>Section Name</th>
+									<th>Section Content</th>
+									<th>Created_at</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- Modal -->
 <div class="modal fade" id="carouselModal" tabindex="-1" role="dialog" aria-labelledby="carouselModalLabel" aria-hidden="true">
-	<div class="modal-dialog" role="document">
+	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h5 class="modal-title" id="carouselModalLabel">Carousel Information</h5>
@@ -52,19 +98,24 @@
 					<div class="form-group">
 						<label for="picture">Images</label>
 						<input type="file" class="form-control" id="picture" name="picture" required>
+						<img id="carouselImage" src="#" alt="Carousel Image" style="display:none; width: 100px; height: auto; margin-top: 10px;">
 					</div>
+
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary" form="carouselForm">Save changes</button>
 					</div>
 				</form>
+
 				<div class="card mt-4">
 					<div class="card-datatable table-responsive pt-0">
 						<table id="carouselTable" class="table table-striped table-bordered" style="width:100%">
 							<thead>
 								<tr>
+									<th>No.</th>
 									<th>Carousel Name</th>
 									<th>Description</th>
 									<th>Images</th>
+									<th>Created_at</th>
 									<th>Action</th>
 								</tr>
 							</thead>
@@ -117,9 +168,7 @@
 					<div class="form-group">
 						<label for="section">Section</label>
 						<select class="form-control select2" id="section" name="section[]" multiple="multiple" required>
-							<option value="section1">Section 1</option>
-							<option value="section2">Section 2</option>
-							<option value="section3">Section 3</option>
+
 						</select>
 					</div>
 					<div class="form-group">

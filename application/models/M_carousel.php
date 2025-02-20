@@ -6,6 +6,7 @@ class M_carousel extends CI_Model
 
 	public function get_all()
 	{
+		$this->db->where('softdeletes_date IS NULL');
 		return $this->db->get('m_carousel')->result();
 	}
 
@@ -16,7 +17,7 @@ class M_carousel extends CI_Model
 
 	public function insert($data)
 	{
-		$this->db->insert('m_carousel', $data);
+		return $this->db->insert('m_carousel', $data);
 	}
 
 	public function update($id, $data)
@@ -28,6 +29,6 @@ class M_carousel extends CI_Model
 	public function delete($id)
 	{
 		$this->db->where('id', $id);
-		$this->db->delete('m_carousel');
+		return $this->db->update('m_carousel', ['softdeletes_date' => date('Y-m-d H:i:s')]);
 	}
 }

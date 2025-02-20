@@ -35,12 +35,70 @@ class M_home extends CI_Model
 		$query = $this->db->get();
 		return $query->row_array();
 	}
+
+
+
+
+
+	public function get_all_sections()
+	{
+		$this->db->select('*');
+		$this->db->from('r_section');
+		$this->db->where('softdeletes_date IS NULL');
+		$query = $this->db->get();
+		return [
+			"data" => $query->result_array()
+		];
+	}
+
+	public function insert_section($data)
+	{
+		$this->db->insert('r_section', $data);
+		return $this->db->insert_id();
+	}
+
+	public function get_section_by_id($id)
+	{
+		$this->db->select('*');
+		$this->db->from('r_section');
+		$this->db->where('id', $id);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+	public function soft_delete_section($id)
+	{
+		$this->db->where('id', $id);
+		return $this->db->update('r_section', ['softdeletes_date' => date('Y-m-d H:i:s')]);
+	}
+	public function update_section($id, $data)
+	{
+		// Soft delete the existing section
+		$this->db->where('id', $id);
+		$this->db->update('r_section', ['softdeletes_date' => date('Y-m-d H:i:s')]);
+
+		// Insert the new section data
+		$this->db->insert('r_section', $data);
+		return $this->db->insert_id();
+	}
+
+
+
+
 	public function update_config($id, $data)
 	{
 		$this->db->where('id', $id);
 		return $this->db->update('r_home_config', $data);
 	}
+	public function apply_config($id)
+	{
+		// Remove apply value from other records where it is 1
+		$this->db->where('apply', 1);
+		$this->db->update('r_home_config', ['apply' => null]);
 
+		// Set apply value to 1 for the given id
+		$this->db->where('id', $id);
+		return $this->db->update('r_home_config', ['apply' => 1]);
+	}
 	public function soft_delete($id)
 	{
 		$this->db->where('id', $id);

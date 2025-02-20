@@ -4,15 +4,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Home extends My_Controller
 {
 	public $data         = array();
-
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('M_home');
 		$this->load->model('M_carousel');
+		$this->load->library(array('upload'));
+		// $this->load->library('input');
 	}
 	public function login() {
 		
+	}
+	public function get_section()
+	{
+		$sections = $this->M_home->get_section();
+		echo json_encode($sections);
 	}
 	
 	public function index()
@@ -119,6 +125,11 @@ class Home extends My_Controller
 		echo json_encode(array('status' => 'success'));
 	}
 
+	public function apply_config($id)
+	{
+		$this->M_home->apply_config($id);
+		echo json_encode(array('status' => 'success', 'message' => 'Configuration applied successfully'));
+	}
 	public function read()
 	{
 		$this->data['records'] = $this->M_home->get_all();
@@ -136,6 +147,48 @@ class Home extends My_Controller
 	}
 
 
+	// Section
+	public function get_all_sections()
+	{
+		$sections = $this->M_home->get_all_sections();
+		echo json_encode($sections);
+	}
+	public function update_section($id)
+	{
+		$data = array(
+			'name' => $this->input->post('section_name'),
+			'content' => $this->input->post('section_content'),
+		);
+
+		$this->M_home->update_section($id, $data);
+		echo json_encode(array('status' => 'success', 'message' => 'Section updated successfully'));
+	}
+	public function store_section()
+	{
+		$data = array(
+			'name' => $this->input->post('section_name'),
+			'content' => $this->input->post('section_content'),
+			'date_of_creation' => date('Y-m-d H:i:s')
+		);
+
+		$result = $this->M_home->insert_section($data);
+		echo json_encode(array('status' => 'success', 'message' => 'Section created successfully', 'data' => $result));
+	}
+
+
+	public function edit_section($id)
+	{
+		$section = $this->M_home->get_section_by_id($id);
+		echo json_encode($section);
+	}
+
+	public function delete_section($id)
+	{
+		$this->M_home->soft_delete_section($id);
+		echo json_encode(array('status' => 'success'));
+	}
+	
+	// Carousel
 
 	public function get_all_carousels()
 	{
@@ -145,24 +198,67 @@ class Home extends My_Controller
 
 	public function store_carousel()
 	{
-		$config['upload_path'] = './uploads/';
-		$config['allowed_types'] = 'gif|jpg|png';
-		$this->load->library('upload', $config);
+		$data = $this->input->post();
+		$id = $this->input->post('id');
 
-		if (!$this->upload->do_upload('picture')) {
-			$error = array('error' => $this->upload->display_errors());
-			echo json_encode($error);
-		} else {
-			$upload_data = $this->upload->data();
+		if ($id) {
+			// Perform soft delete on the existing record
+			$this->M_carousel->delete($id);
+
+			// Prepare data for the new record
 			$data = array(
 				'title' => $this->input->post('title'),
 				'description' => $this->input->post('description'),
-				'picture' => $upload_data['file_name']
+				'created_at' => date('Y-m-d H:i:s')
 			);
-			$this->M_carousel->insert($data);
-			echo json_encode(array('status' => 'success'));
+
+			// Check if a new file is uploaded
+			if (isset($_FILES["picture"]["name"]) && $_FILES["picture"]["name"] != "") {
+				$data['picture'] = $this->upload_image($this->input->post('title'));
+			} else {
+				// Retain the existing image
+				$existing_record = $this->M_carousel->get($id);
+				if ($existing_record) {
+					$data['picture'] = $existing_record->picture;
+				} else {
+					$data['picture'] = ''; // Handle case where no existing record is found
+				}
+			}
+
+			// Create a new record with the updated values
+			$result = $this->M_carousel->insert($data);
+			echo json_encode(array('status' => 'success', 'message' => 'Carousel updated successfully', 'data' => $result));
+		} else {
+			// Check if a new file is uploaded
+			if (isset($_FILES["picture"]["name"]) && $_FILES["picture"]["name"] != "") {
+				$data['picture'] = $this->upload_image($this->input->post('title'));
+			}
+			$data['created_at'] = date('Y-m-d H:i:s'); // Set the current date
+			$result = $this->M_carousel->insert($data);
+			echo json_encode(array('status' => 'success', 'message' => 'Carousel created successfully', 'data' => $result));
 		}
 	}
+
+	private function upload_image($title)
+	{
+		$tgl = date('Y-m-d');
+		$title = preg_replace("/[^A-Za-z0-9 ]/", '_', $title);
+		$config['upload_path'] = "./assets/images/carousel"; // Ensure this path exists
+		$config['allowed_types'] = 'jpg|jpeg|png|gif';
+		$config['max_size'] = 3000; // 3 MB
+		$config['file_name'] = $tgl . "_" . $title;
+		$this->load->library('upload', $config);
+		$this->upload->initialize($config);
+
+		if (!$this->upload->do_upload('picture')) {
+			log_message('error', $this->upload->display_errors());
+			return '';
+		} else {
+			$arr_image = array('upload_data' => $this->upload->data());
+			return $arr_image['upload_data']['file_name'];
+		}
+	}
+
 
 	public function edit_carousel($id)
 	{
@@ -172,24 +268,13 @@ class Home extends My_Controller
 
 	public function update_carousel($id)
 	{
-		$data = array(
-			'title' => $this->input->post('title'),
-			'description' => $this->input->post('description')
-		);
+		$data = $this->input->post();
+		// echo json_encode($data);
+		// Perform soft delete on the existing record
+		$this->M_carousel->delete($id);
 
-		if (!empty($_FILES['picture']['name'])) {
-			$config['upload_path'] = './uploads/';
-			$config['allowed_types'] = 'gif|jpg|png';
-			$this->load->library('upload', $config);
-
-			if ($this->upload->do_upload('picture')) {
-				$upload_data = $this->upload->data();
-				$data['picture'] = $upload_data['file_name'];
-			}
-		}
-
-		$this->M_carousel->update($id, $data);
-		redirect('home/ordal');
+		// Use the store_carousel function to create a new record
+		$this->store_carousel();
 	}
 
 	public function delete_carousel($id)
