@@ -1,4 +1,3 @@
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
@@ -12,18 +11,15 @@
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/vendor/libs/popper/popper.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/vendor/js/bootstrap.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/vendor/js/menu.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="<?php echo base_url(); ?>assets/admin/assets/js/main.js"></script>
 <script src="<?php echo base_url(); ?>assets/admin/magnify-master/dist/jquery.magnify.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 
+
 <script>
 	$(document).ready(function() {
+		// Initialize the DataTable and add the responsive class for config-home
 		var table = $('#configTable').DataTable({
 			ajax: {
 				url: '<?php echo base_url("home/get_all_config"); ?>',
@@ -33,6 +29,12 @@
 				cache: false // Enable cache-busting parameter
 			},
 			columns: [{
+					data: null,
+					render: function(data, type, row, meta) {
+						return meta.row + 1; // Return the row index
+					}
+				},
+				{
 					data: 'config_profile_name'
 				},
 				{
@@ -67,6 +69,7 @@
 				},
 				{
 					data: null,
+					// Add action buttons
 					render: function(data, type, row) {
 						return `
 						<button class="btn btn-sm btn-success apply-btn" data-id="${row.id}" ${row.apply == 1 ? 'disabled' : ''}>Apply</button>
@@ -78,18 +81,19 @@
 			],
 			responsive: true,
 			dom: '<"top"f>rt<"bottom"lp><"clear">',
+			// Add buttons to the DataTable header
 			initComplete: function() {
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#contactModal">Add Config</button>');
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#carouselModal">Add Carousel</button>');
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#sectionModal">Add Section</button>');
+				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-success ml-3" data-bs-toggle="modal" data-bs-target="#contactModal">Tambah Profil Pengaturan</button> ');
+				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-warning ml-3" data-bs-toggle="modal" data-bs-target="#carouselModal">Tambar banner halaman utama</button> ');
+				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#sectionModal">Tambah bagian halaman</button> ');
 			},
 			language: {
 				search: "_INPUT_",
 				searchPlaceholder: "Search..."
 			}
-
 		});
 		table.buttons().container().appendTo('#configTable_wrapper .col-md-6:eq(0)');
+		//function apply config-home
 		$('#configTable').on('click', '.apply-btn', function() {
 			var id = $(this).data('id');
 			Swal.fire({
@@ -124,6 +128,7 @@
 				}
 			});
 		});
+		//function edit config-home
 		$('#configTable').on('click', '.edit-btn', function() {
 			var id = $(this).data('id');
 			$.ajax({
@@ -151,7 +156,7 @@
 				}
 			});
 		});
-
+		// function delete config-home
 		$('#configTable').on('click', '.delete-btn', function() {
 			var id = $(this).data('id');
 			Swal.fire({
@@ -203,7 +208,7 @@
 				fetchCarouselsForCreate();
 			}
 		});
-
+		//function fetch Sections For Edit
 		function fetchSectionsForEdit(configId) {
 			$.ajax({
 				url: '<?php echo base_url("home/get_all_sections"); ?>',
@@ -250,7 +255,7 @@
 				}
 			});
 		}
-
+		//function fetch Sections For Create
 		function fetchSectionsForCreate() {
 			$.ajax({
 				url: '<?php echo base_url("home/get_all_sections"); ?>',
@@ -277,7 +282,7 @@
 				}
 			});
 		}
-
+		//function fetch Carousels For Edit
 		function fetchCarouselsForEdit(configId) {
 			$.ajax({
 				url: '<?php echo base_url("home/get_all_carousels"); ?>',
@@ -325,6 +330,8 @@
 			});
 		}
 
+
+		//function fetch Carousels For Create
 		function fetchCarouselsForCreate() {
 			$.ajax({
 				url: '<?php echo base_url("home/get_all_carousels"); ?>',
@@ -351,7 +358,7 @@
 				}
 			});
 		}
-
+		//function submit config home form
 		$('#contactForm').on('submit', function(e) {
 			e.preventDefault();
 			var formData = $(this).serialize();
@@ -399,6 +406,8 @@
 					['view', ['fullscreen', 'codeview', 'help']]
 				]
 			});
+
+			//datatable for section
 			if (!$.fn.DataTable.isDataTable('#sectionTable')) {
 				var sectionTable = $('#sectionTable').DataTable({
 					ajax: {
@@ -442,6 +451,7 @@
 				});
 			}
 		});
+		// section form submit
 		$('#sectionForm').on('submit', function(e) {
 			e.preventDefault();
 			var formData = $(this).serialize();
@@ -476,7 +486,7 @@
 			});
 		});
 
-
+		//section edit function
 		$('#sectionTable').on('click', '.edit-section-btn', function() {
 			var id = $(this).data('id');
 			$.ajax({
@@ -504,7 +514,7 @@
 				}
 			});
 		});
-
+		//section delete function
 		$('#sectionTable').on('click', '.delete-section-btn', function() {
 			var id = $(this).data('id');
 			Swal.fire({
@@ -540,6 +550,7 @@
 				}
 			});
 		});
+		// carousel modal function
 		$('#carouselModal').on('shown.bs.modal', function() {
 			if (!$.fn.DataTable.isDataTable('#carouselTable')) {
 				var carouselTable = $('#carouselTable').DataTable({
@@ -613,7 +624,7 @@
 				carouselTable.ajax.reload(); // Reload the DataTable
 			}
 		});
-
+		//carousel edit function
 		$('#carouselTable').on('click', '.edit-carousel-btn', function() {
 			var id = $(this).data('id');
 			$.ajax({
@@ -657,7 +668,7 @@
 				}
 			});
 		});
-
+		//
 		$('#carouselForm').on('submit', function(e) {
 			e.preventDefault();
 
@@ -721,6 +732,8 @@
 			}
 		});
 	});
+
+	//
 	$('#carouselTable').on('click', '.delete-carousel-btn', function() {
 		var id = $(this).data('id');
 		Swal.fire({
@@ -756,7 +769,7 @@
 			}
 		});
 	});
-
+	//function initialize select2
 	function initializeSelect2(selector) {
 		$(selector).select2({
 			theme: 'bootstrap-5'

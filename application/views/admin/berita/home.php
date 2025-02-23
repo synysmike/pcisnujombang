@@ -1,10 +1,18 @@
 <!-- Basic DataTable -->
-<style>
+<!-- <style>
 	body {
 		font-family: Arial, sans-serif;
 		background-color: #f8f9fa;
 		margin: 0;
 		padding: 20px;
+	}
+
+	.modal {
+		z-index: 1050;
+	}
+
+	.modal-backdrop {
+		z-index: 1040;
 	}
 
 	.card {
@@ -38,7 +46,7 @@
 	.dataTables_wrapper .dataTables_info {
 		float: left;
 	}
-</style>
+</style> -->
 
 <div class="card">
 	<div class="modal fade" id="createCategory" tabindex="-2" aria-hidden="true">
@@ -97,60 +105,60 @@
 
 
 <div class="card">
-	<div class="modal fade" id="create" tabindex="-2" aria-hidden="true">
+	<div class="modal fade" id="create" tabindex="-1" role="dialog" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form id="item-form" class="form-horizontal" id="submit" enctype='multipart/form-data'>
+			<form id="item-form" class="form-horizontal" enctype='multipart/form-data'>
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
 					<div class="modal-body">
 						<div class="row">
-							<div class="col mb-6">
+							<div class="col-md-6">
 								<label for="judul" class="form-label">Judul</label>
 								<input type="text" id="judul" name="judul" class="form-control" placeholder="Masukan Judul">
 								<input type="hidden" name="id" id="item-id">
 							</div>
 						</div>
 						<div class="row">
-							<div class="col mb-6">
+							<div class="col-md-6">
 								<label for="isiBerita" class="form-label">Isi Berita</label>
-								<textarea name="isiBerita" id="isiBerita"></textarea>
+								<textarea name="isiBerita" id="isiBerita" class="form-control"></textarea>
 							</div>
 						</div>
 						<div id="preview" class="row">
-							<div class="col md-6"></div>
-							<div class="col md-6">
+							<div class="col-md-6"></div>
+							<div class="col-md-6">
 								<label for="kategori" class="form-label">Lihat Gambar</label>
-								<img id="preview-gambar" class='img-thumbnail' data-magnify='gallery' data-src='' src='' width='80px'>
+								<img id="preview-gambar" class="img-thumbnail" data-magnify="gallery" data-src="" src="" width="80px">
 							</div>
 						</div>
 						<div class="row">
-							<div class="col md-6">
-								<label for="kategori" class="form-label">Pilih Kategori
-
-								</label>
-								<select class="form-select select2" name="kategori" id="kategori" aria-label="Multiple select example">
-									<!-- Options will be populated by JavaScript -->
+							<div class="col-md-6">
+								<label for="kategori" class="form-label">Pilih Kategori</label>
+								<select class="form-control select2" name="kategori" id="kategori" aria-label="Multiple select example">
 									<option value="" disabled selected>-- Pilih Kategori --</option>
+									<!-- Options will be populated by JavaScript -->
 								</select>
 							</div>
-							<div class="col md-6">
-								<label for="file" class="form-label">unggah gambar</label>
+							<div class="col-md-6">
+								<label for="file" class="form-label">Unggah Gambar</label>
 								<input class="form-control" type="file" name="file" id="file">
 							</div>
 						</div>
-
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button id="btn_simpan" type="submit" class="btn btn-primary">Simpan Berita</button>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
+
 
 	<div class="col-12">
 		<div class="doc-example">

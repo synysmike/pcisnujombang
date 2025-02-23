@@ -1,23 +1,24 @@
 <div class="col-12">
 	<div class="doc-example">
-		<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
+		<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Contoh">
 			<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
 				<div class="card">
 					<div class="card-datatable table-responsive pt-0">
 						<table id="configTable" class="table table-striped table-bordered" style="width:100%">
 							<thead>
 								<tr>
-									<th>Config Profile Name</th>
-									<th>Color 1</th>
-									<th>Color 2</th>
-									<th>Array of ID Section</th>
-									<th>Array of ID Carousel</th>
-									<th>Date of Creation</th>
-									<!-- <th>Soft Deletes Date</th> -->
+									<th>No.</th>
+									<th>Nama Profil Konfigurasi</th>
+									<th>Warna 1</th>
+									<th>Warna 2</th>
+									<th>Array ID Seksi</th>
+									<th>Array ID Karusel</th>
+									<th>Tanggal Pembuatan</th>
+									<!-- <th>Tanggal Penghapusan Lunak</th> -->
 									<th>Alamat</th>
 									<th>Kontak</th>
 									<th>Email</th>
-									<th>Action</th>
+									<th>Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -34,23 +35,23 @@
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="sectionModalLabel">Section Information</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<h5 class="modal-title" id="sectionModalLabel">Informasi Seksi</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<form id="sectionForm">
 					<div class="form-group">
-						<label for="section_name">Section Name</label>
+						<label for="section_name">Nama Seksi</label>
 						<input type="text" class="form-control" id="section_name" name="section_name" required>
 					</div>
 					<div class="form-group">
-						<label for="section_content">Section Content</label>
+						<label for="section_content">Konten Seksi</label>
 						<textarea class="form-control summernote" id="section_content" name="section_content" required></textarea>
 					</div>
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary" form="sectionForm">Save changes</button>
+						<button type="submit" class="btn btn-primary" form="sectionForm">Simpan Perubahan</button>
 					</div>
 				</form>
 
@@ -60,10 +61,10 @@
 							<thead>
 								<tr>
 									<th>No.</th>
-									<th>Section Name</th>
-									<th>Section Content</th>
-									<th>Created_at</th>
-									<th>Action</th>
+									<th>Nama Seksi</th>
+									<th>Konten Seksi</th>
+									<th>Dibuat Pada</th>
+									<th>Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -80,29 +81,29 @@
 	<div class="modal-dialog modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="carouselModalLabel">Carousel Information</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<h5 class="modal-title" id="carouselModalLabel">Informasi Karusel</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<form id="carouselForm" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="title">Carousel Name</label>
+						<label for="title">Nama Karusel</label>
 						<input type="text" class="form-control" id="title" name="title" required>
 					</div>
 					<div class="form-group">
-						<label for="description">Description</label>
+						<label for="description">Deskripsi</label>
 						<textarea class="form-control" id="description" name="description" required></textarea>
 					</div>
 					<div class="form-group">
-						<label for="picture">Images</label>
+						<label for="picture">Gambar</label>
 						<input type="file" class="form-control" id="picture" name="picture" required>
-						<img id="carouselImage" src="#" alt="Carousel Image" style="display:none; width: 100px; height: auto; margin-top: 10px;">
+						<img id="carouselImage" src="#" alt="Gambar Karusel" style="display:none; width: 100px; height: auto; margin-top: 10px;">
 					</div>
 
 					<div class="modal-footer">
-						<button type="submit" class="btn btn-primary" form="carouselForm">Save changes</button>
+						<button type="submit" class="btn btn-primary" form="carouselForm">Simpan Perubahan</button>
 					</div>
 				</form>
 
@@ -112,11 +113,11 @@
 							<thead>
 								<tr>
 									<th>No.</th>
-									<th>Carousel Name</th>
-									<th>Description</th>
-									<th>Images</th>
-									<th>Created_at</th>
-									<th>Action</th>
+									<th>Nama Karusel</th>
+									<th>Deskripsi</th>
+									<th>Gambar</th>
+									<th>Dibuat Pada</th>
+									<th>Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -134,15 +135,15 @@
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="contactModalLabel">Contact Information</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<h5 class="modal-title" id="contactModalLabel">Informasi Kontak</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
 				<form id="contactForm">
 					<div class="form-group">
-						<label for="nama_config">Nama Config</label>
+						<label for="nama_config">Nama Konfigurasi</label>
 						<input type="text" class="form-control" id="nama_config" name="nama_config" required>
 					</div>
 					<div class="form-group">
@@ -166,25 +167,25 @@
 						<input type="color" class="form-control" id="color_2" name="color_2" required>
 					</div>
 					<div class="form-group">
-						<label for="section">Section</label>
+						<label for="section">Seksi</label>
 						<select class="form-control select2" id="section" name="section[]" multiple="multiple" required>
 
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="carousel">Carousel</label>
+						<label for="carousel">Karusel</label>
 						<select class="form-control select2" id="carousel" name="carousel[]" multiple="multiple" required>
-							<option value="carousel1">Carousel 1</option>
-							<option value="carousel2">Carousel 2</option>
-							<option value="carousel3">Carousel 3</option>
+							<option value="carousel1">Karusel 1</option>
+							<option value="carousel2">Karusel 2</option>
+							<option value="carousel3">Karusel 3</option>
 						</select>
 					</div>
 
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="submit" class="btn btn-primary" form="contactForm">Save changes</button>
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+				<button type="submit" class="btn btn-primary" form="contactForm">Simpan Perubahan</button>
 			</div>
 		</div>
 	</div>

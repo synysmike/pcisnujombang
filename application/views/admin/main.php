@@ -26,55 +26,39 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<link
-		href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+		href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap"
 		rel="stylesheet" />
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/modules/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/modules/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/style.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/components.css">
 
 	<?php
 	$css = $css;
 	$this->load->view($css); ?>
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/custom.css">
 </head>
 
-
-
-
-<body>
+<body class="sidebar-mini">
 	<!-- Layout wrapper -->
-	<div class="layout-wrapper layout-content-navbar">
-		<div class="layout-container">
-			<!-- Menu -->
-
-			<?php $this->load->view('admin/sidebar'); ?>
+	<div id="app">
+		<div class="main-wrapper main-wrapper-1">
+			<div class="navbar-bg"></div>
+			<?php $this->load->view('admin/nav'); ?>
+			<div class="main-sidebar">
+				<?php $this->load->view('admin/sidebar'); ?>
+			</div>
 			<!-- / Menu -->
 
 			<!-- Layout container -->
 			<div class="layout-page">
-				<!-- Navbar -->
-
-				<?php $this->load->view('admin/nav'); ?>
-
-				<!-- / Navbar -->
-				<div class="content-wrapper">
-
-					<!-- Content -->
-
-					<div class="container-xxl flex-grow-1 container-p-y">
-
-
-						<div class="row flex-xl-nowrap">
-							<div class="DocSearch-content col-12 col-xl-12 container-p-y">
-
-								<!-- Content wrapper -->
-								<!-- <hr class="my-12" /> -->
-
-								<?php $ct = $ct;
-								$this->load->view($ct); ?>
-
-
-							</div>
+				<div class="main-content">
+					<section class="section">
+						<div class="section-body">
+							<?php $ct = $ct;
+							$this->load->view($ct); ?>
 						</div>
-					</div>
-					<!-- Content -->
-
+					</section>
 				</div>
 
 				<!-- / Content -->
@@ -112,9 +96,19 @@
 	<!-- / Layout wrapper -->
 
 
+	<script src="<?php echo base_url(); ?>assets/admin/modules/jquery.min.js"></script>
 
+	<script src="<?php echo base_url(); ?>assets/admin/modules/popper.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/modules/tooltip.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/modules/bootstrap/js/bootstrap.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/modules/nicescroll/jquery.nicescroll.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/modules/moment.min.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/js/stisla.js"></script>
+	<!-- Template JS File -->
 	<?php $js = $js;
 	$this->load->view($js); ?>
+	<script src="<?php echo base_url(); ?>assets/admin/js/scripts.js"></script>
+	<script src="<?php echo base_url(); ?>assets/admin/js/custom.js"></script>
 </body>
 
 </html>
