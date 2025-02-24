@@ -38,31 +38,34 @@
 		float: left;
 	}
 </style>
-<div class="col-12">
-	<div class="doc-example">
-		<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
-			<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
-				<div class="card">
-					<div class="card-datatable table-responsive pt-0">
-						<table id="positionsTable" class="display responsive nowrap">
-							<thead>
-								<tr>
-									<th>Index</th>
-									<th>Name</th>
-									<th>Parent Position</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody> </tbody>
-						</table>
+<section class="section">
+	<div class="section-body">
+		<div class="col-12">
+			<div class="doc-example">
+				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
+					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
+						<div class="card">
+							<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
+								<table id="positionsTable" class="display responsive nowrap">
+									<thead>
+										<tr>
+											<th>Index</th>
+											<th>Name</th>
+											<th>Parent Position</th>
+											<th>Actions</th>
+										</tr>
+									</thead>
+									<tbody> </tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</div>
-</div>
-
-
+</section>
 <!-- Modal for Adding/Editing Position -->
 <div class="modal fade" id="positionModal" tabindex="-1" aria-labelledby="positionModalLabel" aria-hidden="true">
 	<div class="modal-dialog">

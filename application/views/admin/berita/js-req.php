@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
@@ -13,7 +13,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.js"></script>
 <script src="<?php echo base_url(); ?>/assets/admin/magnify-master/dist/jquery.magnify.js"></script>
-<script src="<?php echo base_url(); ?>/assets/admin/js/page/bootstrap-modal.js"></script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -21,11 +21,14 @@
 
 <script>
 	$(document).ready(function() {
-
 		$('#isiBerita').summernote();
+
 		$('#kategori').select2({
 			placeholder: 'Pilih Kategori',
-			allowClear: true
+			allowClear: true,
+			width: '100%',
+			dropdownParent: $('#item-form'), // Ensure dropdown is appended to the modal
+
 		});
 		// Fetch kategori data and populate the Select2 dropdown 
 		$.ajax({
@@ -34,7 +37,8 @@
 			success: function(data) {
 				// console.log("Response Data:", data); // Log the response data
 				// var categories = JSON.parse(data);
-				data.forEach(function(category) {
+				var categories = data;
+				categories.forEach(function(category) {
 					var option = new Option(category.kategori, category.id, false, false);
 					$('#kategori').append(option).trigger('change');
 				});
@@ -43,6 +47,13 @@
 				console.error("AJAX Error:", status, error);
 			}
 		});
+
+		$('<style>')
+			.prop('type', 'text/css')
+			.html('.custom-dropdown { z-index: 1060 !important; }')
+			.appendTo('head');
+
+
 
 
 		DataTable.ext.buttons.alert = {
@@ -60,19 +71,26 @@
 			},
 
 			columns: [{
-				data: null,
-				// Use null data to create a row number column 
-				render: function(data, type, row, meta) {
-					return meta.row + 1;
-					// Return the row number 
-				}
-			}, {
-				data: 'kategori',
-			}, {
-				render: function(data, type, row) {
-					return '<button class="btn btn-warning edit-category" type="button" data-id="' + row.id + '">' + "Edit" + '</button> ' + '<button class="btn btn-danger delete-category" type="button" data-id="' + row.id + '">' + "Delete" + '</button>';
-				}
-			}, ]
+					data: null,
+					// Use null data to create a row number column 
+					render: function(data, type, row, meta) {
+						return meta.row + 1;
+						// Return the row number 
+					}
+				}, {
+					data: 'kategori',
+				},
+				{
+					data: 'description',
+				},
+
+				{
+					data: 'id',
+					render: function(data, type, row) {
+						return '<button class="btn btn-warning edit-category" type="button" data-id="' + data + '">' + "Edit" + '</button> ' + '<button class="btn btn-danger delete-category ml-3" type="button" data-id="' + data + '">' + "Delete" + '</button>';
+					}
+				},
+			]
 		});
 
 		// Handle edit and delete actions 
@@ -197,7 +215,7 @@
 				}
 			}, {
 				text: 'Tambah Kategori',
-				className: 'btn btn-secondary',
+				className: 'btn btn-info ml-3',
 				action: function(e, dt, node, config) {
 					$('#createCategory').modal('show');
 					$('[id="categoryName"]').val("");
@@ -211,10 +229,10 @@
 						return meta.row + 1; // Return the row number
 					}
 				},
-				{
-					data: 'id',
-					visible: false // Hide the ID column 
-				},
+				// {
+				// 	data: 'id',
+				// 	visible: false // Hide the ID column 
+				// },
 				{
 					data: 'judul',
 				},
@@ -223,6 +241,16 @@
 				},
 				{
 					data: 'isi',
+					render: function(data, type, row) {
+						if (type === 'display') {
+							if (data.length > 25) { // Limit to 25 characters
+								return '<span class="short-text">' + data.substr(0, 25) + '</span><span class="full-text" style="display:none;">' + data + '</span><a href="#" class="toggle-text">Read more</a>';
+							} else {
+								return data;
+							}
+						}
+						return data;
+					}
 				},
 				{
 					data: 'tgl',
@@ -236,15 +264,31 @@
 				},
 				{
 					// button aksi(refrensi :https://stackoverflow.com/questions/54930978/datatables-show-column-data-in-modal)
-					render: function(data, type, row) {
-						return '<button class="btn btn-info edit" type="button" data-id="' + row.id + '">Edit</button> ' +
-							'<button class="btn btn-danger hapus" type="button" data-id="' + row.id + '">Hapus</button>';
+					data: 'id',
+					render: function(data) {
+						return '<button class="btn btn-info edit" type="button" data-id="' + data + '">Edit</button> ' +
+							'<button class="btn btn-danger hapus" type="button" data-id="' + data + '">Hapus</button>';
 					}
 
 				},
 			]
 		});
+		$('#tabel-berita').on('click', 'a.toggle-text', function(e) {
+			e.preventDefault();
+			var $this = $(this);
+			var $shortText = $this.siblings('.short-text');
+			var $fullText = $this.siblings('.full-text');
 
+			if ($shortText.is(':visible')) {
+				$shortText.hide();
+				$fullText.show();
+				$this.text('Read less');
+			} else {
+				$shortText.show();
+				$fullText.hide();
+				$this.text('Read more');
+			}
+		});
 		$('#tabel-berita tbody').on('click', '.edit', function() {
 			$(".modal-title").text("Edit Data");
 			var id = $(this).data('id'); // Get the ID from the data-id attribute

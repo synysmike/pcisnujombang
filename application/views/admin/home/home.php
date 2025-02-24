@@ -1,35 +1,39 @@
-<div class="col-12">
-	<div class="doc-example">
-		<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Contoh">
-			<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
-				<div class="card">
-					<div class="card-datatable table-responsive pt-0">
-						<table id="configTable" class="table table-striped table-bordered" style="width:100%">
-							<thead>
-								<tr>
-									<th>No.</th>
-									<th>Nama Profil Konfigurasi</th>
-									<th>Warna 1</th>
-									<th>Warna 2</th>
-									<th>Array ID Seksi</th>
-									<th>Array ID Karusel</th>
-									<th>Tanggal Pembuatan</th>
-									<!-- <th>Tanggal Penghapusan Lunak</th> -->
-									<th>Alamat</th>
-									<th>Kontak</th>
-									<th>Email</th>
-									<th>Aksi</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
+<section class="section">
+	<div class="section-body">
+		<div class="col-12">
+			<div class="doc-example">
+				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Contoh">
+					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
+						<div class="card">
+							<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
+								<table id="configTable" class="table table-striped table-bordered" style="width:100%">
+									<thead>
+										<tr>
+											<th>No.</th>
+											<th>Nama Profil Konfigurasi</th>
+											<th>Warna 1</th>
+											<th>Warna 2</th>
+											<th>Array ID Seksi</th>
+											<th>Array ID Karusel</th>
+											<th>Tanggal Pembuatan</th>
+											<!-- <th>Tanggal Penghapusan Lunak</th> -->
+											<th>Alamat</th>
+											<th>Kontak</th>
+											<th>Email</th>
+											<th>Aksi</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</section>
 <!-- Modal -->
 <div class="modal fade" id="sectionModal" tabindex="-1" role="dialog" aria-labelledby="sectionModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">

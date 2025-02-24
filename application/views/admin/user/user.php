@@ -96,7 +96,6 @@
 							<div class="col mb-6"> <label for="rtrw" class="form-label">RT/RW</label> <input type="text" id="rtrw" name="rtrw" class="form-control" placeholder="Masukan RT/RW" required> </div>
 						</div>
 					</div>
-
 					<div class="modal-footer">
 						<button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
 						<button id="btn_simpan" type="submit" class="btn btn-primary">Submit</button>
@@ -106,34 +105,38 @@
 		</div>
 	</div>
 
-	<div class="col-12">
-		<div class="doc-example">
-			<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
-				<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
-					<div class="card">
-						<div class="card-datatable table-responsive pt-0">
-							<table id="tabel-user" class="display responsive nowrap">
-								<thead>
-									<tr>
-										<th>No</th>
-										<th>id</th>
-										<th>Nama</th>
-										<th>Username</th>
-										<th>Email</th>
-										<th>Jenis Kelamin</th>
-										<th>Kabupaten/Kota</th>
-										<th>Alamat</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<!-- Data akan diisi oleh DataTables -->
-								</tbody>
-							</table>
+</div>
+<section class="section">
+	<div class="section-body">
+		<div class="col-12">
+			<div class="doc-example">
+				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
+					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
+						<div class="card">
+							<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
+								<table id="tabel-user" class="display responsive nowrap">
+									<thead>
+										<tr>
+											<th>No</th>
+											<th>id</th>
+											<th>Nama</th>
+											<th>Username</th>
+											<th>Email</th>
+											<th>Jenis Kelamin</th>
+											<th>Kabupaten/Kota</th>
+											<th>Alamat</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<!-- Data akan diisi oleh DataTables -->
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</section>

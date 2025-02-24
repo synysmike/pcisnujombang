@@ -11,9 +11,7 @@
 
 <head>
 	<meta charset="utf-8" />
-	<meta
-		name="viewport"
-		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
 
 	<title>CRUD PCisnuJombang | Ir.Teguh</title>
 
@@ -30,13 +28,14 @@
 		rel="stylesheet" />
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/modules/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/modules/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/style.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/components.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/modules/prism/prism.css">
 
 	<?php
 	$css = $css;
 	$this->load->view($css); ?>
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/custom.css">
+	<!-- <link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/custom.css"> -->
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/style.css">
+	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/admin/css/components.css">
 </head>
 
 <body class="sidebar-mini">
@@ -53,19 +52,9 @@
 			<!-- Layout container -->
 			<div class="layout-page">
 				<div class="main-content">
-					<section class="section">
-						<div class="section-body">
-							<?php $ct = $ct;
-							$this->load->view($ct); ?>
-						</div>
-					</section>
+					<?php $ct = $ct;
+					$this->load->view($ct); ?>
 				</div>
-
-				<!-- / Content -->
-
-
-
-				<!-- Footer -->
 				<footer class="content-footer footer bg-footer-theme">
 					<div class="container-xxl">
 						<div
@@ -82,7 +71,6 @@
 					</div>
 				</footer>
 				<!-- / Footer -->
-
 				<div class="content-backdrop fade"></div>
 			</div>
 			<!-- Content wrapper -->
@@ -96,11 +84,14 @@
 	<!-- / Layout wrapper -->
 
 
-	<script src="<?php echo base_url(); ?>assets/admin/modules/jquery.min.js"></script>
+	<!-- <script src="<?php echo base_url(); ?>assets/admin/modules/jquery.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 	<script src="<?php echo base_url(); ?>assets/admin/modules/popper.js"></script>
 	<script src="<?php echo base_url(); ?>assets/admin/modules/tooltip.js"></script>
-	<script src="<?php echo base_url(); ?>assets/admin/modules/bootstrap/js/bootstrap.min.js"></script>
+	<!-- <script src="<?php echo base_url(); ?>assets/admin/modules/bootstrap/js/bootstrap.min.js"></script> -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 	<script src="<?php echo base_url(); ?>assets/admin/modules/nicescroll/jquery.nicescroll.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/admin/modules/moment.min.js"></script>
 	<script src="<?php echo base_url(); ?>assets/admin/js/stisla.js"></script>
