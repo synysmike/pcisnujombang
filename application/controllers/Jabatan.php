@@ -7,6 +7,7 @@ class Jabatan extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_jabatan');
+		$this->load->helper('upload');
 	}
 
 	// Display all positions

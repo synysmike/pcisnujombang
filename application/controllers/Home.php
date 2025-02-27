@@ -10,6 +10,7 @@ class Home extends My_Controller
 		$this->load->model('M_home');
 		$this->load->model('M_carousel');
 		$this->load->library(array('upload'));
+		$this->load->helper('upload');
 		// $this->load->library('input');
 	}
 	public function login() {

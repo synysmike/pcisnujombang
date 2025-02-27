@@ -8,6 +8,7 @@ class Galeri extends MY_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_galeri');
+		$this->load->helper('upload');
 	}
 
 	public function index()

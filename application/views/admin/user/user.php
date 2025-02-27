@@ -113,25 +113,30 @@
 				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
 					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
 						<div class="card">
-							<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
-								<table id="tabel-user" class="display responsive nowrap">
-									<thead>
-										<tr>
-											<th>No</th>
-											<th>id</th>
-											<th>Nama</th>
-											<th>Username</th>
-											<th>Email</th>
-											<th>Jenis Kelamin</th>
-											<th>Kabupaten/Kota</th>
-											<th>Alamat</th>
-											<th>Action</th>
-										</tr>
-									</thead>
-									<tbody>
-										<!-- Data akan diisi oleh DataTables -->
-									</tbody>
-								</table>
+							<div class="card-header d-flex justify-content-center align-items-center">
+								<h3>Manajemen User</h3>
+							</div>
+							<div class="card-body">
+								<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
+									<table id="tabel-user" class="display responsive nowrap">
+										<thead>
+											<tr>
+												<th>No</th>
+												<th>id</th>
+												<th>Nama</th>
+												<th>Username</th>
+												<th>Email</th>
+												<th>Jenis Kelamin</th>
+												<th>Kabupaten/Kota</th>
+												<th>Alamat</th>
+												<th>Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<!-- Data akan diisi oleh DataTables -->
+										</tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>

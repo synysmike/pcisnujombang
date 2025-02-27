@@ -672,15 +672,16 @@
 			if (fileInput.files && fileInput.files[0]) {
 				var img = new Image();
 				img.onload = function() {
-					if (img.width !== 1920 || img.height !== 850) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: 'Gambar yang anda unggah <strong>HARUS</strong> berukuran 1920x850 pixels!'
-						});
-					} else {
-						submitForm();
-					}
+					// if (img.width !== 1920 || img.height !== 850) {
+					// 	Swal.fire({
+					// 		icon: 'error',
+					// 		title: 'Error',
+					// 		text: 'Gambar yang anda unggah <strong>HARUS</strong> berukuran 1920x850 pixels!'
+					// 	});
+					// } else {
+					// 	submitForm();
+					// }
+					submitForm();
 				};
 				img.onerror = function() {
 					Swal.fire({

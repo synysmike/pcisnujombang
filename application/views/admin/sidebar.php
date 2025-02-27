@@ -130,11 +130,29 @@
 		<?php if (in_array($this->session->userdata('user_level'), [2, 3, 4])): ?>
 			<!-- Logout -->
 			<li class="menu-item <?php echo ($current_url == 'logout') ? 'active' : ''; ?>">
-				<a href="<?php echo site_url('logout'); ?>" class="menu-link">
+				<a href="javascript:void(0);" onclick="logoutConfirmation();" class="menu-link">
 					<i class="fas fa-sign-out-alt"></i>
 					<span class="text-truncate" data-i18n="Logout">Logout</span>
 				</a>
 			</li>
+
 		<?php endif; ?>
 	</ul>
 </aside>
+<script>
+	function logoutConfirmation() {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, logout!'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.location.href = '<?php echo site_url('logout'); ?>';
+			}
+		});
+	}
+</script>

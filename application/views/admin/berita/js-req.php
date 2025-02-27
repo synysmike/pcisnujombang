@@ -223,6 +223,11 @@
 					$(".modal-title").text("Tambah Kategori");
 				}
 			}],
+			columnDefs: [{
+					targets: 3,
+					className: 'isi-column'
+				} // Assuming "isi" is the first column
+			],
 			columns: [{
 					data: null, // Use null data to create a row number column
 					render: function(data, type, row, meta) {
@@ -243,14 +248,16 @@
 					data: 'isi',
 					render: function(data, type, row) {
 						if (type === 'display') {
+							data = data.replace(/<\/?p>/g, '');
 							if (data.length > 25) { // Limit to 25 characters
-								return '<span class="short-text">' + data.substr(0, 25) + '</span><span class="full-text" style="display:none;">' + data + '</span><a href="#" class="toggle-text">Read more</a>';
+								return '<span class="short-text" style="display: inline;">' + data.substr(0, 25) + '...   </span><span class="full-text" style="display:none;">' + data + ' </span> <a href="#" class="toggle-text btn btn-outline-primary btn-sm">Read more</a>';
 							} else {
 								return data;
 							}
 						}
 						return data;
-					}
+					},
+
 				},
 				{
 					data: 'tgl',
@@ -259,7 +266,7 @@
 					// proses gambar pada datatables
 					data: 'gambar',
 					render: function(data) {
-						return "<img class='img-thumbnail' data-magnify='gallery' data-src='<?php echo base_url(); ?>assets/images/" + data + "' src='<?php echo base_url(); ?>assets/images/" + data + "' width='80px'>";
+						return "<img class='img-thumbnail' data-magnify='gallery' data-src='<?php echo base_url(); ?>assets/images/berita/" + data + "' src='<?php echo base_url(); ?>assets/images/berita/" + data + "' width='80px'>";
 					}
 				},
 				{
@@ -271,7 +278,8 @@
 					}
 
 				},
-			]
+			],
+
 		});
 		$('#tabel-berita').on('click', 'a.toggle-text', function(e) {
 			e.preventDefault();
@@ -301,7 +309,7 @@
 				}, // change this to send js object
 				type: "post",
 				success: function(data) {
-					console.log("Response Data:", data); // Log the response data
+					// console.log("Response Data:", data); // Log the response data
 					if (data && data.length > 0) {
 						var item = data[0];
 						$('#create').modal('show');
@@ -311,7 +319,7 @@
 						$("#kategori").val(item.id_kat).trigger('change');
 						if (item.gambar) {
 							$("#preview").show();
-							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/') ?>" + item.gambar);
+							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/berita/') ?>" + item.gambar);
 						} else {
 							$("#preview").hide();
 							$("#preview-gambar").attr("src", "");
@@ -351,11 +359,13 @@
 			// Add Select2 data 
 			formData.append('kategori', $('#kategori').val());
 			// Add Summernote data 
+			var id = $('#carouselForm').find('input[name="id"]').val();
 			formData.append('isiBerita', $('#isiBerita').summernote('code'));
+			var url = id ? '<?php echo base_url("berita/simpan_berita"); ?>/' + id : '<?php echo base_url("berita/simpan_berita"); ?>';
 
 			$.ajax({
 				type: "POST",
-				url: "<?php echo base_url('berita/simpan_berita') ?>",
+				url: url,
 				dataType: "JSON",
 				data: formData,
 				processData: false,
@@ -388,18 +398,18 @@
 		// set button dan fungsi hapus
 		$('#tabel-berita tbody').on('click', '.hapus', function() {
 			var row = $(this).closest('tr');
+			var id = $(this).data('id'); // Move id outside Swal.fire for proper scope
+
 			Swal.fire({
 				title: "Apakah anda yakin menghapus data ini?",
 				showDenyButton: true,
 				confirmButtonText: "Yakin",
 				denyButtonText: `Batal`
 			}).then((result) => {
-				/* Read more about isConfirmed, isDenied below */
 				if (result.isConfirmed) {
-					var id = $(this).data('id');
 					$.ajax({
 						type: "POST",
-						url: "<?php echo base_url('berita/delTemp_berita') ?>",
+						url: "<?php echo base_url('berita/delete_berita'); ?>",
 						dataType: "JSON",
 						data: {
 							id: id
@@ -407,16 +417,17 @@
 						success: function(data) {
 							Swal.fire("Data Terhapus", "", "success");
 							$('#tabel-berita').DataTable().ajax.reload();
+						},
+						error: function(xhr, status, error) {
+							Swal.fire("Error!", "Data gagal dihapus.", "error");
 						}
 					});
-					return false;
-
 				} else if (result.isDenied) {
 					Swal.fire("Batal Hapus!", "", "info");
 				}
 			});
-
 		});
+
 
 		//GET HAPUS
 		$('#show_data').on('click', '.item_hapus', function() {

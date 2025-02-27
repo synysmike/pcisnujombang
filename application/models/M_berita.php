@@ -44,27 +44,18 @@ class M_berita extends CI_Model
 		$id = $this->get_id();
 		$tgl = date('Y-m-d H:i:s');
 		$slug = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
-		if ($data['gambar']) {
-			$data = array(
-				'id' => $id,
-				'tgl' => $tgl,
-				'judul' => $data['judul'],
-				'isi' => $data['isiBerita'],
-				'id_kat' => $data['kategori'],
-				'gambar' => $data['gambar'],
-				'slug' => $slug,
-			);
-		} else {
-			$data = array(
-				'id' => $id,
-				'tgl' => $tgl,
-				'judul' => $data['judul'],
-				'isi' => $data['isiBerita'],
-				'id_kat' => $data['kategori'],
-				'slug' => $slug,
-			);
-		}
-		// var_dump($data);
+		$gambar = isset($data['gambar']) ? $data['gambar'] : null;
+
+		$data = array(
+			'id' => $id,
+			'tgl' => $tgl,
+			'judul' => $data['judul'],
+			'isi' => $data['isiBerita'],
+			'id_kat' => $data['kategori'],
+			'gambar' => $gambar,
+			'slug' => $slug,
+		);
+	
 		$result = $this->db->insert('r_berita', $data);
 		return $result;
 	}
@@ -79,7 +70,6 @@ class M_berita extends CI_Model
 		if ($data['gambar']) {
 			$data = array(
 				'id' => $id,
-				'tgl' => $tgl,
 				'tgl' => $tgl,
 				'judul' => $data['judul'],
 				'isi' => $data['isiBerita'],
@@ -103,13 +93,6 @@ class M_berita extends CI_Model
 		return $result;
 	}
 
-	// function simpan_berita($judul, $isi, $kat)
-	// {
-	// 	$id = $this->get_id();
-	// 	$tgl = date('Y-m-d H:i:s');
-	// 	$hasil = $this->db->query("INSERT INTO r_berita (id,judul,isi,id_kat,tgl,soft_deletes)VALUES('$id','$judul','$isi','$kat','$tgl','0')");
-	// 	return $hasil;
-	// }
 	function delTemp_berita($id)
 	{ // Get the row with the specified id 
 		$this->db->where('id', $id);

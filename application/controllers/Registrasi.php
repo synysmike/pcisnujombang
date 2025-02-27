@@ -9,6 +9,7 @@ class Registrasi extends CI_Controller
 		$this->load->model('M_user');
 		$this->load->database();
 		$this->load->helper('auth'); // Load the auth helper
+		$this->load->helper('upload');
 	}
 
 	public function get_kabkota()

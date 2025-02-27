@@ -8,6 +8,7 @@ class Kategori extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_kategori');
+		$this->load->helper('upload');
 	}
 
 	public function index()

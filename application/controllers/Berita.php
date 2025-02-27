@@ -8,6 +8,7 @@ class Berita extends My_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_berita');
+		$this->load->helper('upload');
 	}
 
 
@@ -48,69 +49,71 @@ class Berita extends My_Controller
 	function simpan_berita()
 	{
 		$data = $this->input->post();
-		// echo json_encode($data);
 		$id = $this->input->post('id');
+		$custom_path = './assets/images/berita/';
 
 		if ($id) {
-			// Perform soft delete on the existing record
-			$this->M_berita->delTemp_berita($id);
-
-			// Check if a new file is uploaded
-			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['gambar'] = $this->upload_image($this->input->post('judul'));
-			} else {
-				// Retain the existing image
+			// Perform soft delete
+			$this->_delete_berita_by_id($id);
+			// Check if a new file is uploaded, if not retain existing image
+			if (!isset($_FILES["file"]["name"]) || $_FILES["file"]["name"] == "") {
 				$existing_record = $this->M_berita->get_berita_by_id($id);
 				$data['gambar'] = $existing_record->gambar;
 			}
-			// Create a new record with the updated values
-			unset($data['id']); // Remove the id from the data array
-			$result = $this->M_berita->simpan_berita($data);
+			// Remove the id from the data array before creating a new record
+			unset($data['id']);
 		} else {
 			// Check if a new file is uploaded
 			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['gambar'] = $this->upload_image($this->input->post('judul'));
-				// echo json_encode($data);
+				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path);
 			}
-			$result = $this->M_berita->simpan_berita($data);
 		}
-
-		echo json_encode($result);
+		// Create a new record with the updated values or new data
+		$result = $this->create_berita($data, $custom_path);
+		echo json_encode(['success' => $result]);
 	}
 
-	private function upload_image($judul)
-	{
-		$tgl = date('Y-m-d');
-		$judul = preg_replace("/[^A-Za-z0-9 ]/", '_', $judul);
-		$config['upload_path'] = "./assets/images";
-		$config['allowed_types'] = 'jpg|jpeg|png|gif';
-		$config['max_size'] = 1000;
-		$config['file_name'] = $tgl . "_" . $judul;
-		$this->load->library('upload', $config);
-		$this->upload->initialize($config);
 
-		if (!$this->upload->do_upload('file')) {
-			return '';
+	function create_berita($data, $custom_path)
+	{
+		if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
+			$data['gambar'] = upload_image($data['judul'], $custom_path);
+		}
+		return $this->M_berita->simpan_berita($data);
+	}
+
+
+
+	public function delete_berita()
+	{
+		$id = $this->input->post('id'); // Get the id from the POST data
+
+		// Ensure $id is valid
+		if ($id) {
+			// Perform delete operation
+			$result = $this->_delete_berita_by_id($id);
+			// Send response
+			if ($result) {
+				echo json_encode(['success' => true]);
+			} else {
+				echo json_encode(['success' => false]);
+			}
 		} else {
-			$arr_image = array('upload_data' => $this->upload->data());
-			return $arr_image['upload_data']['file_name'];
+			echo json_encode(['success' => false]);
 		}
 	}
 
-
-
-
-	function hapus_berita()
+	// Private method to handle the actual deletion logic
+	private function _delete_berita_by_id($id)
 	{
-		$id = $this->input->post('id');
-		$data = $this->M_berita->hapus_berita($id);
-		echo json_encode($data);
+		// Perform delete operation
+		return $this->M_berita->delTemp_berita($id);
 	}
-	function delTemp_berita()
-	{
-		$id = $this->input->post('id');
-		$data = $this->M_berita->delTemp_berita($id);
-		echo json_encode($data);
-		
-	}
+	
+
+
+
+
+
+	
 }

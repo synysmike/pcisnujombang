@@ -41,25 +41,30 @@
 <section class="section">
 	<div class="section-body">
 		<div class="col-12">
-			<div class="doc-example">
-				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
-					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
-						<div class="card">
-							<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
-								<table id="anggotaTable" class="display responsive nowrap">
-									<thead>
-										<tr>
-											<th>No.</th>
-											<th>Username</th>
-											<th>Nama</th>
-											<th>Position</th>
-											<th>Membership Date</th>
-											<th>Status</th>
-											<th>Actions</th>
-										</tr>
-									</thead>
-									<tbody> </tbody>
-								</table>
+			<div class="card">
+				<div class="card-header d-flex justify-content-center align-items-center">
+					<h3>Manajemen Anggota</h3>
+				</div>
+				<div class="card-body">
+					<div class="doc-example">
+						<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
+							<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
+								<div class="card-datatable table-responsive pt-0 d-flex justify-content-center">
+									<table id="anggotaTable" class="display responsive nowrap">
+										<thead>
+											<tr>
+												<th>No.</th>
+												<th>Username</th>
+												<th>Nama</th>
+												<th>Position</th>
+												<th>Membership Date</th>
+												<th>Status</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody> </tbody>
+									</table>
+								</div>
 							</div>
 						</div>
 					</div>

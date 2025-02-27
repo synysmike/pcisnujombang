@@ -8,7 +8,9 @@ class User extends My_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_user');
+		$this->load->helper('upload');
 		$this->load->database();
+
 	}
 
 	public function index()

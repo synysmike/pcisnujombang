@@ -10,6 +10,7 @@ class Auth extends CI_Controller
 		$this->load->model('M_user');
 		$this->load->database();
 		$this->load->helper('auth');
+		$this->load->helper('upload');
 	}
 
 	public function index()

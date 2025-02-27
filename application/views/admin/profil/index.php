@@ -15,8 +15,11 @@
 				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
 					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
 						<div class="card">
-							<div class="container mt-5">
-								<h1 class="mb-4">Profil</h1>
+							<div class="card-header d-flex justify-content-center align-items-center">
+
+								<h3>Manajemen Profil</h3>
+							</div>
+							<div class="container">
 								<div id="profile" class="mb-4">
 									<div class="mb-3">
 										<h3><strong>Visi:</strong></h3> <span id="visi" class="preview"></span>

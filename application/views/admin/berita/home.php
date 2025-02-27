@@ -54,6 +54,12 @@
 		z-index: 1060 !important;
 		/* Set the desired z-index */
 	}
+
+	.isi-column {
+		word-wrap: break-word;
+		white-space: normal;
+		vertical-align: top;
+	}
 </style>
 
 <div class="modal fade" id="createCategory" tabindex="-1" aria-hidden="true">
@@ -170,26 +176,37 @@
 <section class="section">
 	<div class="section-body">
 		<div class="col-12">
-			<div class="doc-example">
-				<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
-					<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
-						<div class="card">
-							<div class="container mt-5">
-								<div class="card-datatable table-responsive pt-0 justify-content-center">
-									<table id="tabel-berita" class="display responsive nowrap">
-										<thead>
-											<tr>
-												<th>no</th>
-												<!-- <th>id</th> -->
-												<th>judul</th>
-												<th>kategori</th>
-												<th>isi</th>
-												<th>tanggal</th>
-												<th>gambar</th>
-												<th>Action</th>
-											</tr>
-										</thead>
-									</table>
+			<div class="card">
+				<div class="card-header d-flex justify-content-center align-items-center">
+					<h3>Manajemen Berita</h3>
+				</div>
+				<div class="card-body">
+					<div class="d-flex justify-content-between">
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create">Tambah Berita</button>
+						<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCategory">Tambah Kategori</button>
+					</div>
+					<div class="doc-example">
+						<div class="tab-content doc-example-content" id="tab-tabContent" data-label="Example">
+							<div class="tab-pane fade show active" id="basic-datatable-preview" role="tabpanel" aria-labelledby="basic-datatable-preview-tab">
+								<div class="card">
+									<div class="container mt-5">
+										<div class="card-datatable table-responsive pt-0 justify-content-center">
+											<table id="tabel-berita" class="display responsive">
+												<thead>
+													<tr>
+														<th>no</th>
+														<!-- <th>id</th> -->
+														<th>judul</th>
+														<th>kategori</th>
+														<th>isi</th>
+														<th>tanggal</th>
+														<th>gambar</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+											</table>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

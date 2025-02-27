@@ -10,6 +10,7 @@ class Anggota extends CI_Controller
 		$this->load->model('M_anggota');
 		$this->load->model('M_jabatan');
 		$this->load->model('M_user');
+		$this->load->helper('upload');
 	}
 
 	// Display all anggota
