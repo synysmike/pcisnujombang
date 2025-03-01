@@ -13,15 +13,13 @@ class Home extends My_Controller
 		$this->load->helper('upload');
 		// $this->load->library('input');
 	}
-	public function login() {
-		
-	}
+	public function login() {}
 	public function get_section()
 	{
 		$sections = $this->M_home->get_section();
 		echo json_encode($sections);
 	}
-	
+
 	public function index()
 	{
 		$this->data['css'] = 'public/home/css-req';
@@ -58,6 +56,12 @@ class Home extends My_Controller
 		$this->load->view('admin/main', $this->data);
 	}
 
+	public function set_home_config()
+	{
+		$config = $this->M_home->get_config_by_apply();
+		echo json_encode($config);
+	}
+
 	public function set_config()
 	{
 		$this->M_home->get_config();
@@ -74,86 +78,124 @@ class Home extends My_Controller
 		echo json_encode($configs);
 	}
 
-	public function create()
+
+	public function save_config()
 	{
-		$section = $this->input->post('section');
-		$carousel = $this->input->post('carousel');
+		$data = $this->input->post();
+		$id = $this->input->post('id');
+		$custom_path = './assets/images/logo/'; // Directory to store logos
 
-		$data = array(
-			'config_profile_name' => $this->input->post('nama_config'),
-			'alamat' => $this->input->post('alamat'),
-			'kontak' => $this->input->post('kontak'),
-			'email' => $this->input->post('email'),
-			'date_of_creation' => date('Y-m-d H:i:s'),
-			'array_of_id_section' => is_array($section) ? implode(',', $section) : $section, // Convert array to comma-separated string
-			'array_of_id_carousel' => is_array($carousel) ? implode(',', $carousel) : $carousel, // Convert array to comma-separated string
-			'color_1' => $this->input->post('color_1'),
-			'color_2' => $this->input->post('color_2')
-		);
+		// Handle file upload for logo
+		if (isset($_FILES["logo"]["name"]) && $_FILES["logo"]["name"] != "") {
+			$data['logo'] = upload_image($this->input->post('config_profile_name'), $custom_path, 'logo');
+		}
 
-		// Insert the data into the database
-		$this->M_home->insert($data);
+		if ($id) {
+			// Update existing config
+			$existing_record = $this->M_home->get_config_by_id($id);
+
+			if ($existing_record) {
+				// Retain existing data that isn't being updated
+				foreach ($existing_record as $key => $value) {
+					if (!isset($data[$key])) {
+						$data[$key] = $value;
+					}
+				}
+
+				// Retain existing logo if no new file uploaded
+				if (!isset($data['logo']) && isset($existing_record->logo)) {
+					$data['logo'] = $existing_record->logo;
+				}
+
+				// Convert arrays to comma-separated strings if needed
+				$section = $this->input->post('array_of_id_section');
+				$carousel = $this->input->post('array_of_id_carousel');
+				$data['array_of_id_section'] = is_array($section) ? implode(',', $section) : $section;
+				$data['array_of_id_carousel'] = is_array($carousel) ? implode(',', $carousel) : $carousel;
+
+				// Debug log
+				log_message('debug', 'Update data: ' . print_r(
+						$data,
+						true
+					));
+
+				// Update the data in the database
+				$this->M_home->update_config($id, $data);
+			}
+		} else {
+			// Add new config
+			$data['date_of_creation'] = date('Y-m-d H:i:s');
+
+			// Convert arrays to comma-separated strings if needed
+			$section = $this->input->post('array_of_id_section');
+			$carousel = $this->input->post('array_of_id_carousel');
+			$data['array_of_id_section'] = is_array($section) ? implode(',', $section) : $section;
+			$data['array_of_id_carousel'] = is_array($carousel) ? implode(',', $carousel) : $carousel;
+
+			// Insert the new data into the database
+			$this->M_home->insert($data);
+		}
 
 		// Return a JSON response
-		echo json_encode(array('status' => 'success'));
+		echo json_encode(['status' => 'success']);
 	}
 
-	public function edit($id)
+
+
+	public function delete_config()
 	{
-		$section = $this->input->post('section');
-		$carousel = $this->input->post('carousel');
+		$id = $this->input->post('id'); // Get the id from the POST data
 
-		$data = array(
-			'config_profile_name' => $this->input->post('nama_config'),
-			'alamat' => $this->input->post('alamat'),
-			'kontak' => $this->input->post('kontak'),
-			'email' => $this->input->post('email'),
-			'array_of_id_section' => is_array($section) ? implode(',', $section) : $section, // Convert array to comma-separated string
-			'array_of_id_carousel' => is_array($carousel) ? implode(',', $carousel) : $carousel, // Convert array to comma-separated string
-			'color_1' => $this->input->post('color_1'),
-			'color_2' => $this->input->post('color_2')
-		);
-
-		// Update the data in the database
-		$this->M_home->update_config($id, $data);
-
-		// Return a JSON response
-		echo json_encode(array('status' => 'success'));
+		// Ensure $id is valid
+		if ($id) {
+			// Perform delete operation
+			$result = $this->_delete_config_by_id($id);
+			// Send response
+			if ($result) {
+				echo json_encode(['success' => true]);
+			} else {
+				echo json_encode(['success' => false]);
+			}
+		} else {
+			echo json_encode(['success' => false]);
+		}
 	}
+	// Private method to handle the actual deletion logic
+	private function _delete_config_by_id($id)
+	{
+		// Perform delete operation
+		return $this->M_home->delTemp_config($id);
+	}
+
+
+	//delete config
 	public function delete($id)
 	{
 		$this->M_home->soft_delete($id);
 		echo json_encode(array('status' => 'success'));
 	}
-
+	//apply config
 	public function apply_config($id)
 	{
 		$this->M_home->apply_config($id);
 		echo json_encode(array('status' => 'success', 'message' => 'Configuration applied successfully'));
 	}
+	// Home
 	public function read()
 	{
 		$this->data['records'] = $this->M_home->get_all();
 		$this->load->view('admin/main', $this->data);
 	}
 
-	public function update($id)
-	{
-		$data = array(
-			'title' => $this->input->post('title'),
-			'content' => $this->input->post('content')
-		);
-		$this->M_home->update($id, $data);
-		redirect('home/ordal');
-	}
 
 
-	// Section
+	// Load Section
 	public function get_all_sections()
 	{
 		$sections = $this->M_home->get_all_sections();
 		echo json_encode($sections);
 	}
+	//update section
 	public function update_section($id)
 	{
 		$data = array(
@@ -164,6 +206,7 @@ class Home extends My_Controller
 		$this->M_home->update_section($id, $data);
 		echo json_encode(array('status' => 'success', 'message' => 'Section updated successfully'));
 	}
+	//store section
 	public function store_section()
 	{
 		$data = array(
@@ -176,32 +219,32 @@ class Home extends My_Controller
 		echo json_encode(array('status' => 'success', 'message' => 'Section created successfully', 'data' => $result));
 	}
 
-
+	//edit section
 	public function edit_section($id)
 	{
 		$section = $this->M_home->get_section_by_id($id);
 		echo json_encode($section);
 	}
-
+	//
 	public function delete_section($id)
 	{
 		$this->M_home->soft_delete_section($id);
 		echo json_encode(array('status' => 'success'));
 	}
-	
-	// Carousel
 
+	// Carousel
+	//
 	public function get_all_carousels()
 	{
 		$carousels = $this->M_carousel->get_all();
 		echo json_encode(['data' => $carousels]);
 	}
-
+	//store carousel
 	public function store_carousel()
 	{
 		$data = $this->input->post();
 		$id = $this->input->post('id');
-
+		$custom_path = './assets/images/carousel/'; // Directory to store carousel images
 		if ($id) {
 			// Perform soft delete on the existing record
 			$this->M_carousel->delete($id);
@@ -215,7 +258,7 @@ class Home extends My_Controller
 
 			// Check if a new file is uploaded
 			if (isset($_FILES["picture"]["name"]) && $_FILES["picture"]["name"] != "") {
-				$data['picture'] = $this->upload_image($this->input->post('title'));
+				$data['picture'] = upload_image($this->input->post('title'), $custom_path, 'picture');
 			} else {
 				// Retain the existing image
 				$existing_record = $this->M_carousel->get($id);
@@ -232,7 +275,8 @@ class Home extends My_Controller
 		} else {
 			// Check if a new file is uploaded
 			if (isset($_FILES["picture"]["name"]) && $_FILES["picture"]["name"] != "") {
-				$data['picture'] = $this->upload_image($this->input->post('title'));
+
+				$data['picture'] = upload_image($this->input->post('title'), $custom_path, 'picture');
 			}
 			$data['created_at'] = date('Y-m-d H:i:s'); // Set the current date
 			$result = $this->M_carousel->insert($data);
@@ -240,54 +284,19 @@ class Home extends My_Controller
 		}
 	}
 
-	private function upload_image($title)
-	{
-		$tgl = date('Y-m-d');
-		$title = preg_replace("/[^A-Za-z0-9 ]/", '_', $title);
-		$config['upload_path'] = "./assets/images/carousel"; // Ensure this path exists
-		$config['allowed_types'] = 'jpg|jpeg|png|gif';
-		$config['max_size'] = 3000; // 3 MB
-		$config['file_name'] = $tgl . "_" . $title;
-		$this->load->library('upload', $config);
-		$this->upload->initialize($config);
-
-		if (!$this->upload->do_upload('picture')) {
-			log_message('error', $this->upload->display_errors());
-			return '';
-		} else {
-			$arr_image = array('upload_data' => $this->upload->data());
-			return $arr_image['upload_data']['file_name'];
-		}
-	}
 
 
+	// get carousel by id
 	public function edit_carousel($id)
 	{
 		$carousel = $this->M_carousel->get($id);
 		echo json_encode($carousel);
 	}
 
-	public function update_carousel($id)
-	{
-		$data = $this->input->post();
-		// echo json_encode($data);
-		// Perform soft delete on the existing record
-		$this->M_carousel->delete($id);
-
-		// Use the store_carousel function to create a new record
-		$this->store_carousel();
-	}
-
+	//delete carousel
 	public function delete_carousel($id)
 	{
 		$this->M_carousel->delete($id);
 		redirect('home/ordal');
 	}
-	
-
-
-
-
-	
-	
 }

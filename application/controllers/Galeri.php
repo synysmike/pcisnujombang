@@ -31,7 +31,7 @@ class Galeri extends MY_Controller
 	{
 		$data = $this->input->post();
 		$id = $this->input->post('id');
-
+		$custom_path = './assets/images/galeri/';
 		if ($id) {
 			// Perform soft delete on the existing record
 			$this->M_galeri->soft_delete_galeri($id);
@@ -46,7 +46,8 @@ class Galeri extends MY_Controller
 
 			// Check if a new file is uploaded
 			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['file'] = $this->upload_image($this->input->post('judul'));
+
+				$data['file']  = upload_image($this->input->post('judul'), $custom_path, 'file');
 			} else {
 				// Retain the existing image
 				$existing_record = $this->M_galeri->get_galeri_by_id($id);
@@ -63,7 +64,7 @@ class Galeri extends MY_Controller
 		} else {
 			// Check if a new file is uploaded
 			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['file'] = $this->upload_image($this->input->post('judul'));
+				$data['file']  = upload_image($this->input->post('judul'), $custom_path, 'file');
 			}
 			$data['tgl'] = date('Y-m-d'); // Set the current date
 			$data['id_user'] = $this->session->userdata('user_id'); // Get user_id from session
@@ -72,37 +73,11 @@ class Galeri extends MY_Controller
 		}
 	}
 
-
-
-	private function upload_image($judul)
-	{
-		$tgl = date('Y-m-d');
-		$judul = preg_replace("/[^A-Za-z0-9 ]/", '_', $judul);
-		$config['upload_path'] = "./assets/images"; // Ensure this path exists
-		$config['allowed_types'] = 'jpg|jpeg|png|gif';
-		$config['max_size'] = 3000; // 1 MB
-		$config['file_name'] = $tgl . "_" . $judul;
-		$this->load->library('upload', $config);
-		$this->upload->initialize($config);
-
-		if (!$this->upload->do_upload('file')) {
-			log_message('error', $this->upload->display_errors());
-			return '';
-		} else {
-			$arr_image = array('upload_data' => $this->upload->data());
-			return $arr_image['upload_data']['file_name'];
-		}
-	}
-
-
 	public function get_edit($id)
 	{
 		$galeri = $this->M_galeri->get_galeri_by_id($id);
 		echo json_encode($galeri);
 	}
-
-
-
 
 	public function delete($id)
 	{

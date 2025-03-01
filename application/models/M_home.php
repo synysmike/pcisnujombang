@@ -36,7 +36,26 @@ class M_home extends CI_Model
 		return $query->row_array();
 	}
 
+	public function get_config_by_apply()
+	{
+		$this->db->select('*');
+		$this->db->from('r_home_config');
+		$this->db->where('apply', 1);
+		$query = $this->db->get();
+		return $query->row();
+	}
 
+	public function insert($data)
+	{
+		return $this->db->insert('r_home_config', $data); // Change 'config_table' to the actual table name
+	}
+	// Update an existing configuration by ID
+	public function update_config($id, $data)
+	{
+		return $this->db->where('id', $id)
+			->update('r_home_config', $data); // Change 'config_table' to the actual table name
+	}
+	
 
 
 
@@ -51,6 +70,10 @@ class M_home extends CI_Model
 		];
 	}
 
+
+
+
+	
 	public function insert_section($data)
 	{
 		$this->db->insert('r_section', $data);
@@ -84,11 +107,7 @@ class M_home extends CI_Model
 
 
 
-	public function update_config($id, $data)
-	{
-		$this->db->where('id', $id);
-		return $this->db->update('r_home_config', $data);
-	}
+	
 	public function apply_config($id)
 	{
 		// Remove apply value from other records where it is 1
@@ -125,11 +144,7 @@ class M_home extends CI_Model
 		return $query->row_array();
 	}
 
-	public function insert($data)
-	{
-		return $this->db->insert('r_home_config', $data);
-	}
-
+	
 	public function update($id, $data)
 	{
 		$this->db->where('id', $id);

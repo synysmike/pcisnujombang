@@ -21,6 +21,31 @@
 </script>
 <script>
 	$(document).ready(function() {
+		$.ajax({
+			url: "/home/set_home_config", // Your API endpoint here
+			method: "GET",
+			success: function(response) {
+				const parsedResponse = JSON.parse(response);
+				const color1 = parsedResponse.color_1;
+				const color2 = parsedResponse.color_2;
+
+				if (color1 && color2) {
+					$(":root").css("--theme-color", color1);
+					$(":root").css("--theme-color2", color2);
+					console.log("Colors applied:", color1, color2);
+				} else {
+					console.error("Color values not found in the response.");
+				}
+				$('#logoImage').attr('src', '<?php echo base_url('/assets/images/logo/'); ?>' + parsedResponse.logo);
+				$('#title').text(parsedResponse.config_profile_name);
+				$('#url_alamat').attr('href', parsedResponse.url_alamat).text(parsedResponse.alamat);
+				$('#url_kontak').attr('href', parsedResponse.url_kontak).text(parsedResponse.kontak);
+				$('#url_email').attr('href', parsedResponse.url_email).text(parsedResponse.email);
+			},
+			error: function(error) {
+				console.error("Error fetching color:", error);
+			},
+		});
 		<?php if ($this->session->flashdata('login_success')): ?> Swal.fire({
 				icon: 'success',
 				title: 'Success',

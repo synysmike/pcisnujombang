@@ -11,15 +11,13 @@ class Berita extends My_Controller
 		$this->load->helper('upload');
 	}
 
-
-	
+	// pyblic berita
 	public function index()
 	{
 		$this->load->view('public/berita');
 	}
 
-
-
+	// admin berita
 	public function ordal()
 	{
 		$this->check_user_level([2, 3, 4]);
@@ -30,6 +28,7 @@ class Berita extends My_Controller
 		$this->load->view('admin/main', $this->data);
 	}
 
+	// get all berita
 	function get_all_berita()
 	{
 		$data = $this->M_berita->get_berita();
@@ -37,7 +36,7 @@ class Berita extends My_Controller
 		echo json_encode($data);
 	}
 
-
+	//get berita by id
 	public function get_berita()
 	{
 		$this->load->model("M_berita");
@@ -46,6 +45,7 @@ class Berita extends My_Controller
 		echo json_encode($data["results"]);
 	}
 
+	// save berita
 	function simpan_berita()
 	{
 		$data = $this->input->post();
@@ -58,14 +58,21 @@ class Berita extends My_Controller
 			// Check if a new file is uploaded, if not retain existing image
 			if (!isset($_FILES["file"]["name"]) || $_FILES["file"]["name"] == "") {
 				$existing_record = $this->M_berita->get_berita_by_id($id);
-				$data['gambar'] = $existing_record->gambar;
+				if ($existing_record) {
+					$data['gambar'] = $existing_record->gambar;
+				} else {
+					$data['gambar'] = null; // Handle case where no existing record is found
+				}
+			} else {
+				// Handle new image upload
+				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
 			}
 			// Remove the id from the data array before creating a new record
 			unset($data['id']);
 		} else {
 			// Check if a new file is uploaded
 			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path);
+				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
 			}
 		}
 		// Create a new record with the updated values or new data
@@ -73,17 +80,16 @@ class Berita extends My_Controller
 		echo json_encode(['success' => $result]);
 	}
 
-
+	// support function create_berita
 	function create_berita($data, $custom_path)
 	{
 		if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-			$data['gambar'] = upload_image($data['judul'], $custom_path);
+			$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
 		}
 		return $this->M_berita->simpan_berita($data);
 	}
 
-
-
+	// delete berita
 	public function delete_berita()
 	{
 		$id = $this->input->post('id'); // Get the id from the POST data
@@ -109,11 +115,4 @@ class Berita extends My_Controller
 		// Perform delete operation
 		return $this->M_berita->delTemp_berita($id);
 	}
-	
-
-
-
-
-
-	
 }

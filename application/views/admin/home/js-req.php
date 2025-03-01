@@ -1,19 +1,26 @@
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
+
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.js"></script>
+<script src="<?php echo base_url(); ?>/assets/admin/magnify-master/dist/jquery.magnify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="<?php echo base_url(); ?>assets/admin/magnify-master/dist/jquery.magnify.js"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js'></script>
+
 
 
 <script>
 	$(document).ready(function() {
+
+
 		// Initialize the DataTable and add the responsive class for config-home
 		var table = $('#configTable').DataTable({
 			ajax: {
@@ -31,6 +38,16 @@
 				},
 				{
 					data: 'config_profile_name'
+				},
+				{
+					data: 'logo',
+					render: function(data, type, row) {
+						if (data) {
+							return '<img src="<?php echo base_url("./assets/images/logo/"); ?>' + data + '" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url("./assets/images/logo/"); ?>' + data + '" width="80px">';
+						} else {
+							return 'No Image';
+						}
+					}
 				},
 				{
 					data: 'color_1',
@@ -57,36 +74,65 @@
 					data: 'alamat'
 				},
 				{
+					data: 'url_alamat'
+				},
+				{
 					data: 'kontak'
+				},
+				{
+					data: 'url_kontak'
 				},
 				{
 					data: 'email'
 				},
 				{
+					data: 'url_email'
+				},
+				{
 					data: null,
-					// Add action buttons
 					render: function(data, type, row) {
 						return `
-						<button class="btn btn-sm btn-success apply-btn" data-id="${row.id}" ${row.apply == 1 ? 'disabled' : ''}>Apply</button>
-						<button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">Edit</button>
-						<button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">Delete</button>
-					`;
+                    <button class="btn btn-sm btn-success apply-btn" data-id="${row.id}" ${row.apply == 1 ? 'disabled' : ''}>Apply</button>
+                    <button class="btn btn-sm btn-primary edit-btn" data-id="${row.id}">Edit</button>
+                    <button class="btn btn-sm btn-danger delete-btn" data-id="${row.id}">Delete</button>
+                `;
 					}
 				}
 			],
-			responsive: true,
-			dom: '<"top"f>rt<"bottom"lp><"clear">',
-			// Add buttons to the DataTable header
-			initComplete: function() {
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-success ml-3" data-bs-toggle="modal" data-bs-target="#contactModal">Tambah Profil Pengaturan</button> ');
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-warning ml-3" data-bs-toggle="modal" data-bs-target="#carouselModal">Tambar banner halaman utama</button> ');
-				$("#configTable_wrapper .top").append('<button type="button" class="btn btn-primary ml-3" data-bs-toggle="modal" data-bs-target="#sectionModal">Tambah bagian halaman</button> ');
+			responsive: {
+				details: {
+					type: 'column',
+					target: 'tr'
+				}
 			},
+			columnDefs: [{
+				className: 'control',
+				orderable: false,
+				targets: 0
+			}],
+			order: [1, 'asc'],
+			dom: 'Bfrtip', // Adjusted to remove buttons
+			initComplete: function() {
+				var $filter = $("#configTable_wrapper .dataTables_filter");
+				$filter.addClass('d-flex align-items-center'); // Add Bootstrap classes to align items
+				$filter.prepend('<div class="btn-group me-3" role="group"></div>'); // Add a wrapper for the buttons
+
+				setTimeout(function() {
+					$filter.find('.btn-group').append('<button type="button" class="btn btn-success ms-3" data-bs-toggle="modal" data-bs-target="#contactModal">Tambah Profil Pengaturan</button>');
+					$filter.find('.btn-group').append('<button type="button" class="btn btn-warning ms-3" data-bs-toggle="modal" data-bs-target="#carouselModal">Tambar banner halaman utama</button>');
+					$filter.find('.btn-group').append('<button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#sectionModal">Tambah bagian halaman</button>');
+				}, 200); // Slight delay to ensure DataTables initialization is complete
+			},
+
 			language: {
 				search: "_INPUT_",
-				searchPlaceholder: "Search..."
+				searchPlaceholder: "Cari ..."
 			}
 		});
+
+
+
+
 		table.buttons().container().appendTo('#configTable_wrapper .col-md-6:eq(0)');
 		//function apply config-home
 		$('#configTable').on('click', '.apply-btn', function() {
@@ -133,14 +179,34 @@
 					// Parse the response as JSON
 					var data = JSON.parse(response);
 					// Populate the form fields with the response data
-					$('#contactForm').append('<input type="hidden" name="id" value="' + data.id + '">');
-					$('#contactForm').find('input[name="nama_config"]').val(data.config_profile_name);
-					$('#contactForm').find('input[name="alamat"]').val(data.alamat);
-					$('#contactForm').find('input[name="kontak"]').val(data.kontak);
-					$('#contactForm').find('input[name="email"]').val(data.email);
-					$('#contactForm').find('input[name="color_1"]').val(data.color_1);
-					$('#contactForm').find('input[name="color_2"]').val(data.color_2);
+					$('#contactModalLabel').text('Form edit pengaturan beranda');
+					$('#configForm').append('<input type="hidden" name="id" value="' + data.id + '">');
+					$('#configForm').find('input[name="config_profile_name"]').val(data.config_profile_name);
+					$('#configForm').find('input[name="alamat"]').val(data.alamat);
+					$('#configForm').find('input[name="url_alamat"]').val(data.url_alamat);
+					$('#configForm').find('input[name="kontak"]').val(data.kontak);
+					$('#configForm').find('input[name="url_kontak"]').val(data.url_kontak);
+					$('#configForm').find('input[name="email"]').val(data.email);
+					$('#configForm').find('input[name="url_email"]').val(data.url_email);
+					$('#configForm').find('input[name="color_1"]').val(data.color_1);
+					$('#configForm').find('input[name="color_2"]').val(data.color_2);
 					$('#contactModal').modal('show');
+					if (data.logo) {
+						$('#configForm').append('<input type="hidden" name="logo" value="' + data.logo + '">');
+						$('#configForm').find('#logoImage').attr('src', '<?php echo base_url("./assets/images/logo/"); ?>' + data.logo).show();
+						// $('#carouselForm').find('input[name="picture"]').prop('disabled', true);
+
+						$('#configForm').find('input[name="logo"]').on('change', function() {
+							if ($(this).val()) {
+								$('#configForm').find('input[name="logo"]').prop('disabled', false);
+							} else {
+								$('#configForm').find('input[name="logo"]').prop('disabled', true);
+							}
+						});
+						// $('#carouselForm').find('#carouselImage').attr('src', '<?php echo base_url("./assets/images/carousel/"); ?>' + data.picture).show();
+					} else {
+						$('#configForm').find('#logoImage').hide();
+					}
 				},
 				error: function(response) {
 					Swal.fire({
@@ -187,12 +253,14 @@
 			});
 		});
 		$('#contactModal').on('hidden.bs.modal', function() {
-			$('#contactForm')[0].reset(); // Clear the form fields
-			$('#contactForm').find('input[name="id"]').remove(); // Remove the hidden ID field
+			$('#contactModalLabel').text('Form tambah pengaturan beranda');
+			$('#configForm')[0].reset(); // Clear the form fields
+			$('#configForm').find('input[name="id"]').remove(); // Remove the hidden ID field
 		});
 
 		$('#contactModal').on('shown.bs.modal', function() {
-			var id = $('#contactForm').find('input[name="id"]').val();
+
+			var id = $('#configForm').find('input[name="id"]').val();
 			if (id) {
 				// console.log('Edit mode');
 				fetchSectionsForEdit(id);
@@ -219,8 +287,8 @@
 					} else {
 						console.error('Expected an array but got:', data);
 					}
-					$('#section').html(options);
-					initializeSelect2('#section');
+					$('#array_of_id_section').html(options);
+					initializeSelect2('#array_of_id_section');
 
 					// Fetch the configuration data and set the selected values
 					$.ajax({
@@ -229,7 +297,7 @@
 						success: function(response) {
 							var configData = JSON.parse(response);
 							setTimeout(function() {
-								$('#section').val(configData.array_of_id_section ? configData.array_of_id_section.split(',') : []).trigger('change');
+								$('#array_of_id_section').val(configData.array_of_id_section ? configData.array_of_id_section.split(',') : []).trigger('change');
 							}, 100); // Add a slight delay
 						},
 						error: function(response) {
@@ -265,8 +333,8 @@
 					} else {
 						console.error('Expected an array but got:', data);
 					}
-					$('#section').html(options);
-					initializeSelect2('#section');
+					$('#array_of_id_section').html(options);
+					initializeSelect2('#array_of_id_section');
 				},
 				error: function(response) {
 					Swal.fire({
@@ -292,8 +360,8 @@
 					} else {
 						console.error('Expected an array but got:', data);
 					}
-					$('#carousel').html(options);
-					initializeSelect2('#carousel');
+					$('#array_of_id_carousel').html(options);
+					initializeSelect2('#array_of_id_carousel');
 
 					// Fetch the configuration data and set the selected values
 					$.ajax({
@@ -302,7 +370,7 @@
 						success: function(response) {
 							var configData = JSON.parse(response);
 							setTimeout(function() {
-								$('#carousel').val(configData.array_of_id_carousel ? configData.array_of_id_carousel.split(',') : []).trigger('change');
+								$('#array_of_id_carousel').val(configData.array_of_id_carousel ? configData.array_of_id_carousel.split(',') : []).trigger('change');
 							}, 100); // Add a slight delay
 							// console.log(response);
 						},
@@ -341,8 +409,8 @@
 					} else {
 						console.error('Expected an array but got:', data);
 					}
-					$('#carousel').html(options);
-					initializeSelect2('#carousel');
+					$('#array_of_id_carousel').html(options);
+					initializeSelect2('#array_of_id_carousel');
 				},
 				error: function(response) {
 					Swal.fire({
@@ -354,15 +422,19 @@
 			});
 		}
 		//function submit config home form
-		$('#contactForm').on('submit', function(e) {
+		$('#configForm').on('submit', function(e) {
 			e.preventDefault();
-			var formData = $(this).serialize();
-			var id = $('#contactForm').find('input[name="id"]').val();
-			var url = id ? '<?php echo base_url("home/edit"); ?>/' + id : '<?php echo base_url("home/create"); ?>';
+
+			var formData = new FormData(this); // Use FormData for file upload
+			var id = $('#configForm').find('input[name="id"]').val();
+			var url = id ? '<?php echo base_url("home/save_config"); ?>/' + id : '<?php echo base_url("home/save_config"); ?>';
+
 			$.ajax({
 				type: 'POST',
 				url: url,
 				data: formData,
+				contentType: false, // Required for file upload
+				processData: false, // Required for file upload
 				success: function(response) {
 					// Handle success response
 					$('#contactModal').modal('hide');
@@ -370,7 +442,7 @@
 					Swal.fire({
 						icon: 'success',
 						title: 'Success',
-						text: id ? 'Contact updated successfully!' : 'Contact added successfully!'
+						text: id ? 'Configuration updated successfully!' : 'Configuration added successfully!'
 					});
 				},
 				error: function(response) {
@@ -378,11 +450,12 @@
 					Swal.fire({
 						icon: 'error',
 						title: 'Error',
-						text: id ? 'Failed to update contact!' : 'Failed to add contact!'
+						text: id ? 'Failed to update configuration!' : 'Failed to add configuration!'
 					});
 				}
 			});
 		});
+
 
 
 
@@ -545,8 +618,92 @@
 				}
 			});
 		});
-		// carousel modal function
+
+
+		// Global variables for cropper
+		let result,
+			img_result,
+			img_w,
+			img_h,
+			options,
+			save,
+			cropped,
+			dwn,
+			upload,
+			cropper,
+			croppedImage;
+
+		// Function to initialize cropper variables and event listeners
+		function initializeCropper() {
+			result = document.querySelector('.result');
+			img_result = document.querySelector('.img-result');
+			img_w = document.querySelector('.img-w');
+			img_h = document.querySelector('.img-h');
+			options = document.querySelector('.options');
+			save = document.querySelector('.save');
+			cropped = document.querySelector('.cropped');
+			dwn = document.querySelector('.download');
+			upload = document.querySelector('#file-input');
+
+			// Function to handle file upload and initialize Cropper
+			upload.addEventListener('change', e => {
+				if (e.target.files.length) {
+					const reader = new FileReader();
+					reader.onload = e => {
+						if (e.target.result) {
+							let img = document.createElement('img');
+							img.id = 'image';
+							img.src = e.target.result;
+							result.innerHTML = '';
+							result.appendChild(img);
+							save.classList.remove('hide');
+							options.classList.remove('hide');
+							cropper = new Cropper(img);
+						}
+					};
+					reader.readAsDataURL(e.target.files[0]);
+				}
+			});
+
+			// Function to handle the save button click and get cropped image
+			save.addEventListener('click', e => {
+				e.preventDefault();
+				let imgSrc = cropper.getCroppedCanvas({
+					width: img_w.value // input value
+				}).toDataURL();
+				cropped.classList.remove('hide');
+				img_result.classList.remove('hide');
+				cropped.src = imgSrc;
+				dwn.classList.remove('hide');
+				dwn.download = 'imagename.png';
+				dwn.setAttribute('href', imgSrc);
+				croppedImage = imgSrc; // Store the cropped image
+			});
+		}
+		// Function to reset the cropper and clear the canvas
+		function resetCropper() {
+			result.innerHTML = ''; // Clear the cropper canvas
+			img_result.classList.add('hide'); // Hide the image result container
+			save.classList.add('hide'); // Hide the save button
+			options.classList.add('hide'); // Hide the options container
+			cropped.classList.add('hide'); // Hide the cropped image
+			dwn.classList.add('hide'); // Hide the download link
+			upload.value = ''; // Clear the file input
+			croppedImage = null; // Reset the cropped image variable
+			if (cropper) {
+				cropper.destroy(); // Destroy the cropper instance
+				cropper = null; // Reset the cropper variable
+			}
+		}
+		// Function to return the cropped image
+		function getCroppedImage() {
+			return croppedImage;
+		}
+
+		// Initialize cropper variables and event listeners when the modal is shown
 		$('#carouselModal').on('shown.bs.modal', function() {
+			initializeCropper();
+
 			if (!$.fn.DataTable.isDataTable('#carouselTable')) {
 				var carouselTable = $('#carouselTable').DataTable({
 					ajax: {
@@ -570,7 +727,6 @@
 						},
 						{
 							data: 'picture',
-
 							render: function(data, type, row) {
 								if (data) {
 									return '<img src="<?php echo base_url("./assets/images/carousel/"); ?>' + data + '" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url("./assets/images/carousel/"); ?>' + data + '" width="80px">';
@@ -602,23 +758,87 @@
 
 				// Initialize the magnify plugin after the table is drawn
 				$('#carouselTable').on('draw.dt', function() {
-					$("[data-magnify=gallery]").magnify(
-						[
-							'zoomIn',
-							'zoomOut',
-							'prev',
-							'fullscreen',
-							'next',
-							'actualSize',
-							'rotateRight'
-						]
-					);
+					$("[data-magnify=gallery]").magnify(['zoomIn', 'zoomOut', 'prev', 'fullscreen', 'next', 'actualSize', 'rotateRight']);
 				});
+
 			} else {
 				var carouselTable = $('#carouselTable').DataTable();
 				carouselTable.ajax.reload(); // Reload the DataTable
 			}
 		});
+
+		$('#carouselForm').on('submit', function(e) {
+			e.preventDefault();
+
+			// Get the cropped image
+			var croppedImgSrc = getCroppedImage();
+
+			if (croppedImgSrc) {
+				// Convert base64 to Blob
+				var mime = croppedImgSrc.split(',')[0].split(':')[1].split(';')[0];
+				var croppedBlob = base64ToBlob(croppedImgSrc, mime);
+
+				// Append the Blob to the FormData
+				var formData = new FormData($('#carouselForm')[0]);
+				formData.append('picture', croppedBlob, 'cropped-image.png');
+
+				var id = $('#carouselForm').find('input[name="id"]').val();
+				var url = id ? '<?php echo base_url("home/store_carousel"); ?>/' + id : '<?php echo base_url("home/store_carousel"); ?>';
+				console.log(formData);
+				$.ajax({
+					type: 'POST',
+					url: url,
+					data: formData,
+					processData: false, // Prevent jQuery from automatically transforming the data into a query string
+					contentType: false, // Set the content type to false to let the browser set it
+					success: function(response) {
+						// Handle success response
+						var carouselTable = $('#carouselTable').DataTable();
+						carouselTable.ajax.reload(); // Reload the DataTable
+						Swal.fire({
+							icon: 'success',
+							title: 'Success',
+							text: id ? 'Carousel updated successfully!' : 'Carousel added successfully!'
+						});
+						// Reset the cropper and canvas
+						resetCropper();
+					},
+					error: function(response) {
+						// Handle error response
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: id ? 'Failed to update carousel!' : 'Failed to add carousel!',
+							footer: response.responseText
+						});
+					}
+				});
+			} else {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'No image selected or cropped image is not available!'
+				});
+			}
+		});
+
+		// Function to convert base64 to Blob
+		function base64ToBlob(base64, mime) {
+			var byteString = atob(base64.split(',')[1]);
+			var ab = new ArrayBuffer(byteString.length);
+			var ia = new Uint8Array(ab);
+			for (var i = 0; i < byteString.length; i++) {
+				ia[i] = byteString.charCodeAt(i);
+			}
+			return new Blob([ab], {
+				type: mime
+			});
+		}
+
+
+
+
+
 		//carousel edit function
 		$('#carouselTable').on('click', '.edit-carousel-btn', function() {
 			var id = $(this).data('id');
@@ -634,7 +854,21 @@
 					if (data.picture) {
 						$('#carouselForm').append('<input type="hidden" name="new_picture" value="' + data.picture + '">');
 						$('#carouselForm').find('#carouselImage').attr('src', '<?php echo base_url("./assets/images/carousel/"); ?>' + data.picture).show();
-						// $('#carouselForm').find('input[name="picture"]').prop('disabled', true);
+						// Destroy existing cropper instance if it exists
+						if (cropper) {
+							cropper.destroy();
+							cropper = null;
+						}
+						// Create new image element with recent image
+						let img = document.createElement('img');
+						img.id = 'image';
+						img.src = '<?php echo base_url("./assets/images/carousel/"); ?>' + data.picture;
+						result.innerHTML = ''; // Clear the previous cropper canvas
+						result.appendChild(img); // Append the new image
+						save.classList.remove('hide');
+						options.classList.remove('hide');
+						// Initialize cropper with new image
+						cropper = new Cropper(img);
 
 						$('#carouselForm').find('input[name="picture"]').on('change', function() {
 							if ($(this).val()) {
@@ -643,7 +877,6 @@
 								$('#carouselForm').find('input[name="picture"]').prop('disabled', true);
 							}
 						});
-						// $('#carouselForm').find('#carouselImage').attr('src', '<?php echo base_url("./assets/images/carousel/"); ?>' + data.picture).show();
 					} else {
 						$('#carouselForm').find('#carouselImage').hide();
 					}
@@ -663,106 +896,47 @@
 				}
 			});
 		});
+
 		//
-		$('#carouselForm').on('submit', function(e) {
-			e.preventDefault();
 
-			// Validate image dimensions
-			var fileInput = $('#carouselForm').find('input[name="picture"]')[0];
-			if (fileInput.files && fileInput.files[0]) {
-				var img = new Image();
-				img.onload = function() {
-					// if (img.width !== 1920 || img.height !== 850) {
-					// 	Swal.fire({
-					// 		icon: 'error',
-					// 		title: 'Error',
-					// 		text: 'Gambar yang anda unggah <strong>HARUS</strong> berukuran 1920x850 pixels!'
-					// 	});
-					// } else {
-					// 	submitForm();
-					// }
-					submitForm();
-				};
-				img.onerror = function() {
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: 'Invalid image file!'
+
+
+
+		//
+		$('#carouselTable').on('click', '.delete-carousel-btn', function() {
+			var id = $(this).data('id');
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "You won't be able to revert this!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Yes, delete it!'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					$.ajax({
+						url: '<?php echo base_url("home/delete_carousel"); ?>/' + id,
+						type: 'DELETE',
+						success: function(response) {
+							var carouselTable = $('#carouselTable').DataTable();
+							carouselTable.ajax.reload(); // Reload the DataTable
+							Swal.fire({
+								icon: 'success',
+								title: 'Deleted!',
+								text: 'Carousel has been deleted.'
+							});
+						},
+						error: function(response) {
+							Swal.fire({
+								icon: 'error',
+								title: 'Error',
+								text: 'Failed to delete carousel!'
+							});
+						}
 					});
-				};
-				img.src = URL.createObjectURL(fileInput.files[0]);
-			} else {
-				submitForm();
-			}
-
-			function submitForm() {
-				var formData = new FormData($('#carouselForm')[0]); // Use FormData to handle file uploads
-				var id = $('#carouselForm').find('input[name="id"]').val();
-				var url = id ? '<?php echo base_url("home/update_carousel"); ?>/' + id : '<?php echo base_url("home/store_carousel"); ?>';
-				$.ajax({
-					type: 'POST',
-					url: url,
-					data: formData,
-					processData: false, // Prevent jQuery from automatically transforming the data into a query string
-					contentType: false, // Set the content type to false to let the browser set it
-					success: function(response) {
-						// Handle success response
-						var carouselTable = $('#carouselTable').DataTable();
-						carouselTable.ajax.reload(); // Reload the DataTable
-						Swal.fire({
-							icon: 'success',
-							title: 'Success',
-							text: id ? 'Carousel updated successfully!' : 'Carousel added successfully!'
-						});
-					},
-					error: function(response) {
-						// Handle error response
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: id ? 'Failed to update carousel!' : 'Failed to add carousel!',
-							footer: response.responseText
-						});
-					}
-				});
-			}
-		});
-	});
-
-	//
-	$('#carouselTable').on('click', '.delete-carousel-btn', function() {
-		var id = $(this).data('id');
-		Swal.fire({
-			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				$.ajax({
-					url: '<?php echo base_url("home/delete_carousel"); ?>/' + id,
-					type: 'DELETE',
-					success: function(response) {
-						var carouselTable = $('#carouselTable').DataTable();
-						carouselTable.ajax.reload(); // Reload the DataTable
-						Swal.fire({
-							icon: 'success',
-							title: 'Deleted!',
-							text: 'Carousel has been deleted.'
-						});
-					},
-					error: function(response) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: 'Failed to delete carousel!'
-						});
-					}
-				});
-			}
+				}
+			});
 		});
 	});
 	//function initialize select2

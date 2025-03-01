@@ -2,12 +2,12 @@
 	<div class="menu-top">
 		<div class="container">
 			<div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
-				<div class="col-auto d-none d-lg-block">
+				<div class="col-auto d-none d-lg-block justify-content-center align-items-center">
 					<div class="header-logo">
+						<a class="justify-content-center justify-content-lg-between align-items-center" href="index.html"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
 						<a href="<?php echo base_url(); ?>" class="php">
-							<h5>PC ISNU Jombang</h5>
+							<h5 id="title">PC ISNU Jombang</h5>
 						</a>
-						<!-- <a href="index.html"><img src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a> -->
 					</div>
 				</div>
 				<div class="col-auto d-none d-md-block">
@@ -20,7 +20,7 @@
 							</div>
 							<div class="box-content">
 								<p class="box-text">Alamat Kantor :</p>
-								<h4 class="box-title"><a href="https://www.google.com/maps">Jombang, Indonesia</a></h4>
+								<h4 id="text_alamat" class="box-title"><a target="_blank" id="url_alamat" href="https://www.google.com/maps">Jombang, Indonesia</a></h4>
 							</div>
 						</div>
 						<div class="info-card">
@@ -31,7 +31,7 @@
 							</div>
 							<div class="box-content">
 								<p class="box-text">Kontak Admin:</p>
-								<h4 class="box-title"><a href="https://wa.me/6281332444088">Teguh : 081332444088</a></h4>
+								<h4 id="text_kontak" class="box-title"><a target="_blank" id="url_kontak" href="https://wa.me/6281332444088">Teguh : 081332444088</a></h4>
 							</div>
 						</div>
 						<div class="info-card">
@@ -42,7 +42,7 @@
 							</div>
 							<div class="box-content">
 								<p class="box-text">Email Kantor:</p>
-								<h4 class="box-title"><a href="mailto:irteguh95@hmail.com">irteguh95@hmail.com</a></h4>
+								<h4 id="text_email" class="box-title"><a target="_blank" id="url_email" href="mailto:irteguh95@hmail.com">irteguh95@hmail.com</a></h4>
 							</div>
 						</div>
 					</div>
@@ -93,7 +93,8 @@
 
 							<?php else: ?>
 								<li>
-									<a href="<?php echo base_url() . 'registrasi' ?>">Registrasi Anggota</a>
+
+									<a href="<?php echo base_url() . 'registrasi' ?>" class="th-btn style2"><span class="btn-icon"><i class="far fa-plus"></i></span><span class="btn-text">Registrasi Anggota</span></a>
 								</li>
 
 						<?php

@@ -1,8 +1,10 @@
+
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
 if (!function_exists('upload_image')) {
-	function upload_image($title, $upload_path)
+	function upload_image($title, $upload_path, $field_name)
 	{
 		$CI = &get_instance();
 
@@ -21,7 +23,7 @@ if (!function_exists('upload_image')) {
 		$CI->load->library('upload', $config);
 		$CI->upload->initialize($config);
 
-		if (!$CI->upload->do_upload('file')) {
+		if (!$CI->upload->do_upload($field_name)) {
 			log_message('error', $CI->upload->display_errors());
 			return '';
 		} else {

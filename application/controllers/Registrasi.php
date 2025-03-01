@@ -57,16 +57,4 @@ class Registrasi extends CI_Controller
 		$this->M_user->insert_user($user_data, $bio_data);
 		redirect('registrasi/success');
 	}
-
-
-	
-
-	public function ordal()
-	{
-		$this->data['css'] = $this->load->view('admin/home/css-req');
-		$this->data['js'] =  $this->load->view('admin/home/js-req');
-		$this->load->view('admin/header', $this->data);
-		$this->load->view('admin/home/home');
-		$this->load->view('admin/footer');
-	}
 }
