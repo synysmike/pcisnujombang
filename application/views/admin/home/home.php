@@ -1,6 +1,6 @@
 <style>
 	.page {
-		margin: 1em auto;
+		margin: 16px auto;
 		max-width: 768px;
 		display: flex;
 		align-items: flex-start;
@@ -9,23 +9,21 @@
 	}
 
 	.box {
-		padding: 0.5em;
+		padding: 8px;
 		width: 100%;
-		margin: 0.5em;
+		margin: 8px;
 	}
 
 	.box-2 {
-		padding: 0.5em;
-		width: calc(100%/2 - 1em);
+		padding: 8px;
+		width: 100%;
 	}
 
 	.options label,
 	.options input {
-		width: 4em;
-		padding: 0.5em 1em;
+		width: 80px;
+		padding: 8px 16px;
 	}
-
-
 
 	.hide {
 		display: none;
@@ -34,6 +32,8 @@
 	img {
 		max-width: 100%;
 	}
+</style>
+
 </style>
 <section class="section">
 	<div class="section-body">
@@ -75,8 +75,6 @@
 						</div>
 					</div>
 				</div>
-
-
 			</div>
 		</div>
 	</div>
@@ -105,7 +103,6 @@
 						<button type="submit" class="btn btn-primary" form="sectionForm">Simpan Perubahan</button>
 					</div>
 				</form>
-
 				<div class="card mt-4">
 					<div class="card-datatable table-responsive pt-0">
 						<table id="sectionTable" class="table table-striped table-bordered" style="width:100%">
@@ -161,28 +158,30 @@
 						<div class="box-2 img-result hide">
 							<!-- result of crop -->
 							<img class="cropped" src="" alt="">
+							<!-- Crop button -->
 						</div>
+						<button class="btn btn-primary crop hide">Crop</button>
+						<button class="btn btn-danger reset hide">Reset</button>
 						<!-- input file -->
 						<div class="box">
 							<div class="options hide">
 								<label> Width</label>
-								<input type="number" class="img-w" value="300" min="100" max="1200" />
+								<input type="number" class="img-w" min="100" max="2000" />
+								<label> Height</label>
+								<input type="number" class="img-h" min="100" max="2000" />
 							</div>
 							<!-- save btn -->
 							<button class="btn btn-success save hide">Save</button>
 							<!-- download btn -->
 							<a href="" class="btn btn-info download hide">Download</a>
 						</div>
-
 						<!-- <input type="file" class="form-control" id="picture" name="picture" required> -->
 						<!-- <img id="carouselImage" src="#" alt="Gambar Karusel" style="display:none; width: 100px; height: auto; margin-top: 10px;"> -->
 					</div>
-
 					<div class="modal-footer">
 						<button type="submit" class="btn btn-primary" form="carouselForm">Simpan Perubahan</button>
 					</div>
 				</form>
-
 				<div class="card mt-4">
 					<div class="card-datatable table-responsive pt-0">
 						<table id="carouselTable" class="table table-striped table-bordered" style="width:100%">
@@ -270,7 +269,6 @@
 					<div class="form-group">
 						<label for="array_of_id_section">Seksi</label>
 						<select class="form-control select2" id="array_of_id_section" name="array_of_id_section[]" multiple="multiple" required>
-
 						</select>
 					</div>
 					<div class="form-group">
@@ -282,7 +280,6 @@
 						</select>
 					</div>
 				</form>
-
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

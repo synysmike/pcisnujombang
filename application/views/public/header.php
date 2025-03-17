@@ -2,11 +2,11 @@
 	<div class="menu-top">
 		<div class="container">
 			<div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
-				<div class="col-auto d-none d-lg-block justify-content-center align-items-center">
+				<div class="col-auto d-none d-lg-block ">
 					<div class="header-logo">
-						<a class="justify-content-center justify-content-lg-between align-items-center" href="index.html"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
+						<a href="index.html"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
 						<a href="<?php echo base_url(); ?>" class="php">
-							<h5 id="title">PC ISNU Jombang</h5>
+							<h5 style="text-align: center;" id="title">PC ISNU Jombang</h5>
 						</a>
 					</div>
 				</div>
@@ -74,13 +74,10 @@
 							<li class="menu-item-has-children">
 								<a href="<?php echo base_url() . 'home' ?>">Home</a>
 								<ul class="mega-menu mega-menu-content">
-
 								</ul>
-
 								<?php $seg =  $this->uri->segment(1);
 								// echo $seg;
 								if ($seg == "" or $seg == "home") {
-
 								?>
 									<!-- <li><a href="#about-sec">About Us</a></li> -->
 							<li><a href="#donation-sec">Visi/Misi</a></li>
@@ -90,13 +87,10 @@
 									if ($this->session->userdata('user_id')):
 							?>
 								<li><a href="<?php echo site_url('logout'); ?>">Logout</a></li>
-
 							<?php else: ?>
 								<li>
-
 									<a href="<?php echo base_url() . 'registrasi' ?>" class="th-btn style2"><span class="btn-icon"><i class="far fa-plus"></i></span><span class="btn-text">Registrasi Anggota</span></a>
 								</li>
-
 						<?php
 									endif;
 								} else {
@@ -104,9 +98,6 @@
 								}
 						?>
 						</li>
-
-
-
 						</ul>
 					</nav>
 					<p class="header-notice"><img class="me-1" src="<?php echo base_url(); ?>assets/public/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p>

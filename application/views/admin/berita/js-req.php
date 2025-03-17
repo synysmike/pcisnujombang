@@ -1,20 +1,13 @@
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.14.5/dist/sweetalert2.min.js"></script>
 <script src="<?php echo base_url(); ?>/assets/admin/magnify-master/dist/jquery.magnify.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -35,8 +28,6 @@
 			url: '<?php echo base_url("kategori/get_all_kategori") ?>',
 			type: 'post',
 			success: function(data) {
-				// console.log("Response Data:", data); // Log the response data
-				// var categories = JSON.parse(data);
 				var categories = data;
 				categories.forEach(function(category) {
 					var option = new Option(category.kategori, category.id, false, false);
@@ -48,14 +39,11 @@
 			}
 		});
 
+		// Datatables AJAX button 
 		$('<style>')
 			.prop('type', 'text/css')
 			.html('.custom-dropdown { z-index: 1060 !important; }')
 			.appendTo('head');
-
-
-
-
 		DataTable.ext.buttons.alert = {
 			className: 'buttons-info',
 			action: function(e, dt, node, config) {
@@ -63,13 +51,13 @@
 			}
 		};
 
+		// Datatables AJAX Kategori
 		var tableKategori = $('#tabel-kategori').DataTable({
 			ajax: {
 				url: '<?php echo base_url("kategori/get_all_kategori") ?>',
 				type: 'post',
 				dataSrc: '',
 			},
-
 			columns: [{
 					data: null,
 					// Use null data to create a row number column 
@@ -83,7 +71,6 @@
 				{
 					data: 'description',
 				},
-
 				{
 					data: 'id',
 					render: function(data, type, row) {
@@ -101,8 +88,6 @@
 				url: '<?php echo base_url("kategori/get_kategori_by_id") ?>/' + id,
 				type: 'get',
 				success: function(data) {
-					console.log("Data received:", data);
-					// Log the received data 
 					if (data) {
 						$('#category-id').val(data.id);
 						$('#categoryName').val(data.kategori);
@@ -161,7 +146,6 @@
 			}
 		});
 
-
 		// Handle form submission for creating categories 
 		$('#category-form').on('submit', function(e) {
 			e.preventDefault();
@@ -175,6 +159,7 @@
 				}
 			});
 		});
+
 		// Handle form submission for editing categories 
 		$('#edit-category-form').on('submit', function(e) {
 			e.preventDefault();
@@ -189,8 +174,6 @@
 				}
 			});
 		});
-
-
 
 		// ///////////////////////////***###<--PEMROSES BERITA-->###***\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		// Datatables AJAX Berita
@@ -234,10 +217,6 @@
 						return meta.row + 1; // Return the row number
 					}
 				},
-				// {
-				// 	data: 'id',
-				// 	visible: false // Hide the ID column 
-				// },
 				{
 					data: 'judul',
 				},
@@ -320,6 +299,7 @@
 						if (item.gambar) {
 							$("#preview").show();
 							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/berita/') ?>" + item.gambar);
+							$("#preview-gambar").attr("data-src", "<?php echo base_url('assets/images/berita/') ?>" + item.gambar);
 						} else {
 							$("#preview").hide();
 							$("#preview-gambar").attr("src", "");
@@ -336,18 +316,6 @@
 		});
 
 
-		//gallery_Magnify.js
-		$("[data-magnify=gallery]").magnify(
-			[
-				'zoomIn',
-				'zoomOut',
-				'prev',
-				'fullscreen',
-				'next',
-				'actualSize',
-				'rotateRight'
-			]
-		);
 
 
 

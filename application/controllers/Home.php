@@ -8,12 +8,14 @@ class Home extends My_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_home');
+		$this->load->model('M_berita');
 		$this->load->model('M_carousel');
 		$this->load->library(array('upload'));
+		$this->load->library('session');
 		$this->load->helper('upload');
 		// $this->load->library('input');
 	}
-	public function login() {}
+
 	public function get_section()
 	{
 		$sections = $this->M_home->get_section();
@@ -44,7 +46,102 @@ class Home extends My_Controller
 		$this->data['footer'] = 'public/footer';
 		// $this->data[''] = 'public/home/';
 		$this->load->view('public/main', $this->data);
+		$this->load->view('public/home/home-jsfunc');
 	}
+
+
+
+
+	public function get_all_berita()
+	{
+		$berita = $this->M_berita->get_berita();
+		if (!$berita) {
+			echo json_encode(["error" => "No data found"]);
+			return;
+		}
+
+		$formattedBerita = [];
+		foreach ($berita as $item) {
+			$formattedBerita[] = [
+				"title" => $item->judul,
+				"id" =>  $item->id,
+				"image" => base_url('assets/images/berita/' . $item->gambar),
+				"date" => date('F d, Y', strtotime($item->tgl)),
+				"category" => $item->kategori_nama
+			];
+		}
+		echo json_encode($formattedBerita);
+	}
+
+
+
+
+
+	public function get_berita_detail()
+	{
+		// Load model
+		$this->load->model('M_berita');
+
+		// Get the slug from the AJAX request
+		$slug = $this->input->post('slug');
+
+		// Fetch berita details by slug
+		$berita = $this->M_berita->get_berita_by_slug($slug);
+
+		// Return berita details as JSON
+		if ($berita) {
+			echo json_encode($berita);
+		} else {
+			echo json_encode(['error' => 'Berita not found']);
+		}
+	}
+
+	public function setBlogSession()
+	{
+		// Get the POST data
+		// Decode JSON input
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		// Retrieve the 'id' from the decoded JSON
+		$id = isset($input['id']) ? $input['id'] : null;
+
+
+
+
+		if ($id) {
+			$this->session->set_userdata('blog_id', $id); // Set the session data
+			// Respond with success
+			echo json_encode(['status' => 'success']);
+		} else {
+			// Respond with error
+			echo json_encode(['status' => 'error', 'message' => 'Invalid blog ID']);
+		}
+	}
+
+
+	public function blog_detail()
+	{
+		// Load session library to retrieve the ID
+
+		$id = $this->session->userdata('blog_id'); // Get the ID from session
+
+		if (!$id) {
+			show_404(); // Show error if no ID is in the session
+			return;
+		}
+
+		$this->data['css'] = 'public/home/css-req';
+		$this->data['js'] = 'public/home/js-req';
+		$this->data['page'] = 'public/home/blog-detail';
+		$this->data['mobile_menu'] = 'public/mobile_menu';
+		$this->data['header'] = 'public/header';
+		$this->data['footer'] = 'public/footer';
+		$this->data['berita'] = $this->M_berita->get_berita_by_id($id); // Fetch blog data
+		$this->load->view('public/main', $this->data);
+	}
+
+
+
 
 	public function ordal()
 	{

@@ -26,6 +26,13 @@ class M_berita extends CI_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+	public function get_berita_by_slug($slug)
+	{
+		$this->db->where('slug', $slug);
+		$query = $this->db->get('berita'); // Replace 'berita' with your table name
+		return $query->row(); // Return a single berita row as an object
+	}
+
 	public function get_berita_by_id($id)
 	{
 		$this->db->select('*');
