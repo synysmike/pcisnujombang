@@ -19,6 +19,22 @@
 <script src="<?php echo base_url(); ?>assets/public/assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
+	$('.popup-image').magnificPopup({
+		type: 'image',
+		gallery: {
+			enabled: true // Enables gallery mode
+		},
+		callbacks: {
+			open: function() {
+				console.log("Magnific Popup is working!"); // Optional for debugging
+			}
+		}
+	});
+
+	// Prevent default link behavior
+	$('.popup-image').on('click', function(event) {
+		event.preventDefault(); // Stops the link from opening in a new tab
+	});
 	$.ajax({
 		url: "/home/set_home_config", // Your API endpoint here
 		method: "GET",

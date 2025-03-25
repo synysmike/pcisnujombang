@@ -43,7 +43,7 @@
 					"data": "file",
 					"render": function(data, type, row) {
 						if (data) {
-							return '<img src="<?php echo base_url("assets/images/"); ?>' + data + '" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url("assets/images/"); ?>' + data + '" width="80px">';
+							return '<img src="<?php echo base_url("assets/images/galeri/"); ?>' + data + '" class="img-thumbnail" data-magnify="gallery" data-src="<?php echo base_url("assets/images/galeri/"); ?>' + data + '" width="80px">';
 						} else {
 							return 'No Image';
 						}
@@ -118,7 +118,10 @@
 					$('#judul').val(data.judul);
 					$('#ket').val(data.ket);
 					$('#tgl').val(data.tgl);
-					$('#preview-gambar').attr('src', '<?php echo base_url("assets/images/"); ?>' + data.file);
+					$('#preview-gambar').attr({
+						'src': '<?php echo base_url("assets/images/galeri/"); ?>' + data.file,
+						'data-src': '<?php echo base_url("assets/images/galeri/"); ?>' + data.file
+					});
 					$('#create').modal('show');
 				}
 			});

@@ -1,6 +1,8 @@
 <script>
 	$(document).ready(function() {
-		// Fetch color data
+		// fetch galeri
+		loadGallery('gallery-container');
+
 
 		// Attach a click event to all <a> tags with an id that starts with "blog_"
 		$('a[id^="blog_"]').click(function(e) {
@@ -179,5 +181,63 @@
 				});
 			});
 		});
+
+
+		const swiper = new Swiper('#ProjectSlider1', {
+			slidesPerView: 1,
+			spaceBetween: 24,
+			breakpoints: {
+				576: {
+					slidesPerView: 1
+				},
+				768: {
+					slidesPerView: 2
+				},
+				992: {
+					slidesPerView: 2
+				},
+				1200: {
+					slidesPerView: 3
+				},
+			},
+		});
+
+		loadGallery('projectGalleryContainer');
+
+		function loadGallery(containerId) {
+			$.ajax({
+				url: "<?php echo base_url(); ?>/Galeri/get_galeri", // Adjust the path to match your controller setup
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+					let galleryHTML = '';
+					const items = response.data; // Access the data from the response
+					items.forEach((item, index) => {
+						const isActive = index === 0 ? 'swiper-slide-active' : index === 1 ? 'swiper-slide-next' : ''; // Determine slide class
+						const ariaLabel = `${index + 1} / ${items.length}`; // Create aria-label for accessibility
+
+						galleryHTML += `
+            <div class="swiper-slide ${isActive}" role="group" aria-label="${ariaLabel}" data-swiper-slide-index="${index}" style="width: 414px; margin-right: 24px;">
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="<?php echo base_url("assets/images/galeri/"); ?>${item.file}" alt="project image">
+                    </div>
+                    <div class="project-content">
+                        <div class="project-card-bg-shape bg-mask" data-mask-src = "<?php echo base_url(); ?>assets/img/shape/project-card-bg-shape1-1.png" ></div>
+                        <h3 class="project-title"><a href="#" target:"_blank">${item.judul}</a></h3>
+                        <p class="project-subtitle">${item.ket}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+					});
+					$(`#${containerId}`).html(galleryHTML); // Populate the container
+				},
+				error: function() {
+					alert("Failed to load gallery data!");
+				}
+			});
+		}
+
 	});
 </script>

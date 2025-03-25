@@ -16,28 +16,29 @@
 </head>
 <style>
 	@charset "utf-8";
+	@import url(//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
 
-
-	@import url //maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css);
-
-
+	:root {
+		--primary-color: #0264d6;
+		--secondary-color: #1c2b5a;
+	}
 
 	div.main {
-		background: #0264d6;
+		background: var(--primary-color, #0264d6);
 		/* Old browsers */
-		background: -moz-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+		background: -moz-radial-gradient(center, ellipse cover, var(--primary-color, #0264d6) 1%, var(--secondary-color, #1c2b5a) 100%);
 		/* FF3.6+ */
-		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%, #0264d6), color-stop(100%, #1c2b5a));
+		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%, var(--primary-color, #0264d6)), color-stop(100%, var(--secondary-color, #1c2b5a)));
 		/* Chrome,Safari4+ */
-		background: -webkit-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+		background: -webkit-radial-gradient(center, ellipse cover, var(--primary-color, #0264d6) 1%, var(--secondary-color, #1c2b5a) 100%);
 		/* Chrome10+,Safari5.1+ */
-		background: -o-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+		background: -o-radial-gradient(center, ellipse cover, var(--primary-color, #0264d6) 1%, var(--secondary-color, #1c2b5a) 100%);
 		/* Opera 12+ */
-		background: -ms-radial-gradient(center, ellipse cover, #0264d6 1%, #1c2b5a 100%);
+		background: -ms-radial-gradient(center, ellipse cover, var(--primary-color, #0264d6) 1%, var(--secondary-color, #1c2b5a) 100%);
 		/* IE10+ */
-		background: radial-gradient(ellipse at center, #0264d6 1%, #1c2b5a 100%);
+		background: radial-gradient(ellipse at center, var(--primary-color, #0264d6) 1%, var(--secondary-color, #1c2b5a) 100%);
 		/* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#0264d6', endColorstr='#1c2b5a', GradientType=1);
+		filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=var(--primary-color, #0264d6), endColorstr=var(--secondary-color, #1c2b5a), GradientType=1);
 		/* IE6-9 fallback on horizontal gradient */
 		height: calc(100vh);
 		width: 100%;
@@ -83,26 +84,27 @@
 		line-height: 1.5em;
 		padding: 0;
 		-webkit-appearance: none;
+		appearance: none;
 	}
 
 	p {
 		line-height: 1.5em;
 	}
 
-	.clearfix {
-		*zoom: 1;
+	zoom: 1;
+	*zoom: 1;
 
-		&:before,
-		&:after {
-			content: ' ';
-			display: table;
-		}
-
-		&:after {
-			clear: both;
-		}
-
+	&:before,
+	&:after {
+		content: ' ';
+		display: table;
 	}
+
+	&:after {
+		clear: both;
+	}
+
+
 
 	.container {
 		left: 50%;
@@ -228,8 +230,9 @@
 						<div class="clearfix"></div>
 
 					</div> <!-- end login -->
-					<div class="logo">LOGO
-
+					<div class="logo">
+						<img width="175" id="logoImage" class="img-fluid" src="" alt="">
+						<h2 id="logo">LOGO</h2>
 						<div class="clearfix"></div>
 					</div>
 
@@ -245,48 +248,85 @@
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 		$(document).ready(function() {
-			$(document).ready(function() {
-				$('#loginForm').on('submit', function(e) {
-					e.preventDefault(); // Prevent the default form submission
 
-					$.ajax({
-						url: '<?php echo site_url('auth/login'); ?>',
-						type: 'POST',
-						data: $(this).serialize(),
-						dataType: 'json', // Ensure the response is parsed as JSON
-						success: function(response) {
-							if (response.status === 'success') {
-								Swal.fire({
-									icon: 'success',
-									title: 'Success',
-									text: 'Login successful!'
-								}).then(function() {
-									window.location.href = response.redirect_url;
-								});
-							} else if (response.status === 'not_approved') {
-								Swal.fire({
-									icon: 'warning',
-									title: 'Not Approved',
-									text: 'Akun anda belum ter-"Approve", Silahkan menghubungi admin untuk dilakukan approval'
-								});
-							} else {
-								Swal.fire({
-									icon: 'error',
-									title: 'Error',
-									text: response.message || 'Invalid username or password. Please try again.'
-								});
-							}
-						},
-						error: function() {
+			$.ajax({
+				url: "/home/set_home_config", // Your API endpoint here
+				method: "GET",
+				success: function(response) {
+					const parsedResponse = JSON.parse(response);
+
+					// Since the response is an array, access the first element
+					if (parsedResponse.length > 0) {
+						const config = parsedResponse[0]; // Access the first object in the array
+						const color1 = config.color_1;
+						const color2 = config.color_2;
+
+						if (color1 && color2) {
+							$(":root").css("--primary-color", color1);
+							// $(":root").css("--secondary-color", color2);
+							// console.log("Colors applied:", color1, color2);
+						} else {
+							console.error("Color values not found in the response.");
+						}
+
+						$('#logoImage').attr('src', '<?php echo base_url('/assets/images/logo/'); ?>' + config.logo);
+						$('#logo').text(config.config_profile_name);
+						$('#url_alamat').attr('href', config.url_alamat).text(config.alamat);
+						$('#url_kontak').attr('href', config.url_kontak).text(config.kontak);
+						$('#url_email').attr('href', config.url_email).text(config.email);
+					} else {
+						console.error("Empty response array.");
+					}
+				},
+				error: function(error) {
+					console.error("Error fetching color:", error);
+				},
+			});
+
+
+
+
+			$('#loginForm').on('submit', function(e) {
+				e.preventDefault(); // Prevent the default form submission
+
+				$.ajax({
+					url: '<?php echo site_url('auth/login'); ?>',
+					type: 'POST',
+					data: $(this).serialize(),
+					dataType: 'json', // Ensure the response is parsed as JSON
+					success: function(response) {
+						if (response.status === 'success') {
+							Swal.fire({
+								icon: 'success',
+								title: 'Success',
+								text: 'Login successful!'
+							}).then(function() {
+								window.location.href = response.redirect_url;
+							});
+						} else if (response.status === 'not_approved') {
+							Swal.fire({
+								icon: 'warning',
+								title: 'Not Approved',
+								text: 'Akun anda belum ter-"Approve", Silahkan menghubungi admin untuk dilakukan approval'
+							});
+						} else {
 							Swal.fire({
 								icon: 'error',
 								title: 'Error',
-								text: 'Login failed. Please try again.'
+								text: response.message || 'Invalid username or password. Please try again.'
 							});
 						}
-					});
+					},
+					error: function() {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: 'Login failed. Please try again.'
+						});
+					}
 				});
 			});
+
 		});
 	</script>
 </body>
