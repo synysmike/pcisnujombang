@@ -59,7 +59,7 @@
 	<!--==============================
      Preloader
   ==============================-->
-	<!-- <div class="preloader ">
+	<div class="preloader ">
 		<button class="th-btn style2 preloaderCls">Cancel Preloader </button>
 		<div class="preloader-inner">
 			<span class="loader">
@@ -67,7 +67,7 @@
 				<span class="loading-text">PC ISNU Jombang</span>
 			</span>
 		</div>
-	</div> -->
+	</div>
 	<?php $this->load->view($mobile_menu); ?>
 	<!--==============================
 	<div class="color-scheme-wrap active">

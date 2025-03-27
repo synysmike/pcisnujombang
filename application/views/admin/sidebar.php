@@ -1,6 +1,6 @@
 <aside id="sidebar-wrapper">
 	<div class="sidebar-brand">
-		<a href="index.html" class="app-brand-link">
+		<a target="_blank" href="<?php echo base_url(); ?>" class="app-brand-link">
 			<span class="app-brand-logo demo mini-sidebar">
 				<svg
 					width="25"
@@ -50,13 +50,13 @@
 					</g>
 				</svg>
 			</span>
-			<span class="app-brand-text demo menu-text fw-bold ms-2">sneat</span>
+			<span class="app-brand-text demo menu-text fw-bold ms-2">PCISNUJOMBANG</span>
 		</a>
 
 
 	</div>
 	<div class="sidebar-brand sidebar-brand-sm">
-		<a href="<?php echo base_url(); ?>dist/index">St</a>
+		<a target="_blank" href="<?php echo base_url(); ?>">Isnu</a>
 	</div>
 	<div class="menu-inner-shadow"></div>
 

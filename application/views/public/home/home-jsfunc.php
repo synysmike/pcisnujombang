@@ -223,7 +223,7 @@
                         <img src="<?php echo base_url("assets/images/galeri/"); ?>${item.file}" alt="project image">
                     </div>
                     <div class="project-content">
-                        <div class="project-card-bg-shape bg-mask" data-mask-src = "<?php echo base_url(); ?>assets/img/shape/project-card-bg-shape1-1.png" ></div>
+                        <div class="project-card-bg-shape bg-mask" style="mask-image: url('<?php echo base_url(); ?>assets/public/assets/img/shape/project-card-bg-shape1-1.png');" ></div>
                         <h3 class="project-title"><a href="#" target:"_blank">${item.judul}</a></h3>
                         <p class="project-subtitle">${item.ket}</p>
                     </div>

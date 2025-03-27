@@ -4,7 +4,7 @@
 			<div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
 				<div class="col-auto d-none d-lg-block ">
 					<div class="header-logo">
-						<a href="index.html"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
+						<a href="<?php echo base_url(); ?>"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
 						<a href="<?php echo base_url(); ?>" class="php">
 							<h5 style="text-align: center;" id="title">PC ISNU Jombang</h5>
 						</a>
@@ -80,8 +80,8 @@
 								if ($seg == "" or $seg == "home") {
 								?>
 									<!-- <li><a href="#about-sec">About Us</a></li> -->
-							<li><a href="#donation-sec">Visi/Misi</a></li>
-							<li><a href="#service-sec">Galeri</a></li>
+							<li><a href="#service-sec">Visi/Misi</a></li>
+							<li><a href="#galls-sec">Galeri</a></li>
 							<li><a href="#blog-sec">Berita</a></li>
 							<?php
 									if ($this->session->userdata('user_id')):

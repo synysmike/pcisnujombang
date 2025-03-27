@@ -132,7 +132,7 @@ class Home extends My_Controller
 
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
-		$this->data['page'] = 'public/home/blog-detail';
+		$this->data['page'] = 'public/isi_berita/blog-detail';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
 		$this->data['header'] = 'public/header';
 		$this->data['footer'] = 'public/footer';

@@ -1,4 +1,4 @@
-<section class="overflow-hidden">
+<section class="overflow-hidden" id="galls-sec">
 	<div class="project-wrap1 space th-radius overflow-hidden" data-bg-src="https://pcisnujombang.test/assets/public/assets/img/bg/gray-bg2.png" data-overlay="gray" data-opacity="5">
 		<div class="shape-mockup project-bg-shape1-1" data-top="0" data-right="0">
 			<img src="https://pcisnujombang.test/assets/public/assets/img/shape/project-shape1-1.png" alt="img">
