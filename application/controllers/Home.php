@@ -10,11 +10,186 @@ class Home extends My_Controller
 		$this->load->model('M_home');
 		$this->load->model('M_berita');
 		$this->load->model('M_carousel');
+		$this->load->model('M_comment');
+		$this->load->model('M_guest');
 		$this->load->library(array('upload'));
 		$this->load->library('session');
 		$this->load->helper('upload');
 		// $this->load->library('input');
 	}
+
+
+	public function get_geo_info($ip_address)
+	{
+		$api_key = '081aa4913cbc4324950e5600c7007aed'; // Replace with your API key
+		$url = "https://api.ipgeolocation.io/ipgeo?apiKey=$api_key&ip=$ip_address";
+
+		// Use cURL to call the API
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$response = curl_exec($ch);
+		curl_close($ch);
+
+		// Decode API response
+		$data = json_decode($response, true);
+
+		return [
+			'country' => $data['country_name'] ?? 'Unknown',
+			'region' => $data['state_prov'] ?? 'Unknown',
+		];
+	}
+	public function process_comment()
+	{
+		// Step 1: Get the IP address and geolocation info
+		$ip_address = $this->input->ip_address(); // Fetch client IP address
+		$geo_info = $this->get_geo_info($ip_address); // Fetch country and region using geolocation
+
+		// Step 2: Handle guest addition or retrieval
+		$guest_data = array(
+			'uname' => $this->input->post('uname'),
+			'email' => $this->input->post('email'),
+			'phone_number' => $this->input->post('phone_number'),
+			'ip_address' => $ip_address,
+			'country' => $geo_info['country'], // Dynamically fetched country
+			'region' => $geo_info['region'],  // Dynamically fetched region
+		);
+
+		// Check for existing guest by email
+		$existing_guest = $this->M_guest->get_guest_by_email($guest_data['email']);
+		if ($existing_guest) {
+			$guest_id = $existing_guest->guest_id; // Use existing guest ID
+		} else {
+			$this->M_guest->insert_guest($guest_data);
+			$guest_id = $this->db->insert_id(); // Get new guest_id
+		}
+
+		// Step 3: Add comment
+		$comment_data = array(
+			'guest_id' => $guest_id,
+			'berita_id' => $this->input->post('post_id'),
+			'comment_text' => $this->input->post('comment_text'),
+			'created_at' => date('Y-m-d H:i:s'),
+			'updated_at' => date('Y-m-d H:i:s'),
+			'parent_comment_id' => $this->input->post('parent_comment_id'),
+		);
+
+		$comment_result = $this->M_comment->insert_comment($comment_data);
+
+		// Step 4: Send response to frontend
+		if ($comment_result) {
+			echo json_encode(['success' => true, 'message' => 'Comment added successfully.']);
+		} else {
+			echo json_encode(['success' => false, 'message' => 'Failed to add comment.']);
+		}
+	}
+	// Add a new comment
+
+
+
+
+	public function get_comment($post_id)
+	{
+		// Step 1: Fetch all comments for the given post_id
+		$comments = $this->M_comment->get_comments_by_post($post_id);
+
+		// Step 2: Organize comments into a hierarchical structure
+		$nested_comments = $this->build_comment_hierarchy($comments);
+
+		// Step 3: Return comments as JSON response
+		echo json_encode($nested_comments);
+	}
+
+	// Helper function to build comment hierarchy
+	private function build_comment_hierarchy($comments)
+	{
+		// Create an associative array for quick lookup
+		$comment_map = [];
+		foreach ($comments as $comment) {
+			$comment_map[$comment->comment_id] = $comment;
+			$comment_map[$comment->comment_id]->children = []; // Add 'children' property to each comment
+		}
+
+		// Build the hierarchy
+		$nested_comments = [];
+		foreach ($comments as $comment) {
+			if ($comment->parent_comment_id != 0) {
+				// If the comment has a parent, add it to the parent's 'children' array
+				$comment_map[$comment->parent_comment_id]->children[] = $comment;
+			} else {
+				// If the comment is a top-level comment, add it to the root array
+				$nested_comments[] = $comment;
+			}
+		}
+
+		return $nested_comments;
+	}
+
+
+	// Update an existing comment
+	public function edit_comment($comment_id)
+	{
+		$data = array(
+			'comment_text' => $this->input->post('comment_text'),
+		);
+
+		$result = $this->M_comment->update_comment($comment_id, $data);
+		echo json_encode(['success' => $result]);
+	}
+
+	// Delete a comment
+	public function delete_comment($comment_id)
+	{
+		$result = $this->M_comment->delete_comment($comment_id);
+		echo json_encode(['success' => $result]);
+	}
+
+
+
+
+
+
+
+	// Display all guests (AJAX)
+	public function get_guests()
+	{
+		$data['guests'] = $this->M_guest->get_all_guests();
+		echo json_encode($data);
+	}
+
+
+
+	// Update guest information
+	public function edit_guest($guest_id)
+	{
+		$data = array(
+			'email' => $this->input->post('email'),
+			'phone_number' => $this->input->post('phone_number'),
+			'ip_address' => $this->input->post('ip_address'),
+			'country' => $this->input->post('country'),
+			'region' => $this->input->post('region'),
+		);
+
+		$result = $this->M_guest->update_guest($guest_id, $data);
+		echo json_encode(['success' => $result]);
+	}
+
+	// Delete guest
+	public function delete_guest($guest_id)
+	{
+		$result = $this->M_guest->delete_guest($guest_id);
+		echo json_encode(['success' => $result]);
+	}
+
+
+
+
+
+
+
+
+
+
 
 	public function get_section()
 	{
@@ -26,6 +201,7 @@ class Home extends My_Controller
 	{
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
+		$this->data['js_func'] = 'public/home/home-jsfunc';
 		$this->data['page'] = 'public/home';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
 		$this->data['hero'] = 'public/home/hero';
@@ -44,9 +220,7 @@ class Home extends My_Controller
 		$this->data['video'] = 'public/home/video';
 		$this->data['header'] = 'public/header';
 		$this->data['footer'] = 'public/footer';
-		// $this->data[''] = 'public/home/';
 		$this->load->view('public/main', $this->data);
-		$this->load->view('public/home/home-jsfunc');
 	}
 
 
@@ -64,6 +238,7 @@ class Home extends My_Controller
 		foreach ($berita as $item) {
 			$formattedBerita[] = [
 				"title" => $item->judul,
+				"url" => $item->slug,
 				"id" =>  $item->id,
 				"image" => base_url('assets/images/berita/' . $item->gambar),
 				"date" => date('F d, Y', strtotime($item->tgl)),
@@ -79,11 +254,10 @@ class Home extends My_Controller
 
 	public function get_berita_detail()
 	{
+		$slug = $this->input->post('slug');
 		// Load model
 		$this->load->model('M_berita');
 
-		// Get the slug from the AJAX request
-		$slug = $this->input->post('slug');
 
 		// Fetch berita details by slug
 		$berita = $this->M_berita->get_berita_by_slug($slug);
@@ -96,47 +270,21 @@ class Home extends My_Controller
 		}
 	}
 
-	public function setBlogSession()
-	{
-		// Get the POST data
-		// Decode JSON input
-		$input = json_decode(file_get_contents('php://input'), true);
-
-		// Retrieve the 'id' from the decoded JSON
-		$id = isset($input['id']) ? $input['id'] : null;
 
 
 
-
-		if ($id) {
-			$this->session->set_userdata('blog_id', $id); // Set the session data
-			// Respond with success
-			echo json_encode(['status' => 'success']);
-		} else {
-			// Respond with error
-			echo json_encode(['status' => 'error', 'message' => 'Invalid blog ID']);
-		}
-	}
 
 
 	public function blog_detail()
 	{
-		// Load session library to retrieve the ID
-
-		$id = $this->session->userdata('blog_id'); // Get the ID from session
-
-		if (!$id) {
-			show_404(); // Show error if no ID is in the session
-			return;
-		}
-
+		// Load model
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
+		$this->data['js_func'] = 'public/isi_berita/jsfunc';
 		$this->data['page'] = 'public/isi_berita/blog-detail';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
 		$this->data['header'] = 'public/header';
 		$this->data['footer'] = 'public/footer';
-		$this->data['berita'] = $this->M_berita->get_berita_by_id($id); // Fetch blog data
 		$this->load->view('public/main', $this->data);
 	}
 
@@ -212,9 +360,9 @@ class Home extends My_Controller
 
 				// Debug log
 				log_message('debug', 'Update data: ' . print_r(
-						$data,
-						true
-					));
+					$data,
+					true
+				));
 
 				// Update the data in the database
 				$this->M_home->update_config($id, $data);

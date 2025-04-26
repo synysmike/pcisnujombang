@@ -26,12 +26,18 @@ class M_berita extends CI_Model
 		$query = $this->db->get();
 		return $query->result();
 	}
+	/*************  ✨ Windsurf Command 🌟  *************/
 	public function get_berita_by_slug($slug)
 	{
-		$this->db->where('slug', $slug);
-		$query = $this->db->get('berita'); // Replace 'berita' with your table name
+		$this->db->select('r_berita.*, m_kategori.kategori as kategori_nama');
+		$this->db->from('r_berita');
+		$this->db->join('m_kategori', 'r_berita.id_kat = m_kategori.id');
+		$this->db->where('r_berita.slug', $slug);
+		$this->db->where('r_berita.soft_deletes IS NULL');
+		$query = $this->db->get();
 		return $query->row(); // Return a single berita row as an object
 	}
+	/*******  858a3baa-18e2-416e-8988-e6f6cb9acf60  *******/
 
 	public function get_berita_by_id($id)
 	{
@@ -46,13 +52,38 @@ class M_berita extends CI_Model
 		}
 	}
 
+
+	/**
+	 * Save a new berita to the database
+	 *
+	 * @param array $data Berita data to be saved
+	 * @return boolean True if the data is saved successfully, False otherwise
+	 */
 	function simpan_berita($data)
 	{
+		/*
+		 * Generate a unique id for the berita
+		 */
 		$id = $this->get_id();
+
+		/*
+		 * Get the current date and time
+		 */
 		$tgl = date('Y-m-d H:i:s');
-		$slug = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
+
+		/*
+		 * Sanitize the judul by replacing all non-alphanumeric characters with dashes
+		 */
+		$slug = strtolower(preg_replace("/[^A-Za-z0-9]+/", '-', $data['judul']));
+
+		/*
+		 * Get the gambar if it is set
+		 */
 		$gambar = isset($data['gambar']) ? $data['gambar'] : null;
 
+		/*
+		 * Create an array of the data to be inserted
+		 */
 		$data = array(
 			'id' => $id,
 			'tgl' => $tgl,
@@ -62,8 +93,12 @@ class M_berita extends CI_Model
 			'gambar' => $gambar,
 			'slug' => $slug,
 		);
-	
+
+		/*
+		 * Insert the data into the database
+		 */
 		$result = $this->db->insert('r_berita', $data);
+
 		return $result;
 	}
 

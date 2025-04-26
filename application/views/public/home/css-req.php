@@ -11,3 +11,21 @@
 	<!-- Theme Custom CSS -->
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/public/assets/css/style.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css">
+
+	<style>
+		.user-icon {
+			width: 50px;
+			height: 50px;
+			border-radius: 50%;
+			background-color: #007bff;
+			/* Default background color */
+			color: white;
+			font-size: 20px;
+			font-weight: bold;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 10px;
+			text-transform: uppercase;
+		}
+	</style>

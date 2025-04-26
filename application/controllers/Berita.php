@@ -59,7 +59,7 @@ class Berita extends My_Controller
 			if (!isset($_FILES["file"]["name"]) || $_FILES["file"]["name"] == "") {
 				$existing_record = $this->M_berita->get_berita_by_id($id);
 				if ($existing_record) {
-					$data['gambar'] = $existing_record->gambar;
+					$data['gambar'] = $existing_record[0]->gambar;
 				} else {
 					$data['gambar'] = null; // Handle case where no existing record is found
 				}

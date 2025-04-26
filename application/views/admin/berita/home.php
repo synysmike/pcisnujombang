@@ -112,67 +112,60 @@
 
 
 
-
-
-
-
-<div class="card">
-	<div class="modal fade" id="create" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document">
-			<form id="item-form" class="form-horizontal" enctype='multipart/form-data'>
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel1">Modal title</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body">
-						<div class="form-group row">
-							<label for="judul" class="col-md-4 col-form-label">Judul</label>
-							<div class="col-md-8">
-								<input type="text" id="judul" name="judul" class="form-control" placeholder="Masukan Judul">
-								<input type="hidden" name="id" id="item-id">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label for="isiBerita" class="col-md-4 col-form-label">Isi Berita</label>
-							<div class="col-md-8">
-								<textarea name="isiBerita" id="isiBerita" class="form-control"></textarea>
-							</div>
-						</div>
-						<div id="preview" class="form-group row">
-							<label for="kategori" class="col-md-4 col-form-label">Lihat Gambar</label>
-							<div class="col-md-8">
-								<img id="preview-gambar" class="img-thumbnail" data-magnify="gallery" data-src="" src="" width="80px">
-							</div>
-						</div>
-						<div class="form-group row">
-							<label for="kategori" class="col-md-4 col-form-label">Pilih Kategori</label>
-							<div class="col-md-8">
-								<select class="form-control select2" name="kategori" id="kategori" aria-label="Multiple select example">
-									<option value="" disabled selected>-- Pilih Kategori --</option>
-									<!-- Options will be populated by JavaScript -->
-								</select>
-							</div>
-						</div>
-						<div class="form-group row">
-							<label for="file" class="col-md-4 col-form-label">Unggah Gambar</label>
-							<div class="col-md-8">
-								<input class="form-control" type="file" name="file" id="file">
-							</div>
+<div class="modal fade" id="create" tabindex="-1" aria-modal="true" role="dialog" style="padding-left: 0px;">
+	<div class="modal-dialog modal-xl" role="document">
+		<form id="item-form" class="form-horizontal" enctype='multipart/form-data'>
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel4">Modal title</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group row">
+						<label for="judul" class="col-md-4 col-form-label">Judul</label>
+						<div class="col-md-8">
+							<input type="text" id="judul" name="judul" class="form-control" placeholder="Masukan Judul">
+							<input type="hidden" name="id" id="item-id">
 						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						<button id="btn_simpan" type="submit" class="btn btn-primary">Simpan Berita</button>
+					<div class="form-group row">
+						<label for="isiBerita" class="col-md-4 col-form-label">Isi Berita</label>
+						<div class="col-md-8">
+							<textarea name="isiBerita" id="isiBerita" class="form-control"></textarea>
+						</div>
+					</div>
+					<div id="preview" class="form-group row">
+						<label for="kategori" class="col-md-4 col-form-label">Lihat Gambar</label>
+						<div class="col-md-8">
+							<img id="preview-gambar" class="img-thumbnail" data-magnify="gallery" data-src="" src="" width="80px">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="kategori" class="col-md-4 col-form-label">Pilih Kategori</label>
+						<div class="col-md-8">
+							<select class="form-control select2" name="kategori" id="kategori" aria-label="Multiple select example">
+								<option value="" disabled selected>-- Pilih Kategori --</option>
+								<!-- Options will be populated by JavaScript -->
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="file" class="col-md-4 col-form-label">Unggah Gambar</label>
+						<div class="col-md-8">
+							<input class="form-control" type="file" name="file" id="file">
+						</div>
 					</div>
 				</div>
-			</form>
-
-		</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button id="btn_simpan" type="submit" class="btn btn-primary">Simpan Berita</button>
+				</div>
+			</div>
+		</form>
 	</div>
 </div>
+
+
 <section class="section">
 	<div class="section-body">
 		<div class="col-12">

@@ -4,16 +4,7 @@
 		loadGallery('gallery-container');
 
 
-		// Attach a click event to all <a> tags with an id that starts with "blog_"
-		$('a[id^="blog_"]').click(function(e) {
-			e.preventDefault(); // Prevent the default anchor navigation
 
-			// Get the full id of the clicked element
-			var fullId = $(this).attr('id'); // Example: "blog_123"
-			var id = fullId.split('_')[1]; // Extract the ID part (e.g., 123)
-
-			console.log('Action triggered for blog ID:', id); // Perform your custom action here
-		});
 
 		// Fetch carousel data
 		$.ajax({
@@ -88,23 +79,23 @@
         <div class="swiper-slide">
             <div class="blog-card">
                 <div class="blog-img" style="width: 400px; height: 200px; overflow: hidden;">
-                    <a href="javascript:void(0);" id="blog_${berita.id}">
+                    <a href="javascript:void(0);" id="blog_${berita.url}">
                         <img src="${berita.image}" alt="blog image">
                     </a>
                 </div>
                 <div class="blog-content">
                     <div class="blog-meta">
-                        <a href="javascript:void(0);" id="blog_${berita.id}">
+                        <a href="javascript:void(0);" id="blog_${berita.url}">
                             <i class="fas fa-calendar"></i>${berita.date}
                         </a>
-                        <a href="javascript:void(0);" id="blog_${berita.id}">
+                        <a href="javascript:void(0);" id="blog_${berita.url}">
                             <i class="fas fa-tags"></i>${berita.category}
                         </a>
                     </div>
                     <h3 class="box-title">
-                        <a href="javascript:void(0);" id="blog_${berita.id}">${berita.title}</a>
+                        <a href="javascript:void(0);" id="blog_${berita.url}">${berita.title}</a>
                     </h3>
-                    <a href="javascript:void(0);" id="blog_${berita.id}" class="th-btn">
+                    <a href="javascript:void(0);" id="blog_${berita.url}" class="th-btn">
                         Read More <i class="fas fa-arrow-up-right ms-2"></i>
                     </a>
                 </div>
@@ -159,26 +150,8 @@
 
 				console.log('Blog clicked, ID:', id);
 
-				// Set session and redirect (or do whatever custom logic you need)
-				$.ajax({
-					url: '/home/setBlogSession',
-					type: 'POST',
-					contentType: 'application/json',
-					data: JSON.stringify({
-						id: id
-					}),
-					success: function(response) {
-						swal.fire({
-							icon: 'success',
-							title: 'Success',
-							text: 'Server Response:' + response
-						});
-						window.location.href = '/home/blog_detail';
-					},
-					error: function(xhr, status, error) {
-						console.error('Error setting session:', error);
-					}
-				});
+				// Redirect to the blog page with the ID
+				window.location.href = "<?php echo base_url(); ?>Home/blog_detail/" + id;
 			});
 		});
 
