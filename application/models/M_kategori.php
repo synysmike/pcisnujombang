@@ -19,6 +19,7 @@ class M_kategori extends CI_Model
 		$data = [
 			'kategori' => $this->input->post('categoryName'),
 			'description' => $this->input->post('categoryDescription')
+
 		];
 		return $this->db->insert('m_kategori', $data);
 	}
