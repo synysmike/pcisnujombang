@@ -235,6 +235,33 @@
 				$("#judul").text(berita.judul);
 				$("#judul-detail").text(berita.judul);
 				$("#kat").text(berita.kategori_nama);
+				// Change <meta name="author">
+				$('meta[name="author"]').attr('content', 'PC ISNU Kab. Jombang');
+
+				// Change <meta name="description">
+				const isi = berita.isi;
+				const words = isi.split(' ');
+				const limitedIsi = words.slice(0, 20).join(' ');
+				$('meta[name="description"]').attr('content', limitedIsi + '...');
+
+				// Change <meta name="keywords">
+				const keywords = limitedIsi.split(' ').slice(0, 5).join(', ');
+				$('meta[name="keywords"]').attr('content', keywords);
+
+				// Change <meta property="og:title">
+				$('meta[property="og:title"]').attr('content', berita.judul);
+
+				// Change <meta property="og:description">
+				$('meta[property="og:description"]').attr('content', 'Stay updated with local events, educational initiatives, and community news from PC ISNU Kab. Jombang.');
+
+				// Change <meta property="og:url">
+				$('meta[property="og:url"]').attr('content', window.location.href);
+
+				// Change <meta property="og:image">
+				$('meta[property="og:image"]').attr('content', '<?php echo base_url(); ?>assets/images/berita/' + berita.gambar);
+				// Change <link rel="canonical" href="https://yourwebsite.com/news-page-url"> <!-- Preferred URL for SEO -->
+				$('link[rel="canonical"]').attr('href', window.location.href);
+
 				const $submitButton = $('.th-btn.btn-fw');
 				$submitButton.attr('onclick', `addComment('${berita.id}')`);
 				// Fetch comments again to refresh the list

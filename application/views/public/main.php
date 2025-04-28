@@ -4,11 +4,25 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>PC ISNU Kab. Jombang</title>
-	<meta name="author" content="Donat">
-	<meta name="description" content="Donat - Charity & Donation HTML Template">
-	<meta name="keywords" content="Donat - Charity & Donation HTML Template">
+	<title>Latest News from PC ISNU Kab. Jombang</title> <!-- Make the title descriptive -->
+	<meta name="author" content="PC ISNU Kab. Jombang"> <!-- Set the actual author or organization -->
+	<meta name="description" content="Get the latest news updates from PC ISNU Kab. Jombang, covering local events, educational initiatives, and community activities.">
+	<meta name="keywords" content="PC ISNU, Jombang News, Local Events, Education, Community News"> <!-- Use relevant keywords -->
 	<meta name="robots" content="INDEX,FOLLOW">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Essential for mobile responsiveness -->
+
+	<!-- Open Graph (OG) Tags for Social Media -->
+	<meta property="og:title" content="Latest News from PC ISNU Kab. Jombang">
+	<meta property="og:description" content="Stay updated with local events, educational initiatives, and community news from PC ISNU Kab. Jombang.">
+	<meta property="og:image" content="https://yourwebsite.com/path-to-thumbnail.jpg"> <!-- Thumbnail image URL -->
+	<meta property="og:url" content="https://yourwebsite.com/news-page-url"> <!-- Actual URL of the news page -->
+	<meta property="og:type" content="article"> <!-- Defines the type for news articles -->
+
+
+	<!-- Additional Tags -->
+	<meta name="theme-color" content="#007bff"> <!-- Customize color theme for browsers -->
+	<link rel="canonical" href="https://yourwebsite.com/news-page-url"> <!-- Preferred URL for SEO -->
+	<meta name="language" content="en"> <!-- Specify language, e.g., "en" for English -->
 
 	<!-- Mobile Specific Metas -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
