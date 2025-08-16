@@ -32,9 +32,12 @@ class Berita extends My_Controller
 	function get_all_berita()
 	{
 		$data = $this->M_berita->get_berita();
-		header('Content-Type: application/json');
-		echo json_encode($data);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
 	}
+
+
 
 	//get berita by id
 	public function get_berita()

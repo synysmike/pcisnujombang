@@ -27,7 +27,10 @@
 		$.ajax({
 			url: '<?php echo base_url("kategori/get_all_kategori") ?>',
 			type: 'post',
+			dataType: 'json', // 👈 forces auto-parsing
 			success: function(data) {
+				// console.log("Raw data:", data);
+				// console.log("Type:", typeof data);
 				var categories = data;
 				categories.forEach(function(category) {
 					var option = new Option(category.kategori, category.id, false, false);

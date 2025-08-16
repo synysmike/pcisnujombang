@@ -1,5 +1,6 @@
 <?php
-
+// echo "Requested URI: " . $_SERVER['REQUEST_URI'];
+header('X-Debug: Start');
 /**
  * CodeIgniter
  *

@@ -21,15 +21,13 @@ class Kategori extends CI_Controller
 
 	public function get_all_kategori()
 	{
-		// Fetch the data from the model
 		$kategori = $this->M_kategori->get_all_kategori();
 
-		// Set the content type to application/json
-		header('Content-Type: application/json');
-
-		// Ensure the data is properly encoded as JSON
-		echo json_encode($kategori, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK);
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($kategori, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
 	}
+
 
 
 	public function get_kategori_by_id($id)
