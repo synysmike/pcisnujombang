@@ -53,6 +53,7 @@ class M_berita extends CI_Model
 	}
 
 
+
 	/**
 	 * Save a new berita to the database
 	 *
@@ -107,33 +108,28 @@ class M_berita extends CI_Model
 
 	function update_berita($id, $data)
 	{
-		$slug = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
-		$tgl = date('Y-m-d H:i:s');
-		if ($data['gambar']) {
-			$data = array(
-				'id' => $id,
-				'tgl' => $tgl,
-				'judul' => $data['judul'],
-				'isi' => $data['isiBerita'],
-				'gambar' => $data['gambar'],
-				'id_kat' => $data['kat'],
-				'slug' => $slug,
-			);
-		} else {
-			$data = array(
-				'id' => $data['id'],
-				'tgl' => $tgl,
-				'judul' => $data['judul'],
-				'isi' => $data['isiBerita'],
-				'id_kat' => $data['kat'],
-				'slug' => $slug,
-			);
+		// Generate slug and timestamp
+		$data['slug'] = preg_replace("/[^A-Za-z0-9 ]/", '-', $data['judul']);
+		$data['tgl'] = date('Y-m-d H:i:s');
+
+		// Map fields explicitly to avoid unexpected keys
+		$update_data = [
+			'judul' => $data['judul'],
+			'isi' => $data['isiBerita'],
+			'id_kat' => $data['kat'],
+			'slug' => $data['slug'],
+			'tgl' => $data['tgl'],
+		];
+
+		// Include image only if present
+		if (!empty($data['gambar'])) {
+			$update_data['gambar'] = $data['gambar'];
 		}
-		// var_dump($data);
+
 		$this->db->where('id', $id);
-		$result = $this->db->update('r_berita', $data);
-		return $result;
+		return $this->db->update('r_berita', $update_data);
 	}
+
 
 	function delTemp_berita($id)
 	{ // Get the row with the specified id 

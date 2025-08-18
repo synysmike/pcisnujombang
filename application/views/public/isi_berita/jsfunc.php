@@ -88,6 +88,8 @@
 				method: 'GET',
 				success: function(response) {
 					const data = JSON.parse(response); // Parse JSON response
+
+					console.log(data);
 					const commentList = $('.comment-list');
 					const commentCount = $('#comment');
 					const comm = $('#comm');

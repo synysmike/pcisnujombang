@@ -40,57 +40,34 @@ class Berita extends My_Controller
 
 
 	//get berita by id
-	public function get_berita()
-	{
-		$this->load->model("M_berita");
-		$id = $this->input->post('id');
-		$data["results"] = $this->M_berita->get_berita_by_id($id);
-		echo json_encode($data["results"]);
-	}
-
-	// save berita
 	function simpan_berita()
 	{
 		$data = $this->input->post();
 		$id = $this->input->post('id');
 		$custom_path = './assets/images/berita/';
 
-		if ($id) {
-			// Perform soft delete
-			$this->_delete_berita_by_id($id);
-			// Check if a new file is uploaded, if not retain existing image
-			if (!isset($_FILES["file"]["name"]) || $_FILES["file"]["name"] == "") {
-				$existing_record = $this->M_berita->get_berita_by_id($id);
-				if ($existing_record) {
-					$data['gambar'] = $existing_record[0]->gambar;
-				} else {
-					$data['gambar'] = null; // Handle case where no existing record is found
-				}
-			} else {
-				// Handle new image upload
-				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
-			}
-			// Remove the id from the data array before creating a new record
-			unset($data['id']);
-		} else {
-			// Check if a new file is uploaded
-			if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-				$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
-			}
+		// Handle image upload
+		if (!empty($_FILES["file"]["name"])) {
+			$data['gambar'] = upload_image($data['judul'], $custom_path, 'file');
+		} elseif ($id) {
+			// Retain existing image if editing and no new file uploaded
+			$existing = $this->M_berita->get_berita_by_id($id);
+			$data['gambar'] = !empty($existing[0]->gambar) ? $existing[0]->gambar : null;
 		}
-		// Create a new record with the updated values or new data
-		$result = $this->create_berita($data, $custom_path);
-		echo json_encode(['success' => $result]);
+
+		// Save or update
+		$result = $id
+			? $this->M_berita->update_berita($id, $data)
+			: $this->M_berita->simpan_berita($data);
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode(['success' => $result]));
 	}
 
-	// support function create_berita
-	function create_berita($data, $custom_path)
-	{
-		if (isset($_FILES["file"]["name"]) && $_FILES["file"]["name"] != "") {
-			$data['gambar'] = upload_image($this->input->post('judul'), $custom_path, 'file');
-		}
-		return $this->M_berita->simpan_berita($data);
-	}
+
+
+
 
 	// delete berita
 	public function delete_berita()

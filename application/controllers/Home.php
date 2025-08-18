@@ -90,14 +90,20 @@ class Home extends My_Controller
 
 	public function get_comment($post_id)
 	{
+
+		// echo '<pre>';
+		// var_dump($post_id);
+		// echo '</pre>';
 		// Step 1: Fetch all comments for the given post_id
 		$comments = $this->M_comment->get_comments_by_post($post_id);
+		// var_dump($comments);
 
 		// Step 2: Organize comments into a hierarchical structure
 		$nested_comments = $this->build_comment_hierarchy($comments);
 
 		// Step 3: Return comments as JSON response
 		echo json_encode($nested_comments);
+		// echo json_encode($nested_comments);
 	}
 
 	// Helper function to build comment hierarchy
@@ -251,24 +257,23 @@ class Home extends My_Controller
 
 
 
-
 	public function get_berita_detail()
 	{
 		$slug = $this->input->post('slug');
-		// Load model
-		$this->load->model('M_berita');
 
-
-		// Fetch berita details by slug
 		$berita = $this->M_berita->get_berita_by_slug($slug);
 
-		// Return berita details as JSON
-		if ($berita) {
-			echo json_encode($berita);
-		} else {
-			echo json_encode(['error' => 'Berita not found']);
-		}
+		$response = !empty($berita)
+			? (array) $berita
+			: ['error' => 'Berita not found'];
+
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output(json_encode($response));
 	}
+
+
 
 
 
