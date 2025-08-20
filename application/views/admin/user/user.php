@@ -122,7 +122,6 @@
 										<thead>
 											<tr>
 												<th>No</th>
-												<th>id</th>
 												<th>Nama</th>
 												<th>Username</th>
 												<th>Email</th>

@@ -34,23 +34,7 @@
 	$(document).ready(function() {
 
 
-		$('#kab_kota').select2({
-			theme: 'bootstrap-4',
-			ajax: {
-				url: "<?php echo site_url('user/get_kab_kota'); ?>",
-				dataType: 'json',
-				processResults: function(data) {
-					return {
-						results: $.map(data, function(item) {
-							return {
-								id: item.id,
-								text: item.kabkot
-							};
-						})
-					};
-				}
-			}
-		});
+
 		var levelsOptions = ''; // Example options, replace with actual options
 		<?php foreach ($levels as $level): ?> levelsOptions += '<option value="<?php echo $level->id; ?>"><?php echo $level->nama_level; ?></option>';
 		<?php endforeach; ?>
@@ -68,10 +52,7 @@
 						return meta.row + 1; // Return the row number
 					}
 				},
-				{
-					data: "id",
-					visible: false
-				}, // Hide the ID column
+				// Hide the ID column
 				{
 					data: 'nama',
 				},
@@ -104,10 +85,15 @@
 					"data": null,
 					"className": "dt-center action-column",
 					"render": function(data, type, row) {
+						var id_row = data.id
 						var selectedLevel = row.id_level;
 						var approveButton = row.status === 'Approved' ? '' : '<button class="btn btn-success approve-status" type="button">Approve</button>';
 						var options = levelsOptions.replace(new RegExp('value="' + selectedLevel + '"'), 'value="' + selectedLevel + '" selected');
-						return ` <div class="dropdown"> <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions </button> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> <button class="dropdown-item edit" type="button">Edit</button> <button class="dropdown-item hapus" type="button">Hapus</button> <div class="dropdown-divider"></div> <label class="dropdown-item unclickable-label">Level user:</label> <select class="dropdown-item level-dropdown bg-default"> ${options} </select> ${approveButton} </div> </div> `;
+						return ` <div class="dropdown"> 
+						<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Actions 
+						</button> <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"> 
+						<button class="dropdown-item edit" data-id="${id_row}" type="button">Edit</button>
+						<button class="dropdown-item hapus" type="button">Hapus</button> <div class="dropdown-divider"></div> <label class="dropdown-item unclickable-label">Level user:</label> <select class="dropdown-item level-dropdown bg-default"> ${options} </select> ${approveButton} </div> </div> `;
 					}
 				}
 			],
@@ -153,14 +139,46 @@
 		});
 		// Handle edit button click 
 
+		function loadKabKota(selectedId) {
+			// Clear and inject selected option
+			$('#kab_kota').empty().append(
+				new Option('Loading...', '', false, false)
+			);
+
+			// Fetch full list via AJAX
+			$.ajax({
+				url: "<?php echo base_url('user/get_kab_kota'); ?>",
+				dataType: 'json',
+				success: function(data) {
+					$('#kab_kota').empty(); // Clear loading option
+
+					const kabkotOptions = $.map(data, function(item) {
+						return {
+							id: item.id,
+							text: item.kabkot
+						};
+					});
+
+					// Inject all options
+					kabkotOptions.forEach(function(opt) {
+						const isSelected = opt.id == selectedId;
+						$('#kab_kota').append(new Option(opt.text, opt.id, isSelected, isSelected));
+					});
+
+					// Initialize Select2
+					$('#kab_kota').select2({
+						theme: 'bootstrap-5',
+						data: kabkotOptions
+					});
+				}
+			});
+		}
 
 
 
 		// Event listeners for the dropdown actions 
 		$('#tabel-user').on('click', '.edit', function() {
-			var rowIndex = table.row($(this).closest('tr')).index();
-			var rowData = table.rows(rowIndex).data()[0];
-			userId = rowData.id;
+			const userId = $(this).data('id'); // ← This grabs the injected ID
 			$.ajax({
 				url: "<?php echo site_url('user/get_user'); ?>/" + userId,
 				type: "GET",
@@ -171,7 +189,8 @@
 					$('#username').val(data.username);
 					$('#email').val(data.email);
 					$('input[name="jenis_kelamin"][value="' + data.jk + '"]').prop('checked', true);
-					$('#kab_kota').val(data.id_kabkot);
+					loadKabKota(data.id_kabkot);
+
 					$('#alamat').val(data.alamat);
 					$('#ktp').val(data.ktp);
 					$('#strata').val(data.strata).trigger('change');
