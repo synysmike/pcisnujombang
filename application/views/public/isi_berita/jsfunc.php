@@ -1,68 +1,108 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
 	function addComment(postId) {
 		// Extract form data
-		const guestName = $('#guest_name').val();
-		const guestEmail = $('#guest_email').val();
-		const guestPhone = $('#guest_phone').val();
-		const commentText = $('#comment_text').val();
-		const parentCommentId = $('#parent_comment_id').val(); // Optional for nested comments
+		const guestName = $('#guest_name').val().trim();
+		const guestEmail = $('#guest_email').val().trim();
+		const guestPhone = $('#guest_phone').val().trim();
+		const commentText = $('#comment_text').val().trim();
+		const parentCommentId = $('#parent_comment_id').val();
+
+		// Basic format validation
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		const phoneRegex = /^\+?\d{10,15}$/; // Accepts international format or local with 10–15 digits
+
+		if (!guestName || !guestEmail || !guestPhone || !commentText) {
+			Swal.fire({
+				title: 'Missing Fields',
+				text: 'Please fill in all required fields.',
+				icon: 'warning',
+			});
+			return;
+		}
+
+		if (!emailRegex.test(guestEmail)) {
+			Swal.fire({
+				title: 'Invalid Email',
+				text: 'Please enter a valid email address.',
+				icon: 'warning',
+			});
+			return;
+		}
+
+		if (!phoneRegex.test(guestPhone)) {
+			Swal.fire({
+				title: 'Invalid Phone Number',
+				text: 'Please enter a valid phone number (10–15 digits).',
+				icon: 'warning',
+			});
+			return;
+		}
 
 		// Construct data for both guest and comment
 		const commentData = {
-			uname: guestName, // Name of the guest
-			email: guestEmail, // Email of the guest
-			phone_number: guestPhone, // You can add a phone number field if applicable
-			ip_address: null, // No need for IP from frontend; backend handles this
-			country: null, // Backend will fetch country info
-			region: null, // Backend will fetch region info
-			post_id: postId, // Berita (post) ID
-			comment_text: commentText, // Content of the comment
-			parent_comment_id: parentCommentId || null, // Optional parent comment ID
+			uname: guestName,
+			email: guestEmail,
+			phone_number: guestPhone,
+			ip_address: null,
+			country: null,
+			region: null,
+			post_id: postId,
+			comment_text: commentText,
+			parent_comment_id: parentCommentId || null,
 		};
 
 		// AJAX call to process both guest and comment
 		$.ajax({
-			url: `<?php echo base_url(); ?>home/process_comment`, // Correct endpoint
+			url: `<?php echo base_url(); ?>home/process_comment`,
 			method: 'POST',
 			data: commentData,
 			success: function(response) {
-				const result = JSON.parse(response);
+				let result;
+				try {
+					result = JSON.parse(response);
+				} catch (e) {
+					Swal.fire({
+						title: 'Error!',
+						text: 'Invalid server response. Please try again.',
+						icon: 'error',
+					});
+					return;
+				}
 
 				if (result.success) {
 					// Clear form fields
-					$('input[placeholder="Your Name"]').val('');
-					$('input[placeholder="Your Email"]').val('');
-					$('textarea[placeholder="Type Your Message"]').val('');
+					$('#guest_name').val('');
+					$('#guest_email').val('');
+					$('#guest_phone').val('');
+					$('#comment_text').val('');
 					$('#parent_comment_id').val('');
 
-					// Refresh comments list
 					fetchComments(postId);
 
-					// Success notification
-					swal({
+					Swal.fire({
 						title: 'Success!',
 						text: 'Comment added successfully!',
 						icon: 'success',
 					});
 				} else {
-					// Handle failure
-					swal({
-						title: 'Error!',
+					Swal.fire({
+						title: 'Validation Error',
 						text: result.message || 'Failed to process your comment.',
 						icon: 'error',
 					});
 				}
 			},
 			error: function() {
-				// Handle error
-				swal({
-					title: 'Error!',
+				Swal.fire({
+					title: 'Server Error',
 					text: 'An unexpected error occurred. Please try again later.',
 					icon: 'error',
 				});
 			},
 		});
 	}
+
 
 	/**
 	 * Format a date string into a human-readable format.
@@ -88,11 +128,10 @@
 				method: 'GET',
 				success: function(response) {
 					const data = JSON.parse(response); // Parse JSON response
-
-					console.log(data);
+					// console.log(data);
+					const comm = $('#count_cmnt');
 					const commentList = $('.comment-list');
 					const commentCount = $('#comment');
-					const comm = $('#comm');
 
 					if (Array.isArray(data) && data.length > 0) {
 						// Update comment count
@@ -156,6 +195,7 @@
 						});
 					} else {
 						// No comments found
+						comm.html(`<i class="far fa-comments"></i> Comments (0)`);
 						commentCount.html('<i class="far fa-comments"></i> Comments (0)');
 						commentList.html('<p>No comments found.</p>');
 					}
@@ -234,6 +274,22 @@
 				var berita = data;
 				$("#blog-image").attr("src", "<?php echo base_url(); ?>assets/images/berita/" + berita.gambar);
 				$('#breadcumb-bg').attr('data-bg-src', '<?php echo base_url(); ?>assets/images/berita/' + berita.gambar);
+				$('#breadcumb-bg').attr('style', `
+					position: relative;
+					overflow: hidden;
+					`);
+				$('#breadcumb-bg').prepend(`
+					<div class="bg-blur-layer" style="
+						position: absolute;
+						top: 0; left: 0;
+						width: 100%; height: 100%;
+						background-image: url('<?php echo base_url(); ?>assets/images/berita/${berita.gambar}');
+						background-size: cover;
+						background-position: center;
+						filter: blur(4px);
+						z-index: 0;
+					"></div>
+					`);
 				$("#judul").text(berita.judul);
 				$("#judul-detail").text(berita.judul);
 				$("#kat").text(berita.kategori_nama);

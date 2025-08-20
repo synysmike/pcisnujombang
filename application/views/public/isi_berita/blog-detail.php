@@ -26,7 +26,7 @@
  						<div class="blog-meta">
  							<a id="tgl" href="blog.html"><i class="fas fa-calendar-days"></i>July 05, 2024</a>
  							<a id="kat" href="blog.html"><i class="fas fa-tags"></i>Education</a>
- 							<a id="comm" href="#comment-sec"><i class="fas fa-comments"></i>Comments (03)</a>
+ 							<a id="count_cmnt" href="#comment-sec"><i class="fas fa-comments"></i><span id="comment-count-text">Comments (01)</span></a>
  						</div>
  						<h2 id="judul" class="blog-title">See Your Impact: Transparent Donation Tracking</h2>
  						<div id="isi" class="col-md-12">

@@ -39,50 +39,76 @@ class Home extends My_Controller
 			'region' => $data['state_prov'] ?? 'Unknown',
 		];
 	}
+
+
+
 	public function process_comment()
 	{
-		// Step 1: Get the IP address and geolocation info
-		$ip_address = $this->input->ip_address(); // Fetch client IP address
-		$geo_info = $this->get_geo_info($ip_address); // Fetch country and region using geolocation
+		$this->load->library('form_validation');
 
-		// Step 2: Handle guest addition or retrieval
-		$guest_data = array(
-			'uname' => $this->input->post('uname'),
-			'email' => $this->input->post('email'),
-			'phone_number' => $this->input->post('phone_number'),
-			'ip_address' => $ip_address,
-			'country' => $geo_info['country'], // Dynamically fetched country
-			'region' => $geo_info['region'],  // Dynamically fetched region
-		);
+		// Step 0: Validate input
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('phone_number', 'Phone Number', 'required|regex_match[/^[0-9\-\+\s\(\)]+$/]');
+		$this->form_validation->set_rules('uname', 'Username', 'required|min_length[3]');
+		$this->form_validation->set_rules('comment_text', 'Comment', 'required|min_length[5]');
 
-		// Check for existing guest by email
-		$existing_guest = $this->M_guest->get_guest_by_email($guest_data['email']);
-		if ($existing_guest) {
-			$guest_id = $existing_guest->guest_id; // Use existing guest ID
-		} else {
-			$this->M_guest->insert_guest($guest_data);
-			$guest_id = $this->db->insert_id(); // Get new guest_id
+		if ($this->form_validation->run() == FALSE) {
+			echo json_encode([
+				'success' => false,
+				'message' => validation_errors()
+			]);
+			return;
 		}
 
-		// Step 3: Add comment
+		// Step 1: Get IP and geolocation
+		$ip_address = $this->input->ip_address();
+		$geo_info = $this->get_geo_info($ip_address);
+
+		// Step 2: Prepare guest data
+		$guest_data = array(
+			'uname' => $this->input->post('uname', TRUE),
+			'email' => $this->input->post('email', TRUE),
+			'phone_number' => $this->input->post('phone_number', TRUE),
+			'ip_address' => $ip_address,
+			'country' => $geo_info['country'],
+			'region' => $geo_info['region'],
+			'created_at' => date('Y-m-d H:i:s')
+		);
+
+		// Step 3: Insert or retrieve guest
+		$existing_guest = $this->M_guest->get_guest_by_email($guest_data['email']);
+		if ($existing_guest) {
+			$guest_id = $existing_guest->guest_id;
+		} else {
+			$this->M_guest->insert_guest($guest_data);
+			$guest_id = $this->db->insert_id();
+			if (!$guest_id) {
+				log_message('error', 'Guest insert failed: ' . json_encode($guest_data));
+				echo json_encode(['success' => false, 'message' => 'Failed to register guest.']);
+				return;
+			}
+		}
+
+		// Step 4: Insert comment
 		$comment_data = array(
 			'guest_id' => $guest_id,
-			'berita_id' => $this->input->post('post_id'),
-			'comment_text' => $this->input->post('comment_text'),
+			'berita_id' => $this->input->post('post_id', TRUE),
+			'comment_text' => $this->input->post('comment_text', TRUE),
 			'created_at' => date('Y-m-d H:i:s'),
 			'updated_at' => date('Y-m-d H:i:s'),
-			'parent_comment_id' => $this->input->post('parent_comment_id'),
+			'parent_comment_id' => $this->input->post('parent_comment_id', TRUE),
 		);
 
 		$comment_result = $this->M_comment->insert_comment($comment_data);
 
-		// Step 4: Send response to frontend
+		// Step 5: Respond
 		if ($comment_result) {
 			echo json_encode(['success' => true, 'message' => 'Comment added successfully.']);
 		} else {
 			echo json_encode(['success' => false, 'message' => 'Failed to add comment.']);
 		}
 	}
+
 	// Add a new comment
 
 
