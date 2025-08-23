@@ -964,22 +964,14 @@
 				if (result.isConfirmed) {
 					$.ajax({
 						url: '<?php echo base_url("home/delete_carousel"); ?>/' + id,
-						type: 'DELETE',
+						type: 'POST',
+
 						success: function(response) {
-							var carouselTable = $('#carouselTable').DataTable();
-							carouselTable.ajax.reload(); // Reload the DataTable
-							Swal.fire({
-								icon: 'success',
-								title: 'Deleted!',
-								text: 'Carousel has been deleted.'
-							});
+							$('#carouselTable').DataTable().ajax.reload();
+							Swal.fire('Deleted!', 'Carousel has been deleted.', 'success');
 						},
 						error: function(response) {
-							Swal.fire({
-								icon: 'error',
-								title: 'Error',
-								text: 'Failed to delete carousel!'
-							});
+							Swal.fire('Error', 'Failed to delete carousel!', 'error');
 						}
 					});
 				}

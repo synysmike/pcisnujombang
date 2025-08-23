@@ -28,6 +28,8 @@ class M_carousel extends CI_Model
 
 	public function delete($id)
 	{
+		if (!$id) return false;
+
 		$this->db->where('id', $id);
 		return $this->db->update('m_carousel', ['softdeletes_date' => date('Y-m-d H:i:s')]);
 	}

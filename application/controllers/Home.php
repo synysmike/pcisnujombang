@@ -572,7 +572,17 @@ class Home extends My_Controller
 	//delete carousel
 	public function delete_carousel($id)
 	{
-		$this->M_carousel->delete($id);
-		redirect('home/ordal');
+		if ($this->input->method() !== 'post') {
+			show_error('Forbidden', 403);
+		}
+
+		$deleted = $this->M_carousel->delete($id);
+
+		if ($deleted) {
+			echo json_encode(['status' => 'success']);
+		} else {
+			http_response_code(500);
+			echo json_encode(['status' => 'error', 'message' => 'Delete failed']);
+		}
 	}
 }
