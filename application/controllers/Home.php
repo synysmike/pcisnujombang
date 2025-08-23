@@ -293,8 +293,12 @@ class Home extends My_Controller
 			->set_output(json_encode($response));
 	}
 
-	public function blog_detail()
+	public function blog_detail($slug = null)
 	{
+		$this->data['berita'] = (array) $this->M_berita->get_berita_by_slug($slug);
+
+
+
 		// Load model
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';

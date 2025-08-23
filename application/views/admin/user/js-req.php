@@ -99,7 +99,7 @@
 			],
 			dom: 'Bfrtip',
 			"buttons": [{
-				text: 'Tambah Berita',
+				text: 'Tambah User',
 				className: 'btn btn-success',
 				action: function(e, node, config) {
 					$('#create').modal('show');

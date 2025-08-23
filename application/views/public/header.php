@@ -2,14 +2,15 @@
 	<div class="menu-top">
 		<div class="container">
 			<div class="row justify-content-center justify-content-lg-between align-items-center gy-2">
-				<div class="col-auto d-none d-lg-block ">
-					<div class="header-logo">
-						<a href="<?php echo base_url(); ?>"><img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat"></a>
-						<a href="<?php echo base_url(); ?>" class="php">
-							<h5 style="text-align: center;" id="title">PC ISNU Jombang</h5>
+				<div class="col-auto d-none d-lg-block">
+					<div class="header-logo text-center">
+						<a href="<?php echo base_url(); ?>" class="d-flex flex-column align-items-center">
+							<img id="logoImage" width="100" src="<?php echo base_url(); ?>assets/public/assets/img/logo.svg" alt="Donat">
+							<h5 id="title" class="mt-2">PC ISNU Jombang</h5>
 						</a>
 					</div>
 				</div>
+
 				<div class="col-auto d-none d-md-block">
 					<div class="info-card-wrap">
 						<div class="info-card">
@@ -47,14 +48,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-auto header-social-col">
+				<!-- <div class="col-auto header-social-col">
 					<div class="th-social">
 						<a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
 						<a href="https://www.twitter.com/"><i class="fab fa-twitter"></i></a>
 						<a href="https://www.youtube.com/"><i class="fab fa-youtube"></i></a>
 						<a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>
@@ -81,8 +82,8 @@
 								?>
 									<!-- <li><a href="#about-sec">About Us</a></li> -->
 							<li><a href="#service-sec">Visi/Misi</a></li>
-							<li><a href="#galls-sec">Galeri</a></li>
 							<li><a href="#blog-sec">Berita</a></li>
+							<li><a href="#galls-sec">Galeri</a></li>
 							<?php
 									if ($this->session->userdata('user_id')):
 							?>
@@ -100,10 +101,10 @@
 						</li>
 						</ul>
 					</nav>
-					<p class="header-notice"><img class="me-1" src="<?php echo base_url(); ?>assets/public/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p>
+					<!-- <p class="header-notice"><img class="me-1" src="<?php echo base_url(); ?>assets/public/assets/img/icon/heart-icon.svg" alt="img">Are you ready to help them? Let’s become a volunteers...</p> -->
 				</div>
 				<div class="header-button">
-					<button type="button" class="icon-btn style2 searchBoxToggler d-lg-block d-none"><i class="far fa-search"></i></button>
+					<!-- <button type="button" class="icon-btn style2 searchBoxToggler d-lg-block d-none"><i class="far fa-search"></i></button> -->
 					<!-- <button type="button" class="icon-btn sideMenuToggler">
 						<span class="badge">5</span>
 						<i class="fa-regular fa-cart-shopping"></i>

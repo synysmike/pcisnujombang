@@ -28,7 +28,7 @@ class Anggota extends My_Controller
 	public function fetch_all()
 	{
 		$anggota = $this->M_anggota->get_all_anggota();
-		var_dump($anggota);
+		// var_dump($anggota);
 		echo json_encode($anggota);
 	}
 

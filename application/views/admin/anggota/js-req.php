@@ -39,13 +39,17 @@
 
 <script>
 	$(document).ready(function() {
+		$.ajaxSetup({
+			cache: false
+		});
 
 		var table = $('#anggotaTable').DataTable({
 			"responsive": true,
 			"ajax": {
 				"url": "<?php echo site_url('anggota/fetch_all'); ?>",
 				"type": "GET",
-				"dataSrc": ""
+				"dataSrc": "",
+				"cache": "true",
 			},
 			"columns": [{
 				"data": null,
