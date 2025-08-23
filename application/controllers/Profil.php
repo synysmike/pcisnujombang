@@ -1,5 +1,5 @@
 <?php
-class Profil extends CI_Controller
+class Profil extends My_Controller
 {
 	public function __construct()
 	{
@@ -10,7 +10,7 @@ class Profil extends CI_Controller
 	// Display the latest profile
 	public function index()
 	{
-
+		$this->check_user_level([2, 3, 4]);
 		$this->data['js'] = 'admin/profil/js-req';
 		$this->data['css'] = 'admin/profil/css-req';
 		$this->data['ct'] = 'admin/profil/index';

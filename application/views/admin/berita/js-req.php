@@ -230,15 +230,20 @@
 					data: 'isi',
 					render: function(data, type, row) {
 						if (type === 'display') {
-							data = data.replace(/<\/?p>/g, '');
-							if (data.length > 25) { // Limit to 25 characters
-								return '<span class="short-text" style="display: inline;">' + data.substr(0, 25) + '...   </span><span class="full-text" style="display:none;">' + data + ' </span> <a href="#" class="toggle-text btn btn-outline-primary btn-sm">Read more</a>';
-							} else {
-								return data;
-							}
+							const plainText = $('<div>').html(data).text();
+							const preview = plainText.length > 25 ? plainText.substr(0, 25) + '...' : plainText;
+
+							return `
+								<div class="short-text">${preview}</div>
+								<div class="editor-container" style="display:none;">
+									<div class="read-only-editor"></div>
+									<div class="full-html" style="display:none;">${data}</div>
+								</div>
+								<a href="#" class="toggle-editor btn btn-outline-primary btn-sm">Read more</a>
+							`;
 						}
 						return data;
-					},
+					}
 
 				},
 				{
@@ -263,22 +268,44 @@
 			],
 
 		});
-		$('#tabel-berita').on('click', 'a.toggle-text', function(e) {
+		$('#tabel-berita').on('click', 'a.toggle-editor', function(e) {
 			e.preventDefault();
-			var $this = $(this);
-			var $shortText = $this.siblings('.short-text');
-			var $fullText = $this.siblings('.full-text');
 
-			if ($shortText.is(':visible')) {
-				$shortText.hide();
-				$fullText.show();
-				$this.text('Read less');
-			} else {
+			const $cell = $(this).closest('td');
+			const $shortText = $cell.find('.short-text');
+			const $editorContainer = $cell.find('.editor-container');
+			const $editor = $editorContainer.find('.read-only-editor');
+			const fullHtml = $editorContainer.find('.full-html').html(); // Safely grab raw HTML
+
+			if ($editorContainer.is(':visible')) {
+				$editorContainer.hide();
 				$shortText.show();
-				$fullText.hide();
-				$this.text('Read more');
+				$(this).text('Read more');
+			} else {
+				$shortText.hide();
+				$editorContainer.show();
+				$(this).text('Read less');
+
+				if (!$editor.hasClass('initialized')) {
+					$editor.summernote({
+						toolbar: false,
+						airMode: false,
+						disableResizeEditor: true,
+						height: 200,
+						disableDragAndDrop: true,
+						callbacks: {
+							onInit: function() {
+								$editor.summernote('disable');
+							}
+						}
+					}).addClass('initialized');
+
+					$editor.summernote('code', fullHtml);
+				}
 			}
 		});
+
+
 		$('#tabel-berita tbody').on('click', '.edit', function() {
 			$(".modal-title").text("Edit Data");
 			var id = $(this).data('id'); // Get the ID from the data-id attribute
@@ -291,35 +318,34 @@
 				}, // change this to send js object
 				type: "post",
 				success: function(data) {
-					// console.log("Response Data:", data); // Log the response data
-					if (data && data.length > 0) {
-						var item = data[0];
+					console.log("Response Data:", data); // Confirm it's an object
+
+					if (data && typeof data === 'object') {
 						$('#create').modal('show');
-						$('#item-id').val(item.id);
-						$("#judul").val(item.judul);
-						$('#isiBerita').summernote('code', item.isi);
-						$("#kategori").val(item.id_kat).trigger('change');
-						if (item.gambar) {
+						$('#item-id').val(data.id);
+						$("#judul").val(data.judul);
+						$('#isiBerita').summernote('code', data.isi);
+						$("#kategori").val(data.id_kat).trigger('change');
+
+						if (data.gambar) {
 							$("#preview").show();
-							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/berita/') ?>" + item.gambar);
-							$("#preview-gambar").attr("data-src", "<?php echo base_url('assets/images/berita/') ?>" + item.gambar);
+							$("#preview-gambar").attr("src", "<?php echo base_url('assets/images/berita/') ?>" + data.gambar);
+							$("#preview-gambar").attr("data-src", "<?php echo base_url('assets/images/berita/') ?>" + data.gambar);
 						} else {
 							$("#preview").hide();
 							$("#preview-gambar").attr("src", "");
 						}
 					} else {
-						console.warn("No data received or data is empty");
+						console.warn("No valid data received");
 					}
 				},
+
 				error: function(xhr, status, error) {
 					console.error("AJAX Error:", status, error); // Log any AJAX errors
 				}
 			});
 			return false;
 		});
-
-
-
 
 
 		// Simpan Berita

@@ -18,8 +18,159 @@
 <script>
 	$(document).ready(function() {
 
-		// Initialize cropperLib globally
-		const cropperLib = new CropperLibrary();
+
+		const cropperLib = {
+
+			img: null,
+			result: null,
+			img_result: null,
+			img_w: null,
+			img_h: null,
+			options: null,
+			crop: null,
+			save: null,
+			cropped: null,
+			dwn: null,
+			upload: null,
+			cropper: null,
+			croppedImage: null, // Declared globally within the class
+			reset: null,
+
+			initialize() {
+				this.result = document.querySelector('.result');
+				this.img_result = document.querySelector('.img-result');
+				this.img_w = document.querySelector('.img-w');
+				this.img_h = document.querySelector('.img-h');
+				this.options = document.querySelector('.options');
+				this.crop = document.querySelector('.crop');
+				this.save = document.querySelector('.save');
+				this.cropped = document.querySelector('.cropped');
+				this.dwn = document.querySelector('.download');
+				this.upload = document.querySelector('#file-input');
+				this.reset = document.querySelector('.reset');
+				this.img = document.querySelector('#image');
+
+				if (this.img) this.setupCropper();
+				this.bindEvents();
+			},
+
+			setupCropper() {
+				if (!this.img || !document.body.contains(this.img)) return;
+
+				if (this.cropper) this.cropper.destroy();
+
+				this.cropper = new Cropper(this.img, {
+					viewMode: 1,
+					autoCrop: true,
+					aspectRatio: 2.07,
+					crop: () => {
+						const cropBox = this.cropper.getCropBoxData();
+						const imageData = this.cropper.getImageData();
+						const scaleX = imageData.naturalWidth / imageData.width;
+						const scaleY = imageData.naturalHeight / imageData.height;
+						const w = Math.round(cropBox.width * scaleX);
+						const h = Math.round(cropBox.height * scaleY);
+						if (w > 0 && h > 0) {
+							this.img_w.value = w;
+							this.img_h.value = h;
+						}
+						this.reset.classList.remove('hide');
+					}
+				});
+
+				this.options.classList.remove('hide');
+				this.save.classList.remove('hide');
+			},
+
+			bindEvents() {
+				this.upload.addEventListener('change', (e) => {
+					const file = e.target.files[0];
+					if (!file) return;
+
+					const reader = new FileReader();
+					reader.onload = (e) => {
+						this.img = document.createElement('img');
+						this.img.id = 'image';
+						this.img.src = e.target.result;
+						this.img.onload = () => {
+							this.result.innerHTML = '';
+							this.result.appendChild(this.img);
+							this.crop.classList.remove('hide');
+							this.setupCropper();
+						};
+					};
+					reader.readAsDataURL(file);
+				});
+
+				this.crop.addEventListener('click', (e) => {
+					e.preventDefault();
+					if (this.img) this.setupCropper();
+				});
+
+				this.save.addEventListener('click', (e) => {
+					e.preventDefault();
+					const w = parseInt(this.img_w.value);
+					const h = parseInt(this.img_h.value);
+					if (!w || !h || isNaN(w) || isNaN(h)) return alert("Invalid dimensions");
+
+					const canvas = this.cropper.getCroppedCanvas({
+						width: w,
+						height: h
+					});
+					if (!canvas) return alert("Failed to crop");
+
+					const imgSrc = canvas.toDataURL();
+					this.cropped.src = imgSrc;
+					this.cropped.classList.remove('hide');
+					this.img_result.classList.remove('hide');
+					this.dwn.href = imgSrc;
+					this.dwn.download = 'cropped-image.png';
+					this.dwn.classList.remove('hide');
+					this.croppedImage = imgSrc;
+				});
+
+				this.reset.addEventListener('click', (e) => {
+					e.preventDefault();
+					this.resetCropper();
+				});
+			},
+
+			resetCropper() {
+				if (this.cropper) this.cropper.destroy();
+				this.cropper = null;
+				this.result.innerHTML = '';
+				this.img = null;
+				this.img_w.value = '';
+				this.img_h.value = '';
+				this.options.classList.add('hide');
+				this.save.classList.add('hide');
+				this.crop.classList.add('hide');
+				this.cropped.classList.add('hide');
+				this.img_result.classList.add('hide');
+				this.dwn.classList.add('hide');
+				this.croppedImage = null;
+				this.reset.classList.add('hide');
+			},
+
+			getCroppedImage() {
+				return this.croppedImage || null;
+			},
+
+
+			base64ToBlob(base64, mime = 'image/png') {
+				const byteString = atob(base64.split(',')[1]);
+				const arrayBuffer = new ArrayBuffer(byteString.length);
+				const intArray = new Uint8Array(arrayBuffer);
+				for (let i = 0; i < byteString.length; i++) {
+					intArray[i] = byteString.charCodeAt(i);
+				}
+				return new Blob([intArray], {
+					type: mime
+				});
+			}
+
+		};
+
 
 		// Initialize the DataTable and add the responsive class for config-home
 		var table = $('#configTable').DataTable({
@@ -622,25 +773,18 @@
 
 		// Ensure the element exists before initializing the cropper
 		if ($('#image').length) {
-			cropperLib.initializeHandlers();
+			cropperLib.initialize();
 		}
 
 		// Initialize the upload change event
 		$('#file-input').on('change', function() {
-			cropperLib.initializeHandlers();
+			cropperLib.initialize();
 		});
-
-
-
-
-
-
 
 		// Initialize cropper variables and event listeners when the modal is shown
 		$('#carouselModal').on('shown.bs.modal', function() {
 			// Ensure cropperLib is defined
-			const cropperLib = new CropperLibrary();
-			cropperLib.initializeHandlers();
+			cropperLib.initialize();
 
 
 			if (!$.fn.DataTable.isDataTable('#carouselTable')) {
@@ -721,8 +865,12 @@
 					// Populate the form fields with the response data
 					$('#carouselForm').find('input[name="title"]').val(data.title);
 					$('#carouselForm').find('textarea[name="description"]').val(data.description);
+					$('#carouselForm').find('input[name="id"]').remove(); // Remove existing
+					$('#carouselForm').append('<input type="hidden" name="id" value="' + data.id + '">');
+
 					if (data.picture) {
-						$('#carouselForm').append('<input type="hidden" name="new_picture" value="' + data.picture + '">');
+						$('#carouselForm').find('input[name="picture"]').remove();
+						$('#carouselForm').append('<input type="hidden" name="picture" value="' + data.picture + '">');
 						$('#carouselForm').find('#carouselImage').attr('src', '<?php echo base_url("./assets/images/carousel/"); ?>' + data.picture).show();
 						// Create new image element with recent image
 						let img = document.createElement('img');
@@ -734,10 +882,12 @@
 					} else {
 						$('#carouselForm').find('#carouselImage').hide();
 					}
-					$('#carouselForm').append('<input type="hidden" name="id" value="' + data.id + '">');
 
+					// Optional: Reset cropper when modal closes
 					$('#carouselModal').on('hidden.bs.modal', function() {
-						$('#carouselForm').find('input[name="id"]').remove();
+						cropperLib.resetCropper();
+						$('#carouselForm')[0].reset();
+						$('#carouselImage').hide();
 					});
 					$('#carouselModal').modal('show');
 				},
@@ -752,57 +902,52 @@
 		});
 
 
+		// Submit form with cropped image
 		$('#carouselForm').on('submit', function(e) {
 			e.preventDefault();
-			var croppedImgSrc = $('.cropped').attr('src');
-			if (croppedImgSrc) {
-				// Convert base64 to Blob
-				var mime = croppedImgSrc.split(',')[0].split(':')[1].split(';')[0];
-				var croppedBlob = cropperLib.base64ToBlob(croppedImgSrc, mime);
 
-				// Append the Blob to the FormData
-				var formData = new FormData($('#carouselForm')[0]);
-				formData.append('picture', croppedBlob, 'cropped-image.png');
-
-				var id = $('#carouselForm').find('input[name="id"]').val();
-				var url = id ? '<?php echo base_url("home/store_carousel"); ?>/' + id : '<?php echo base_url("home/store_carousel"); ?>';
-				console.log("FormData before sending:", formData);
-				$.ajax({
-					type: 'POST',
-					url: url,
-					data: formData,
-					processData: false, // Prevent jQuery from automatically transforming the data into a query string
-					contentType: false, // Set the content type to false to let the browser set it
-					success: function(response) {
-						// Handle success response
-						var carouselTable = $('#carouselTable').DataTable();
-						carouselTable.ajax.reload(); // Reload the DataTable
-						Swal.fire({
-							icon: 'success',
-							title: 'Success',
-							text: id ? 'Carousel updated successfully!' : 'Carousel added successfully!'
-						});
-						// Reset the cropper and canvas
-						cropperLib.resetCropper();
-						$('#file-input').val(''); // Reset the file input
-					},
-					error: function(response) {
-						// Handle error response
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: id ? 'Failed to update carousel!' : 'Failed to add carousel!',
-							footer: response.responseText
-						});
-					}
-				});
-			} else {
+			const base64 = cropperLib.getCroppedImage();
+			if (!base64) {
 				Swal.fire({
 					icon: 'error',
 					title: 'Error',
-					text: 'No image selected or cropped image is not available!'
+					text: 'No cropped image found.'
 				});
+				return;
 			}
+
+			const blob = cropperLib.base64ToBlob(base64, 'image/png');
+			const formData = new FormData(this);
+			formData.append('picture', blob, 'cropped-image.png');
+
+			const id = $('input[name="id"]').val();
+			const url = id ?
+				'<?php echo base_url("home/store_carousel"); ?>/' + id :
+				'<?php echo base_url("home/store_carousel"); ?>';
+
+			$.ajax({
+				url,
+				type: 'POST',
+				data: formData,
+				processData: false,
+				contentType: false,
+				success: function(res) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Saved successfully.'
+					});
+					$('#carouselModal').modal('hide');
+					$('#carouselTable').DataTable().ajax.reload();
+					cropperLib.resetCropper();
+				},
+				error: function(xhr) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Upload failed.',
+						text: xhr.responseText
+					});
+				}
+			});
 		});
 		//
 		$('#carouselTable').on('click', '.delete-carousel-btn', function() {

@@ -80,21 +80,22 @@
 					<span class="text-truncate" data-i18n="Berita">Berita</span>
 				</a>
 			</li>
+			<!-- Profile -->
+			<li class="menu-item <?php echo ($current_url == 'profil') ? 'active' : ''; ?>">
+				<a href="<?php echo site_url('profil'); ?>" class="menu-link">
+					<i class="fas fa-user"></i>
+					<span class="text-truncate" data-i18n="Profile">Profile</span>
+				</a>
+			</li>
+			<!-- Kontak -->
+			<!-- <li class="menu-item <?php echo ($current_url == 'kontak') ? 'active' : ''; ?>">
+				<a href="<?php echo site_url('kontak'); ?>" class="menu-link">
+					<i class="fas fa-phone"></i>
+					<span class="text-truncate" data-i18n="Kontak">Kontak</span>
+				</a>
+			</li> -->
 		<?php endif; ?>
-		<!-- Profile -->
-		<li class="menu-item <?php echo ($current_url == 'profil') ? 'active' : ''; ?>">
-			<a href="<?php echo site_url('profil'); ?>" class="menu-link">
-				<i class="fas fa-user"></i>
-				<span class="text-truncate" data-i18n="Profile">Profile</span>
-			</a>
-		</li>
-		<!-- Kontak -->
-		<li class="menu-item <?php echo ($current_url == 'kontak') ? 'active' : ''; ?>">
-			<a href="<?php echo site_url('kontak'); ?>" class="menu-link">
-				<i class="fas fa-phone"></i>
-				<span class="text-truncate" data-i18n="Kontak">Kontak</span>
-			</a>
-		</li>
+
 		<?php if (in_array($this->session->userdata('user_level'), [3, 4])): ?>
 			<!-- Anggota -->
 			<li class="menu-item <?php echo ($current_url == 'anggota') ? 'active' : ''; ?>">

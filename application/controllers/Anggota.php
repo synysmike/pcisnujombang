@@ -1,11 +1,12 @@
-
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Anggota extends CI_Controller
+class Anggota extends My_Controller
 {
+	public $data         = array();
 	public function __construct()
 	{
+
 		parent::__construct();
 		$this->load->model('M_anggota');
 		$this->load->model('M_jabatan');
@@ -27,6 +28,7 @@ class Anggota extends CI_Controller
 	public function fetch_all()
 	{
 		$anggota = $this->M_anggota->get_all_anggota();
+		var_dump($anggota);
 		echo json_encode($anggota);
 	}
 

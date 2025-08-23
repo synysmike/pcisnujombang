@@ -12,12 +12,40 @@ class Home extends My_Controller
 		$this->load->model('M_carousel');
 		$this->load->model('M_comment');
 		$this->load->model('M_guest');
+		$this->load->model('M_profil');
 		$this->load->library(array('upload'));
 		$this->load->library('session');
 		$this->load->helper('upload');
 		// $this->load->library('input');
 	}
 
+	public function index()
+	{
+
+		$profile = $this->M_profil->get_latest_profile();
+		$this->data['css'] = 'public/home/css-req';
+		$this->data['js'] = 'public/home/js-req';
+		$this->data['js_func'] = 'public/home/home-jsfunc';
+		$this->data['page'] = 'public/home';
+		$this->data['mobile_menu'] = 'public/mobile_menu';
+		$this->data['hero'] = 'public/home/hero';
+		$this->data['about'] = 'public/home/about';
+		$this->data['blog'] = 'public/home/blog';
+		$this->data['brand'] = 'public/home/brand';
+		$this->data['cta1'] = 'public/home/cta1';
+		$this->data['cta2'] = 'public/home/cta2';
+		$this->data['service'] = 'public/home/service';
+		$this->data['faq'] = 'public/home/faq';
+		$this->data['donation'] = 'public/home/donation';
+		$this->data['project'] = 'public/home/project';
+		$this->data['story'] = 'public/home/story';
+		$this->data['team'] = 'public/home/team';
+		$this->data['testimoni'] = 'public/home/testi';
+		$this->data['video'] = 'public/home/video';
+		$this->data['header'] = 'public/header';
+		$this->data['footer'] = 'public/footer';
+		$this->load->view('public/main', $this->data);
+	}
 
 	public function get_geo_info($ip_address)
 	{
@@ -213,47 +241,13 @@ class Home extends My_Controller
 		echo json_encode(['success' => $result]);
 	}
 
-
-
-
-
-
-
-
-
-
-
 	public function get_section()
 	{
 		$sections = $this->M_home->get_section();
 		echo json_encode($sections);
 	}
 
-	public function index()
-	{
-		$this->data['css'] = 'public/home/css-req';
-		$this->data['js'] = 'public/home/js-req';
-		$this->data['js_func'] = 'public/home/home-jsfunc';
-		$this->data['page'] = 'public/home';
-		$this->data['mobile_menu'] = 'public/mobile_menu';
-		$this->data['hero'] = 'public/home/hero';
-		$this->data['about'] = 'public/home/about';
-		$this->data['blog'] = 'public/home/blog';
-		$this->data['brand'] = 'public/home/brand';
-		$this->data['cta1'] = 'public/home/cta1';
-		$this->data['cta2'] = 'public/home/cta2';
-		$this->data['service'] = 'public/home/service';
-		$this->data['faq'] = 'public/home/faq';
-		$this->data['donation'] = 'public/home/donation';
-		$this->data['project'] = 'public/home/project';
-		$this->data['story'] = 'public/home/story';
-		$this->data['team'] = 'public/home/team';
-		$this->data['testimoni'] = 'public/home/testi';
-		$this->data['video'] = 'public/home/video';
-		$this->data['header'] = 'public/header';
-		$this->data['footer'] = 'public/footer';
-		$this->load->view('public/main', $this->data);
-	}
+
 
 
 
@@ -298,13 +292,6 @@ class Home extends My_Controller
 			->set_content_type('application/json')
 			->set_output(json_encode($response));
 	}
-
-
-
-
-
-
-
 
 	public function blog_detail()
 	{
@@ -518,6 +505,19 @@ class Home extends My_Controller
 	//store carousel
 	public function store_carousel()
 	{
+		////////////////////////////////// FOR DEBUGGING FILE////////////////////////
+
+		// $tmp = $_FILES['picture']['tmp_name'];
+		// $target = './assets/images/carousel/test.png';
+		// if (move_uploaded_file($tmp, $target)) {
+		// 	log_message('debug', 'Manual move_uploaded_file succeeded');
+		// } else {
+		// 	log_message('error', 'Manual move_uploaded_file failed');
+		// }
+
+		////////////////////////////////// END OF DEBUGGING FILE////////////////////////
+
+
 		$data = $this->input->post();
 		$id = $this->input->post('id');
 		$custom_path = './assets/images/carousel/'; // Directory to store carousel images

@@ -36,7 +36,18 @@ class Berita extends My_Controller
 			->set_content_type('application/json')
 			->set_output(json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
 	}
-
+	function get_berita()
+	{
+		$id = $this->input->post('id');
+		$data = $this->M_berita->get_berita_by_id($id);
+		if ($data) {
+			$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($data[0], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_NUMERIC_CHECK));
+		} else {
+			show_404();
+		}
+	}
 
 
 	//get berita by id

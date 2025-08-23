@@ -10,12 +10,12 @@ class M_anggota extends CI_Model
 	// Get all anggota with related user, bio, and position data
 	public function get_all_anggota()
 	{
-		$this->db->select('m_anggota.*, r_user.username, r_bio.nama, m_jabatan.name as position_name');
-		$this->db->from('m_anggota');
-		$this->db->join('r_user', 'm_anggota.id_user = r_user.id');
-		$this->db->join('r_bio', 'r_user.id_bio = r_bio.id');
-		$this->db->join('m_jabatan', 'm_anggota.id_jabatan = m_jabatan.id');
-		$this->db->where('m_anggota.soft_deletes IS NULL');
+		$this->db->select('a.*, u.username, b.nama, j.name as position_name');
+		$this->db->from('m_anggota a');
+		$this->db->join('r_user u', 'a.id_user = u.id');
+		$this->db->join('r_bio b', 'u.id_bio = b.id');
+		$this->db->join('m_jabatan j', 'a.id_jabatan = j.id');
+		$this->db->where('a.soft_deletes IS NULL');
 		$query = $this->db->get();
 		return $query->result();
 	}
