@@ -382,8 +382,8 @@
 			}).then((result) => {
 				if (result.isConfirmed) {
 					$.ajax({
-						url: '<?php echo base_url("home/delete"); ?>/' + id,
-						type: 'DELETE',
+						url: '<?php echo base_url("home/delete_config"); ?>/' + id,
+						type: 'POST',
 						success: function(response) {
 							table.ajax.reload(); // Reload the DataTable
 							Swal.fire({
