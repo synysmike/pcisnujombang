@@ -22,7 +22,7 @@ class Home extends My_Controller
 	public function index()
 	{
 
-		$profile = $this->M_profil->get_latest_profile();
+		$this->data['profile'] = $this->M_profil->get_latest_profile();
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
 		$this->data['js_func'] = 'public/home/home-jsfunc';
