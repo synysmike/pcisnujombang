@@ -427,7 +427,7 @@ class Home extends My_Controller
 	private function _delete_config_by_id($id)
 	{
 		// Perform delete operation
-		return $this->M_home->delTemp_config($id);
+		return $this->M_home->soft_delete($id);
 	}
 
 
