@@ -13,7 +13,7 @@ class Galeri extends MY_Controller
 
 	public function index()
 	{
-
+		$this->check_user_level([2, 3, 4]);
 		$this->data['js'] = 'admin/galeri/js-req';
 		$this->data['css'] = 'admin/galeri/css-req';
 		$this->data['ct'] = 'admin/galeri/index';

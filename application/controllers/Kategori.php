@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Kategori extends CI_Controller
+class Kategori extends MY_Controller
 {
 
 	public function __construct()
@@ -13,6 +13,7 @@ class Kategori extends CI_Controller
 
 	public function index()
 	{
+		$this->check_user_level([2, 3, 4]);
 		$data['kategori'] = $this->M_kategori->get_all_kategori();
 		$this->load->view('admin/templates/header');
 		$this->load->view('admin/kategori/index', $data);

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Anggota extends My_Controller
+class Anggota extends MY_Controller
 {
 	public $data         = array();
 	public function __construct()
@@ -17,7 +17,7 @@ class Anggota extends My_Controller
 	// Display all anggota
 	public function index()
 	{
-
+		$this->check_user_level([3, 4]);
 		$this->data['js'] = 'admin/anggota/js-req';
 		$this->data['css'] = 'admin/anggota/css-req';
 		$this->data['ct'] = 'admin/anggota/index';
@@ -28,8 +28,12 @@ class Anggota extends My_Controller
 	public function fetch_all()
 	{
 		$anggota = $this->M_anggota->get_all_anggota();
-		// var_dump($anggota);
-		echo json_encode($anggota);
+		echo json_encode([
+			'draw' => intval($this->input->get('draw')),
+			'recordsTotal' => count($anggota),
+			'recordsFiltered' => count($anggota),
+			'data' => $anggota
+		]);
 	}
 
 	// Add a new anggota

@@ -1,8 +1,80 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+require_once(APPPATH . 'third_party/PhpSpreadsheet/vendor/autoload.php');
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
+
 class Registrasi extends CI_Controller
 {
+	public function test_upload_path()
+	{
+		$path = FCPATH . 'assets/uploads';
+		echo 'Upload path: ' . $path . '<br>';
+		echo 'is_dir: ' . (is_dir($path) ? 'yes' : 'no') . '<br>';
+		echo 'is_writable: ' . (is_writable($path) ? 'yes' : 'no') . '<br>';
+		echo 'realpath: ' . realpath($path) . '<br>';
+	}
+
+	public function import_excel()
+	{
+		$config['upload_path']   = FCPATH . 'assets/uploads';
+		$config['allowed_types'] = 'xlsx|xls|csv';
+		$config['max_size']      = 2048;
+
+		$this->load->library('upload');
+		$this->upload->initialize($config, true);
+
+		if (!$this->upload->do_upload('excelFile')) {
+			log_message('error', 'Upload failed: ' . $this->upload->display_errors());
+			echo $this->upload->display_errors();
+			return;
+		}
+
+		$uploadData = $this->upload->data();
+		$inputFileName = $uploadData['full_path'];
+
+		try {
+			$spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($inputFileName);
+			$sheetData = $spreadsheet->getActiveSheet()->toArray();
+
+			$header = array_map('strtolower', array_map('trim', $sheetData[0])); // Normalize headers
+			unset($sheetData[0]); // Remove header row
+
+			foreach ($sheetData as $row) {
+				$data = array_combine($header, $row);
+
+				if (empty($data['username']) || empty($data['password']) || empty($data['nama_lengkap'])) {
+					continue; // Skip incomplete rows
+				}
+
+				// Step 1: Insert into r_bio
+				$bio_data = array(
+					'nama' => $data['nama_lengkap']
+				);
+
+				$this->db->insert('r_bio', $bio_data);
+				$id_bio = $this->db->insert_id();
+
+				// Step 2: Insert into r_user with id_bio
+				$user_data = array(
+					'username' => $data['username'],
+					'password' => password_hash($data['password'], PASSWORD_BCRYPT),
+					'id_level' => 1,
+					'status'   => 'Pending',
+					'id_bio'   => $id_bio // <-- this is the fix
+				);
+
+				$this->db->insert('r_user', $user_data);
+			}
+
+			echo "Import successful!";
+		} catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+			echo 'Error loading file: ' . $e->getMessage();
+		}
+	}
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -19,7 +91,7 @@ class Registrasi extends CI_Controller
 		// Ensure the result is an array 
 		echo json_encode($kabkota);
 	}
-	
+
 	public function index()
 	{
 		$this->data['header'] = 'public/header';
@@ -56,5 +128,15 @@ class Registrasi extends CI_Controller
 		);
 		$this->M_user->insert_user($user_data, $bio_data);
 		redirect('registrasi/success');
+	}
+
+	public function import_page()
+	{
+
+
+		$this->data['js'] = 'admin/user/js-req';
+		$this->data['css'] = 'admin/user/css-req';
+		$this->data['ct'] = 'admin/user/batch_excel';
+		$this->load->view('admin/main', $this->data);
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class Jabatan extends CI_Controller
+class Jabatan extends MY_Controller
 {
 	public function __construct()
 	{
@@ -13,7 +13,7 @@ class Jabatan extends CI_Controller
 	// Display all positions
 	public function index()
 	{
-
+		$this->check_user_level([3, 4]);
 		$this->data['js'] = 'admin/jabatan/js-req';
 		$this->data['css'] = 'admin/jabatan/css-req';
 		$this->data['ct'] = 'admin/jabatan/index';

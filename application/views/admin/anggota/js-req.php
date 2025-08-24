@@ -48,7 +48,7 @@
 			"ajax": {
 				"url": "<?php echo site_url('anggota/fetch_all'); ?>",
 				"type": "GET",
-				"dataSrc": "",
+				"dataSrc": "data",
 				"cache": "true",
 			},
 			"columns": [{

@@ -103,6 +103,7 @@
 				className: 'btn btn-success',
 				action: function(e, node, config) {
 					$('#create').modal('show');
+					loadKabKota();
 					$('[id="judul"]').val("");
 					$('#isiBerita').summernote('reset');
 					$("#kategori").select2("val", "");
@@ -139,19 +140,18 @@
 		});
 		// Handle edit button click 
 
-		function loadKabKota(selectedId) {
-			// Clear and inject selected option
+		function loadKabKota(selectedId = null) {
+			// Clear and show loading placeholder
 			$('#kab_kota').empty().append(
 				new Option('Loading...', '', false, false)
 			);
 
-			// Fetch full list via AJAX
+			// Fetch kab/kota list via AJAX
 			$.ajax({
 				url: "<?php echo base_url('user/get_kab_kota'); ?>",
 				dataType: 'json',
 				success: function(data) {
-					$('#kab_kota').empty(); // Clear loading option
-
+					$('#kab_kota').empty(); // Remove loading option
 					const kabkotOptions = $.map(data, function(item) {
 						return {
 							id: item.id,
@@ -161,14 +161,13 @@
 
 					// Inject all options
 					kabkotOptions.forEach(function(opt) {
-						const isSelected = opt.id == selectedId;
+						const isSelected = selectedId !== null && opt.id == selectedId;
 						$('#kab_kota').append(new Option(opt.text, opt.id, isSelected, isSelected));
 					});
 
-					// Initialize Select2
+					// Initialize Select2 (or re-init if already applied)
 					$('#kab_kota').select2({
-						theme: 'bootstrap-5',
-						data: kabkotOptions
+						theme: 'bootstrap-5'
 					});
 				}
 			});

@@ -27,8 +27,8 @@ if (!function_exists('upload_image')) {
 		$CI->upload->initialize($config);
 
 		if (!$CI->upload->do_upload($field_name)) {
-			log_message('error', $CI->upload->display_errors());
-			return '';
+			$error = log_message('error', $CI->upload->display_errors());
+			return $error;
 		} else {
 			$arr_image = array('upload_data' => $CI->upload->data());
 			return $arr_image['upload_data']['file_name'];

@@ -110,7 +110,7 @@
 			<div class="row justify-content-center gy-3 align-items-center">
 				<div class="col-lg-12">
 					<p class="copyright-text text-center">
-						<i class="fal fa-copyright"></i> Made with ❤️ by <a target="_blank" href="https://guthub.com/synysmike"> Ir.Teguh </a>on 2025.
+						<i class="fal fa-copyright"></i> Made with ❤️ by <a target="_blank" href="https://github.com/synysmike"> Ir.Teguh </a>on 2025.
 					</p>
 				</div>
 			</div>

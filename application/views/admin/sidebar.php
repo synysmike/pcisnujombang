@@ -84,7 +84,7 @@
 			<li class="menu-item <?php echo ($current_url == 'profil') ? 'active' : ''; ?>">
 				<a href="<?php echo site_url('profil'); ?>" class="menu-link">
 					<i class="fas fa-user"></i>
-					<span class="text-truncate" data-i18n="Profile">Profile</span>
+					<span class="text-truncate" data-i18n="Profile">Profile (visi,misi, sejarah)</span>
 				</a>
 			</li>
 			<!-- Kontak -->
