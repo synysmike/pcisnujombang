@@ -228,7 +228,7 @@
 		player = new YT.Player('player', {
 			height: '100%',
 			width: '100%',
-			videoId: '55a6pzDIPIE', // First YouTube video ID
+			videoId: 'LGFdLMY93Xg', // First YouTube video ID
 			playerVars: {
 				'autoplay': 1,
 				'controls': 0,
@@ -251,15 +251,15 @@
 		updateButtonStates();
 
 		// Add event listeners to custom controls
-		document.getElementById('play-btn').addEventListener('click', function () {
+		document.getElementById('play-btn').addEventListener('click', function() {
 			player.playVideo();
 		});
 
-		document.getElementById('pause-btn').addEventListener('click', function () {
+		document.getElementById('pause-btn').addEventListener('click', function() {
 			player.pauseVideo();
 		});
 
-		document.getElementById('mute-btn').addEventListener('click', function () {
+		document.getElementById('mute-btn').addEventListener('click', function() {
 			if (player.isMuted()) {
 				player.unMute();
 			} else {
@@ -268,7 +268,7 @@
 			updateButtonStates();
 		});
 
-		document.getElementById('volume').addEventListener('input', function () {
+		document.getElementById('volume').addEventListener('input', function() {
 			player.setVolume(this.value);
 		});
 	}
@@ -286,10 +286,14 @@
 		// Update play/pause button
 		if (player.getPlayerState() === YT.PlayerState.PLAYING) {
 			playBtn.innerHTML = '<i class="fas fa-pause"></i> Pause';
-			playBtn.onclick = function () { player.pauseVideo(); };
+			playBtn.onclick = function() {
+				player.pauseVideo();
+			};
 		} else {
 			playBtn.innerHTML = '<i class="fas fa-play"></i> Play';
-			playBtn.onclick = function () { player.playVideo(); };
+			playBtn.onclick = function() {
+				player.playVideo();
+			};
 		}
 
 		// Update mute button
