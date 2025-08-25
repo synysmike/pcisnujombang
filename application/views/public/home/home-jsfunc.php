@@ -176,6 +176,22 @@
 		});
 
 		loadGallery('projectGalleryContainer');
+		$('.popup-image').magnificPopup({
+			type: 'image',
+			gallery: {
+				enabled: true // Enables gallery mode
+			},
+			callbacks: {
+				open: function() {
+					console.log("Magnific Popup is working!"); // Optional for debugging
+				}
+			}
+		});
+
+		// Prevent default link behavior
+		$('.popup-image').on('click', function(event) {
+			event.preventDefault(); // Stops the link from opening in a new tab
+		});
 
 		function loadGallery(containerId) {
 			$.ajax({
@@ -194,11 +210,16 @@
                 <div class="project-card">
                     <div class="project-img">
                         <img src="<?php echo base_url("assets/images/galeri/"); ?>${item.file}" alt="project image">
-                    </div>
-                    <div class="project-content">
+						</div>
+						
+						<div class="project-content">
                         <div class="project-card-bg-shape bg-mask" style="mask-image: url('<?php echo base_url(); ?>assets/public/assets/img/shape/project-card-bg-shape1-1.png');" ></div>
                         <h3 class="project-title"><a href="#" target:"_blank">${item.judul}</a></h3>
                         <p class="project-subtitle">${item.ket}</p>
+						<a href="<?= base_url('assets/images/galeri/') ?>${item.file}" class="icon-btn popup-image">
+								<i class="fas fa-eye">
+								</i>
+							</a>
                     </div>
                 </div>
             </div>

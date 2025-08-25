@@ -13,7 +13,7 @@
 				</div>
 				<div class="col-auto">
 					<div class="sec-btn">
-						<a href="contact.html" class="th-btn">Lihat Seluruh Gallery<i class="fas fa-arrow-up-right ms-2"></i></a>
+						<a href="<?php echo base_url('/galeri/single') ?>" class="th-btn">Lihat Seluruh Gallery<i class="fas fa-arrow-up-right ms-2"></i></a>
 					</div>
 				</div>
 			</div>

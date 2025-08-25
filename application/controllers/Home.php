@@ -47,8 +47,8 @@ class Home extends My_Controller
 		$this->data['js_func'] = 'public/home/home-jsfunc';
 		$this->data['page'] = 'public/home';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
-		// $this->data['hero'] = 'public/home/hero';
-		$this->data['hero'] = 'public/home/hero_video';
+		$this->data['hero'] = 'public/home/hero';
+		// $this->data['hero'] = 'public/home/hero_video';
 		$this->data['about'] = 'public/home/about';
 		$this->data['blog'] = 'public/home/blog';
 		$this->data['brand'] = 'public/home/brand';
@@ -316,9 +316,6 @@ class Home extends My_Controller
 	public function blog_detail($slug = null)
 	{
 		$this->data['berita'] = (array) $this->M_berita->get_berita_by_slug($slug);
-
-
-
 		// Load model
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';

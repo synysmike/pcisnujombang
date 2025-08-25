@@ -20,6 +20,21 @@ class Galeri extends MY_Controller
 		$this->load->view('admin/main', $this->data);
 	}
 
+	public function single()
+	{
+		$this->data['galeri'] = $this->M_galeri->get_all_galeri();
+		$this->data['css'] = 'public/home/css-req';
+		$this->data['js'] = 'public/home/js-req';
+		$this->data['js_func'] = 'public/isi_berita/jsfunc';
+		$this->data['page'] = 'public/gallery_view';
+		$this->data['mobile_menu'] = 'public/mobile_menu';
+		$this->data['header'] = 'public/header';
+		$this->data['footer'] = 'public/footer';
+		$this->load->view('public/main', $this->data);
+		// Assuming your model method is named like this
+		// $this->load->view('galeri_view', $data);
+	}
+
 	public function get_galeri()
 	{
 		$galeri = $this->M_galeri->get_all_galeri();

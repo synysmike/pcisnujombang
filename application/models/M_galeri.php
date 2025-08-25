@@ -14,7 +14,7 @@ class M_galeri extends CI_Model
 		$this->db->select('m_galeri.*, r_user.username as user_name'); // Select the necessary fields
 		$this->db->from('m_galeri');
 		$this->db->join('r_user', 'r_user.id = m_galeri.id_user'); // Join with the r_user table
-		$this->db->where('m_galeri.soft_deletes', 0);
+		$this->db->where('m_galeri.soft_deletes', null);
 		$query = $this->db->get();
 		return $query->result();
 	}

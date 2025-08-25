@@ -50,8 +50,12 @@
 					}
 				},
 				{
-					"data": "ket"
+					"data": "ket",
+					"render": function(data, type, row) {
+						return '<div style="white-space: normal; word-break: break-word;">' + data + '</div>';
+					}
 				},
+
 				{
 					"data": "tgl"
 				},
@@ -99,6 +103,11 @@
 				contentType: false,
 				processData: false,
 				success: function(response) {
+					Swal.fire({
+						icon: 'success',
+						title: 'Success',
+						text: 'Galeri saved successfully'
+					});
 					$('#create').modal('hide');
 					table.ajax.reload();
 				}
