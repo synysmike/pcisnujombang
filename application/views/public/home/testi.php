@@ -3,7 +3,9 @@
 		<h2 class="text-center mb-5">Struktur Organisasi PC ISNU JOMBANG</h2>
 
 		<div class="row">
+			<?php $count = 0; ?>
 			<?php foreach ($struktur as $level => $roles): ?>
+				<?php if ($count++ >= 3) break; ?>
 				<div class="col-4 mb-5">
 					<div class="d-flex flex-wrap justify-content-start gap-4">
 						<?php foreach ($roles as $role => $members): ?>
@@ -29,7 +31,13 @@
 					</div>
 				</div>
 			<?php endforeach; ?>
+
+		</div>
+
+		<div class="text-center mt-4">
+			<a href="<?= base_url('/anggota/get_struktur') ?>" class="btn btn-success px-4 py-2">
+				Lihat Selengkapnya
+			</a>
 		</div>
 	</div>
-
 </section>
