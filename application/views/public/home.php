@@ -2,4 +2,4 @@
 <?php $this->load->view($service); ?>
 <?php $this->load->view($blog); ?>
 <?php $this->load->view($project); ?>
-////
+<?php $this->load->view($testimoni); ?>

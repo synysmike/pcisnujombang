@@ -27,7 +27,7 @@
 	// <!-- <?php $this->load->view($team); ?> -->
 	// <!-- <?php $this->load->view($video); ?> -->
 	// <!-- <?php $this->load->view($brand); ?> -->
-	// <!-- <?php $this->load->view($testimoni); ?> -->
+
 	// <!-- <?php $this->load->view($faq); ?> -->
 	$('.popup-image').magnificPopup({
 		type: 'image',

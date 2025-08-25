@@ -1,19 +1,19 @@
 <section class="overflow-hidden" id="galls-sec">
 	<div class="project-wrap1 space th-radius overflow-hidden" data-bg-src="https://pcisnujombang.test/assets/public/assets/img/bg/gray-bg2.png" data-overlay="gray" data-opacity="5">
 		<div class="shape-mockup project-bg-shape1-1" data-top="0" data-right="0">
-			<img src="https://pcisnujombang.test/assets/public/assets/img/shape/project-shape1-1.png" alt="img">
+			<img src="<?php echo base_url('/assets/images/bg_gall.jpg') ?>" alt="img">
 		</div>
 		<div class="container">
 			<div class="row justify-content-md-between align-items-center">
 				<div class="col-lg-5 col-md-6">
 					<div class="title-area">
-						<span class="sub-title before-none">Complete Projects</span>
-						<h2 class="sec-title">Our Recent Project</h2>
+						<span class="sub-title before-none">Gallery</span>
+						<h2 class="sec-title">PC ISNU JOMBANG</h2>
 					</div>
 				</div>
 				<div class="col-auto">
 					<div class="sec-btn">
-						<a href="contact.html" class="th-btn">View All Project<i class="fas fa-arrow-up-right ms-2"></i></a>
+						<a href="contact.html" class="th-btn">Lihat Seluruh Gallery<i class="fas fa-arrow-up-right ms-2"></i></a>
 					</div>
 				</div>
 			</div>

@@ -21,7 +21,26 @@ class Home extends My_Controller
 
 	public function index()
 	{
+		$query = $this->db->select('a.*, u.username, b.nama, j.name as position_name, a.id_jabatan')
+			->from('m_anggota a')
+			->join('r_user u', 'a.id_user = u.id')
+			->join('r_bio b', 'u.id_bio = b.id')
+			->join('m_jabatan j', 'a.id_jabatan = j.id')
+			->where('a.soft_deletes IS NULL')
+			->order_by('a.id_jabatan ASC, j.name ASC, b.nama ASC')
+			->get();
 
+		$raw = $query->result_array();
+		$struktur = [];
+
+		foreach ($raw as $row) {
+			$level = $row['id_jabatan'];
+			$role = $row['position_name'];
+			$name = $row['nama'];
+
+			$struktur[$level][$role][] = $name;
+		}
+		$this->data['struktur'] = $struktur;
 		$this->data['profile'] = $this->M_profil->get_latest_profile();
 		$this->data['css'] = 'public/home/css-req';
 		$this->data['js'] = 'public/home/js-req';
