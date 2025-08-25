@@ -28,8 +28,8 @@ class Home extends My_Controller
 		$this->data['js_func'] = 'public/home/home-jsfunc';
 		$this->data['page'] = 'public/home';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
-		$this->data['hero'] = 'public/home/hero';
-		// $this->data['hero'] = 'public/home/hero_video';
+		// $this->data['hero'] = 'public/home/hero';
+		$this->data['hero'] = 'public/home/hero_video';
 		$this->data['about'] = 'public/home/about';
 		$this->data['blog'] = 'public/home/blog';
 		$this->data['brand'] = 'public/home/brand';
