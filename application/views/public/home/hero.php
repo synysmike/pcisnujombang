@@ -50,11 +50,10 @@
 <div class="th-hero-wrapper hero-3" id="hero">
 	<div class="video-bg-wrapper">
 		<div class="video-overlay">
-			<iframe
+			<!-- <iframe
 				src="https://www.youtube.com/embed/DjduqOyDKik?autoplay=1&mute=1&controls=0&loop=1&playlist=DjduqOyDKik&modestbranding=1&showinfo=0"
-				frameborder="0"
-				allow="autoplay; encrypted-media"
-				allowfullscreen></iframe>
+				frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+				<div id="player"></div>
 		</div>
 		<div class="video-overlay"></div>
 
@@ -98,3 +97,37 @@
 		</div>
 	</div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+	integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>	
+	// Load YouTube Iframe API
+	var tag = document.createElement('script');
+	tag.src = "https://www.youtube.com/iframe_api";
+	var firstScriptTag = document.getElementsByTagName('script')[0];
+	firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+	var player;
+
+	function onYouTubeIframeAPIReady() {
+		player = new YT.Player('player', {
+			height: '100%',
+			width: '100%',
+			videoId: '<?php echo $hero_video_source->youtube_id; ?>', // your video ID
+			playerVars: {
+				autoplay: 1,       // autoplay
+				controls: 0,       // hide controls
+				rel: 0,            // no related videos
+				modestbranding: 1,
+				mute: 1            // autoplay works because muted
+			},
+			events: {
+				onReady: onPlayerReady
+			}
+		});
+	}
+
+	function onPlayerReady(event) {
+		event.target.playVideo(); // start video
+	}
+</script>

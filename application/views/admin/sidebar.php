@@ -118,6 +118,14 @@
 					<span class="text-truncate" data-i18n="Galeri">Galeri</span>
 				</a>
 			</li>
+			<!-- Jumbotron -->
+			<li class="menu-item <?php echo ($current_url == 'jumbotron') ? 'active' : ''; ?>">
+				<a href="<?php echo site_url('home/jumbotron'); ?>" class="menu-link">
+					<i class="fas fa-video"></i>
+					<span class="text-truncate" data-i18n="Galeri">Video Tron</span>
+				</a>
+			</li>
+			<!-- Jumbotron -->
 		<?php endif; ?>
 		<?php if (in_array($this->session->userdata('user_level'), [4])): ?>
 			<!-- User -->

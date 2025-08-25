@@ -3,7 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Home extends My_Controller
 {
-	public $data         = array();
+	public $data = array();
 	public function __construct()
 	{
 		parent::__construct();
@@ -47,6 +47,7 @@ class Home extends My_Controller
 		$this->data['js_func'] = 'public/home/home-jsfunc';
 		$this->data['page'] = 'public/home';
 		$this->data['mobile_menu'] = 'public/mobile_menu';
+		$this->data['hero_video_source'] = $this->M_carousel->getJumbotronActive();
 		$this->data['hero'] = 'public/home/hero';
 		// $this->data['hero'] = 'public/home/hero_video';
 		$this->data['about'] = 'public/home/about';
@@ -130,8 +131,8 @@ class Home extends My_Controller
 		} else {
 			$this->M_guest->insert_guest($guest_data);
 			$guest_id = $this->db->insert_id();
-			if (!$guest_id) {
-				log_message('error', 'Guest insert failed: ' . json_encode($guest_data));
+			if (! $guest_id) {
+				log_message('error', 'Guest insert failed: '.json_encode($guest_data));
 				echo json_encode(['success' => false, 'message' => 'Failed to register guest.']);
 				return;
 			}
@@ -275,7 +276,7 @@ class Home extends My_Controller
 	public function get_all_berita()
 	{
 		$berita = $this->M_berita->get_berita();
-		if (!$berita) {
+		if (! $berita) {
 			echo json_encode(["error" => "No data found"]);
 			return;
 		}
@@ -285,8 +286,8 @@ class Home extends My_Controller
 			$formattedBerita[] = [
 				"title" => $item->judul,
 				"url" => $item->slug,
-				"id" =>  $item->id,
-				"image" => base_url('assets/images/berita/' . $item->gambar),
+				"id" => $item->id,
+				"image" => base_url('assets/images/berita/'.$item->gambar),
 				"date" => date('F d, Y', strtotime($item->tgl)),
 				"category" => $item->kategori_nama
 			];
@@ -303,7 +304,7 @@ class Home extends My_Controller
 
 		$berita = $this->M_berita->get_berita_by_slug($slug);
 
-		$response = !empty($berita)
+		$response = ! empty($berita)
 			? (array) $berita
 			: ['error' => 'Berita not found'];
 
@@ -381,13 +382,13 @@ class Home extends My_Controller
 			if ($existing_record) {
 				// Retain existing data that isn't being updated
 				foreach ($existing_record as $key => $value) {
-					if (!isset($data[$key])) {
+					if (! isset($data[$key])) {
 						$data[$key] = $value;
 					}
 				}
 
 				// Retain existing logo if no new file uploaded
-				if (!isset($data['logo']) && isset($existing_record->logo)) {
+				if (! isset($data['logo']) && isset($existing_record->logo)) {
 					$data['logo'] = $existing_record->logo;
 				}
 
@@ -398,7 +399,7 @@ class Home extends My_Controller
 				$data['array_of_id_carousel'] = is_array($carousel) ? implode(',', $carousel) : $carousel;
 
 				// Debug log
-				log_message('debug', 'Update data: ' . print_r(
+				log_message('debug', 'Update data: '.print_r(
 					$data,
 					true
 				));
@@ -605,5 +606,33 @@ class Home extends My_Controller
 			http_response_code(500);
 			echo json_encode(['status' => 'error', 'message' => 'Delete failed']);
 		}
+	}
+
+	public function jumbotron()
+	{
+		$data['jumbotron'] = $this->M_carousel->getJumbotronActive();
+
+		$data['css'] = 'admin/home/css-req';
+		$data['js'] = 'admin/home/js-req';
+		$data['ct'] = 'admin/video_carousel/index';
+		$data['carousels'] = $this->M_carousel->get_all();
+		// $this->data['js'] =  $this->load->view('admin/berita/js-req');
+
+		$this->load->view('admin/main', $data);
+	}
+
+	public function jumbotron_update()
+	{
+		$data = array(
+			'youtube_id' => $this->input->post('youtube_id')
+		);
+
+		$this->db->where('is_active', 1);
+		$this->db->update('m_video_carousels', $data);
+
+		// Set flash data for success message
+		$this->session->set_flashdata('success', 'Jumbotron updated successfully!');
+
+		redirect('home/jumbotron');
 	}
 }

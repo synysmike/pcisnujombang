@@ -33,4 +33,12 @@ class M_carousel extends CI_Model
 		$this->db->where('id', $id);
 		return $this->db->update('m_carousel', ['softdeletes_date' => date('Y-m-d H:i:s')]);
 	}
+
+	public function getJumbotronActive()
+	{
+		$sql = "SELECT * FROM m_video_carousels WHERE is_active = 1 ORDER BY id DESC LIMIT 1";
+		$query = $this->db->query($sql);
+		$jumbotron = $query->row();
+		return $jumbotron;
+	}
 }
