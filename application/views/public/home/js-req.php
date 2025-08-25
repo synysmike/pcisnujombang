@@ -19,6 +19,16 @@
 <script src="<?php echo base_url(); ?>assets/public/assets/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
+	// 	<!-- <?php $this->load->view($cta2); ?> -->
+	// <!-- <?php $this->load->view($about); ?> -->
+	// <!-- <?php $this->load->view($cta1); ?> -->
+	// <!-- <?php $this->load->view($donation); ?> -->
+	// <!-- <?php $this->load->view($story); ?> -->
+	// <!-- <?php $this->load->view($team); ?> -->
+	// <!-- <?php $this->load->view($video); ?> -->
+	// <!-- <?php $this->load->view($brand); ?> -->
+	// <!-- <?php $this->load->view($testimoni); ?> -->
+	// <!-- <?php $this->load->view($faq); ?> -->
 	$('.popup-image').magnificPopup({
 		type: 'image',
 		gallery: {

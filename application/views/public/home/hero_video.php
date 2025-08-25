@@ -134,6 +134,23 @@
 		margin-bottom: 10px;
 	}
 
+	#player {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		pointer-events: none;
+	}
+
+	.th-hero-wrapper.hero-1 {
+		position: relative;
+		width: 100%;
+		height: 100vh;
+		overflow: hidden;
+	}
+
 	/* Footer */
 	footer {
 		text-align: center;
@@ -245,7 +262,9 @@
 	// Called when player is ready
 	function onPlayerReady(event) {
 		// Set initial volume
-		player.setVolume(80);
+		// player.setVolume(80);
+		player.mute(); // Required for autoplay to work
+		player.playVideo();
 
 		// Update UI elements
 		updateButtonStates();

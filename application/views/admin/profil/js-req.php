@@ -23,7 +23,15 @@
 	$(document).ready(function() {
 		// Initialize Summernote 
 		$('.summernote').summernote({
-			height: 200
+			height: 200,
+			callbacks: {
+				onPaste: function(e) {
+					e.preventDefault();
+					const clipboardData = (e.originalEvent || e).clipboardData;
+					const text = clipboardData.getData('text/plain'); // strips all tags
+					document.execCommand('insertText', false, text);
+				}
+			}
 		});
 		// Fetch profile data 
 		$.ajax({
@@ -43,7 +51,20 @@
 			var modal = $(this);
 			var content = $('#' + field).html();
 			modal.find('.modal-title').text('Edit ' + field.charAt(0).toUpperCase() + field.slice(1));
+
+
 			$('#editor').summernote('code', content);
+			$('#editor').summernote({
+				height: 300,
+				callbacks: {
+					onPaste: function(e) {
+						e.preventDefault();
+						const clipboardData = (e.originalEvent || e).clipboardData;
+						const text = clipboardData.getData('text/plain');
+						document.execCommand('insertText', false, text);
+					}
+				}
+			});
 			$('#saveChanges').data('field', field);
 		});
 		// Save changes 
