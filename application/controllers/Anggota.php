@@ -14,6 +14,40 @@ class Anggota extends MY_Controller
 		$this->load->helper('upload');
 	}
 
+	public function get_struktur()
+	{
+		$query = $this->db->select('a.*, u.username, b.nama, j.name as position_name, a.id_jabatan')
+			->from('m_anggota a')
+			->join('r_user u', 'a.id_user = u.id')
+			->join('r_bio b', 'u.id_bio = b.id')
+			->join('m_jabatan j', 'a.id_jabatan = j.id')
+			->where('a.soft_deletes IS NULL')
+			->order_by('a.id_jabatan ASC, j.name ASC, b.nama ASC')
+			->get();
+
+		$raw = $query->result_array();
+		$struktur = [];
+
+		foreach ($raw as $row) {
+			$level = $row['id_jabatan'];
+			$role = $row['position_name'];
+			$name = $row['nama'];
+
+			$struktur[$level][$role][] = $name;
+		}
+		$this->data['css'] = 'public/home/css-req';
+		$this->data['js'] = 'public/home/js-req';
+		$this->data['js_func'] = 'public/isi_berita/jsfunc';
+		$this->data['page'] = 'public/struktur_view';
+		$this->data['mobile_menu'] = 'public/mobile_menu';
+		$this->data['header'] = 'public/header';
+		$this->data['footer'] = 'public/footer';
+		$this->data['struktur'] = $struktur;
+		$this->load->view('public/main', $this->data);
+		// $this->load->view('public/struktur_view', $data);
+	}
+
+
 	// Display all anggota
 	public function index()
 	{

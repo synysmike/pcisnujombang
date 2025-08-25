@@ -14,7 +14,17 @@
 
 <script>
 	$(document).ready(function() {
-		$('#isiBerita').summernote();
+		// $('#isiBerita').summernote();
+		$('#isiBerita').summernote({
+			callbacks: {
+				onPaste: function(e) {
+					e.preventDefault();
+					const clipboardData = (e.originalEvent || e).clipboardData;
+					const text = clipboardData.getData('text/plain'); // strips all tags
+					document.execCommand('insertText', false, text);
+				}
+			}
+		});
 
 		$('#kategori').select2({
 			placeholder: 'Pilih Kategori',

@@ -24,7 +24,7 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 
 <!-- SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
 
 <!-- jq-magnify JS -->
 
@@ -42,6 +42,43 @@
 		$.ajaxSetup({
 			cache: false
 		});
+
+		function loadSelect2Dropdown({
+			url,
+			target,
+			selectedId = null,
+			placeholder = '',
+			parent = '#anggotaModal'
+		}) {
+			const $select = $(target);
+
+			// Only destroy if Select2 is already initialized
+			if ($select.hasClass('select2-hidden-accessible')) {
+				$select.select2('destroy');
+			}
+
+			$select.empty(); // Clear options
+
+			$.ajax({
+				url: url,
+				method: 'GET',
+				dataType: 'json',
+				cache: true,
+				success: function(data) {
+					$.each(data, function(index, item) {
+						const selected = item.id == selectedId ? 'selected' : '';
+						const label = item.name || item.nama || item.label || item.text;
+						$select.append(`<option value="${item.id}" ${selected}>${label}</option>`);
+					});
+					$select.select2({
+						placeholder: placeholder,
+						dropdownParent: $(parent),
+						width: '100%'
+					});
+				}
+			});
+		}
+
 
 		var table = $('#anggotaTable').DataTable({
 			"responsive": true,
@@ -81,8 +118,22 @@
 					$('#anggotaForm').attr('action', '<?php echo site_url('anggota/add'); ?>');
 					$('#anggotaForm')[0].reset();
 					$('#anggota_id').val('');
+
+					loadSelect2Dropdown({
+						url: "<?php echo site_url('user/get_all_users'); ?>",
+						target: '#user_id',
+						placeholder: 'Pilih Pengguna'
+					});
+
+					loadSelect2Dropdown({
+						url: "<?php echo site_url('jabatan/fetch_all'); ?>",
+						target: '#position_id',
+						placeholder: 'Pilih Jabatan'
+					});
+
 					$('#anggotaModal').modal('show');
 				}
+
 			}]
 		});
 
@@ -93,11 +144,14 @@
 			dataType: 'json',
 			success: function(data) {
 				var userSelect = $('#user_id');
+				userSelect.empty(); // clear existing options
 				$.each(data, function(index, user) {
-					userSelect.append('<option value="' + user.id + '">' + user.username + '</option>');
+					userSelect.append('<option value="' + user.id + '">' + user.nama + '</option>');
 				});
+				userSelect.select2(); // initialize Select2 after options are loaded
 			}
 		});
+
 		$.ajax({
 			url: "<?php echo site_url('jabatan/fetch_all'); ?>",
 			method: 'GET',
@@ -130,7 +184,8 @@
 		});
 		// Handle edit button click
 		$('#anggotaTable').on('click', '.edit-btn', function() {
-			var id = $(this).data('id');
+			const id = $(this).data('id');
+
 			$.ajax({
 				url: "<?php echo site_url('anggota/get_anggota_by_id/'); ?>" + id,
 				method: 'GET',
@@ -139,39 +194,30 @@
 					$('#anggotaModalLabel').text('Edit Anggota');
 					$('#anggotaForm').attr('action', '<?php echo site_url('anggota/edit/'); ?>' + id);
 					$('#anggota_id').val(data.id);
-					// Populate user select and set selected value 
-					$.ajax({
+
+					loadSelect2Dropdown({
 						url: "<?php echo site_url('user/get_all_users'); ?>",
-						method: 'GET',
-						dataType: 'json',
-						success: function(users) {
-							var userSelect = $('#user_id');
-							userSelect.empty();
-							$.each(users, function(index, user) {
-								var selected = user.id == data.user_id ? 'selected' : '';
-								userSelect.append('<option value="' + user.id + '" ' + selected + '>' + user.username + '</option>');
-							});
-						}
-					}); // Populate position select and set selected value 
-					$.ajax({
-						url: "<?php echo site_url('positions/get_all_positions'); ?>",
-						method: 'GET',
-						dataType: 'json',
-						success: function(positions) {
-							var positionSelect = $('#position_id');
-							positionSelect.empty();
-							$.each(positions, function(index, position) {
-								var selected = position.id == data.position_id ? 'selected' : '';
-								positionSelect.append('<option value="' + position.id + '" ' + selected + '>' + position.name + '</option>');
-							});
-						}
+						target: '#user_id',
+						selectedId: data.user_id,
+						placeholder: 'Pilih Pengguna'
 					});
+
+					loadSelect2Dropdown({
+						url: "<?php echo site_url('positions/get_all_positions'); ?>",
+						target: '#position_id',
+						selectedId: data.position_id,
+						placeholder: 'Pilih Jabatan'
+					});
+
 					$('#membership_date').val(data.membership_date);
 					$('#status').val(data.status);
 					$('#anggotaModal').modal('show');
 				}
 			});
 		});
+
+
+
 
 		// Handle delete button click 
 		$('#anggotaTable').on('click', '.delete-btn', function() {
