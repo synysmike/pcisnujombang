@@ -56,7 +56,6 @@ class Berita extends My_Controller
 		$data = $this->input->post();
 		$id = $this->input->post('id');
 		$custom_path = './assets/images/berita/';
-
 		// Handle image upload
 		if (!empty($_FILES["file"]["name"])) {
 			$data['gambar'] = upload_image($data['judul'], $custom_path, 'file');
@@ -65,6 +64,7 @@ class Berita extends My_Controller
 			$existing = $this->M_berita->get_berita_by_id($id);
 			$data['gambar'] = !empty($existing[0]->gambar) ? $existing[0]->gambar : null;
 		}
+
 
 		// Save or update
 		$result = $id
@@ -76,7 +76,22 @@ class Berita extends My_Controller
 			->set_output(json_encode(['success' => $result]));
 	}
 
+	public function test_upload_access()
+	{
+		$path = FCPATH . 'uploads/berita/';
+		$test_file = $path . 'test.tmp';
 
+		if (!is_dir($path)) {
+			mkdir($path, 0755, true);
+		}
+
+		if (file_put_contents($test_file, 'test') !== false) {
+			echo "Write access OK";
+			unlink($test_file);
+		} else {
+			echo "Write access FAILED";
+		}
+	}
 
 
 

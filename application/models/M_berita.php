@@ -116,7 +116,7 @@ class M_berita extends CI_Model
 		$update_data = [
 			'judul' => $data['judul'],
 			'isi' => $data['isiBerita'],
-			'id_kat' => $data['kat'],
+			'id_kat' => $data['kategori'],
 			'slug' => $data['slug'],
 			'tgl' => $data['tgl'],
 		];
