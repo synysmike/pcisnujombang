@@ -187,6 +187,7 @@
 				}
 			});
 		});
+		const base_url = '<?php echo base_url(); ?>';
 
 		// ///////////////////////////***###<--PEMROSES BERITA-->###***\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		// Datatables AJAX Berita
@@ -267,14 +268,30 @@
 					}
 				},
 				{
-					// button aksi(refrensi :https://stackoverflow.com/questions/54930978/datatables-show-column-data-in-modal)
 					data: 'id',
-					render: function(data) {
-						return '<button class="btn btn-info edit" type="button" data-id="' + data + '">Edit</button> ' +
-							'<button class="btn btn-danger hapus" type="button" data-id="' + data + '">Hapus</button>';
+					orderable: false,
+					searchable: false,
+					render: function(data, type, row) {
+						// row.slug is available here
+						return `
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-info edit" type="button" data-id="${data}">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button class="btn btn-sm btn-danger hapus" type="button" data-id="${data}">
+                    <i class="fas fa-trash-alt"></i> Hapus
+                </button>
+                <a target="_blank" href="${base_url}home/blog_detail/${row.slug}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-link"></i> View
+                </a>
+            </div>
+        `;
 					}
+				}
 
-				},
+
+
+
 			],
 
 		});
